@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MIT:The Analytics Edge 笔记01－R语言入门 | 行行重行行</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MIT课程 15.071x The Analytics Edge 第一单元的学习记录。  R语言入门R语言入门只讲了一些常用的操作。相对于动辄花一本书来讲这些，真是相当简约。但其实足够了，其他操作，需要的时候再查嘛。数据分析的四要素：data、models、decisions、value     简单使用帮助： ?func 显示当前的临时变量： ls() 获取／设置当前目录： getwd() se">
+<meta name="keywords" content="R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT:The Analytics Edge 笔记01－R语言入门">
+<meta property="og:url" content="https://youngspring1.github.io/2016/2016-04-18-R01/index.html">
+<meta property="og:site_name" content="行行重行行">
+<meta property="og:description" content="MIT课程 15.071x The Analytics Edge 第一单元的学习记录。  R语言入门R语言入门只讲了一些常用的操作。相对于动辄花一本书来讲这些，真是相当简约。但其实足够了，其他操作，需要的时候再查嘛。数据分析的四要素：data、models、decisions、value     简单使用帮助： ?func 显示当前的临时变量： ls() 获取／设置当前目录： getwd() se">
+<meta property="og:updated_time" content="2017-10-15T11:25:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MIT:The Analytics Edge 笔记01－R语言入门">
+<meta name="twitter:description" content="MIT课程 15.071x The Analytics Edge 第一单元的学习记录。  R语言入门R语言入门只讲了一些常用的操作。相对于动辄花一本书来讲这些，真是相当简约。但其实足够了，其他操作，需要的时候再查嘛。数据分析的四要素：data、models、decisions、value     简单使用帮助： ?func 显示当前的临时变量： ls() 获取／设置当前目录： getwd() se">
+  
+    <link rel="alternate" href="/atom.xml" title="行行重行行" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">行行重行行</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2016/2016-04-18-R01" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-04-18-R01/" class="article-date">
+  <time datetime="2016-04-18T03:55:25.000Z" itemprop="datePublished">2016-04-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MIT:The Analytics Edge 笔记01－R语言入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="external">15.071x The Analytics Edge</a> 第一单元的学习记录。</p>
+<hr>
+<h2 id="R语言入门"><a href="#R语言入门" class="headerlink" title="R语言入门"></a>R语言入门</h2><p>R语言入门只讲了一些常用的操作。相对于动辄花一本书来讲这些，真是相当简约。但其实足够了，其他操作，需要的时候再查嘛。<br>数据分析的四要素：data、models、decisions、value    </p>
+<h3 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h3><p>帮助：</p>
+<pre><code>?func
+</code></pre><p>显示当前的临时变量：</p>
+<pre><code>ls()
+</code></pre><p>获取／设置当前目录：</p>
+<pre><code>getwd()
+setwd()
+</code></pre><p>显示当前文件夹下的文件：</p>
+<pre><code>dir()
+</code></pre><h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>向量概念：</p>
+<pre><code>所有的操作都是对向量的每个元素实施的
+</code></pre><p>data.frame：</p>
+<pre><code>observation：行
+variable   ：列，data.frame是按照列存储的
+rbind()合并两个data.frame
+</code></pre><p>序列：</p>
+<pre><code>自动生成序列seq()
+</code></pre><h3 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h3><p>读取CSV文件：</p>
+<pre><code>DF = read.csv(&quot;file_path&quot;)
+# 返回值是data.frame
+</code></pre><p>查看DF的基本信息：</p>
+<pre><code>str(DF)
+# DF的结构信息。行和列的数目，列名、列的类型、列的数据举例。
+
+summary(DF)
+# 每列的最大值、最小值、中位数、平均数、1/4值、3/4值，以及是否包含空值。
+</code></pre><p>写入CSV文件：</p>
+<pre><code>write.csv(DF, &quot;file_path&quot;)
+</code></pre><p>从内存中删除变量：</p>
+<pre><code>rm(DF)
+</code></pre><h3 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h3><p>选取一部分数据：</p>
+<pre><code>subset( DF, 条件1 &amp; 条件2 ｜ 条件3)
+</code></pre><p>按照列名选取3列：</p>
+<pre><code>DF[c(var1, var2, var3)]
+</code></pre><p>选取1，3，5列：</p>
+<pre><code>DF[c(1, 3, 5)]
+</code></pre><p>计算平均值和标准差：</p>
+<pre><code>mean(DF$var)
+sd(DF$var)
+</code></pre><p>返回最大值／最小值的位置(index)：</p>
+<pre><code>which.max(DF$var)
+which.min(DF$var)
+</code></pre><p>返回行数：</p>
+<pre><code>nrow(DF)
+</code></pre><h3 id="绘图"><a href="#绘图" class="headerlink" title="绘图"></a>绘图</h3><p>直方图，反映<strong>一列</strong>数据的分布情况：</p>
+<pre><code>hist(DF$var, xlim = c(1, 100), breaks = 100)
+# xlim 限定范围
+# breaks x轴的精确度。注意是针对原始数据的，不是对限定后的
+</code></pre><p>箱型图：</p>
+<pre><code>boxplot(DF$var1 ~ DF$var2, xlab = &quot;x-label&quot;, ylab = &quot;y-label&quot;, main = &quot;title&quot;)
+</code></pre><p>点阵图：</p>
+<pre><code>plot(......, col = &quot;red&quot;)
+line(......, col = &quot;blue&quot;) # 在原先的基础上再加一条
+
+函数jitter() # 对于有很多重合的点阵图，先用jitter偏移一点，这样看上去效果好很多
+</code></pre><p>其他共通的参数：</p>
+<pre><code>col = &quot;red&quot;
+type = &quot;line&quot; # 可以指定1，2，3，4，5
+</code></pre><h3 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h3><p>分组：</p>
+<pre><code>table(DF$var1)
+# var1列中，每种数据的数量的统计
+table(DF$var1, DF$var2)
+# var1和var2列中，每种数据的数量的交叉统计
+</code></pre><p>分组计算：</p>
+<pre><code>tapply(DF$var1, DF$var2, func)
+# DF$var1, 原始数据
+# DF$var2, 分组依据
+# func, 要应用的函数
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-04-18-R01/" data-id="cj8so6qtn001w8mw8140ornvs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/2016-04-23-R02/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          MIT:The Analytics Edge 笔记02－线性回归
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/2016-04-08-datatable5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">data.table 教程5－数据拆分和合并</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/2017-07-02-food/">迷上做饭视频</a>
+          </li>
+        
+          <li>
+            <a href="/2017/2017-06-25-jizhi/">集智网文章索引</a>
+          </li>
+        
+          <li>
+            <a href="/2017/2017-06-24-DLmaterials/">(发福利)深度学习资料</a>
+          </li>
+        
+          <li>
+            <a href="/2017/2017-06-24-fromdaily/">算法来自日常工作</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 youngspring1<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
