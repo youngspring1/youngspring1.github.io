@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>行行重行行</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://youngspring1.github.io/"/>
+  <updated>2017-10-20T06:30:03.000Z</updated>
+  <id>https://youngspring1.github.io/</id>
+  
+  <author>
+    <name>youngspring1</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用 Python 解析 Excel 发现的小坑</title>
+    <link href="https://youngspring1.github.io/2017/2017-10-20-parse-date-in-xlsx/"/>
+    <id>https://youngspring1.github.io/2017/2017-10-20-parse-date-in-xlsx/</id>
+    <published>2017-10-20T06:00:25.000Z</published>
+    <updated>2017-10-20T06:30:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近用 Python的 xlrd 解析 Excel 发现了一个小坑，记录一下。   </p><h4 id="xlrd-和-openpyxl"><a href="#xlrd-和-openpyxl" class="headerlink" title="xlrd 和 openpyxl"></a>xlrd 和 openpyxl</h4><p>这两个lib，常用的功能应该都有了，但是读取速度差异非常大。</p><table><thead><tr><th style="text-align:right">Excel Size</th><th style="text-align:right">xlrd</th><th style="text-align:right">openpyxl</th></tr></thead><tbody><tr><td style="text-align:right">2 M</td><td style="text-align:right">5 sec</td><td style="text-align:right">10 sec</td></tr><tr><td style="text-align:right">150 M</td><td style="text-align:right">6 min</td><td style="text-align:right">20 min</td></tr></tbody></table><p>经过试验果断选择了 xlrd。</p><h4 id="Excel里面的日期"><a href="#Excel里面的日期" class="headerlink" title="Excel里面的日期"></a>Excel里面的日期</h4><p>最重要的原理是，Excel 并不保存日期，而是保存距离某个起始时间点（比如1900-1-1 零点）的一个数值，需要显示的时候，再进行加减运算，根据设置的格式显示出来。<br>这样我们看上去是日期，但是代码看到的却是一个数值。<br>然而，不同的操作系统上的Excel，对这个起始时间点的定义却不一样：</p><pre><code>Windows: 1899-12-31T00:00:00macOS  : 1904-01-01T00:00:00</code></pre><p>参考链接：<a href="http://www.lexicon.net/sjmachin/xlrd.html" target="_blank" rel="external">Dates in Excel spreadsheets</a></p><p>这样保存的数值就不一样，如果把 Windows 上生成的 Excel，拿到 macOS 下想做点什么，可就要小心了。   </p><p>那么处理 Excel 的时候，怎么知道这个文件到底是 Windows格式的，还是 macOS格式的呢，可以看 datamode 这个变量。</p><pre><code>datemode = 0    Which date system was in force when this file was last saved.    0:        1900 system (the Excel for Windows default).    1:        1904 system (the Excel for Macintosh default).</code></pre><p>当然，默认情况是 Windows。参考链接：<a href="http://xlrd.readthedocs.io/en/latest/api.html#xlrd.book.Book" target="_blank" rel="external">datamode</a></p><p>此外，单元格Cell是文本，还是数值，还是日期，可以查看 Cell.ctype 的值。详细参考：<a href="http://xlrd.readthedocs.io/en/latest/api.html#xlrd.sheet.Cell" target="_blank" rel="external">Cell</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近用 Python的 xlrd 解析 Excel 发现了一个小坑，记录一下。   &lt;/p&gt;
+&lt;h4 id=&quot;xlrd-和-openpyxl&quot;&gt;&lt;a href=&quot;#xlrd-和-openpyxl&quot; class=&quot;headerlink&quot; title=&quot;xlrd 和 openp
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="python" scheme="https://youngspring1.github.io/tags/python/"/>
+    
+      <category term="xlrd" scheme="https://youngspring1.github.io/tags/xlrd/"/>
+    
+      <category term="Excel" scheme="https://youngspring1.github.io/tags/Excel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>迁移博客系统到hexo</title>
+    <link href="https://youngspring1.github.io/2017/2017-10-15-hexo/"/>
+    <id>https://youngspring1.github.io/2017/2017-10-15-hexo/</id>
+    <published>2017-10-15T11:42:24.000Z</published>
+    <updated>2017-10-15T12:30:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>原先放在 github pages上的博客系统是用hugo搭建的，8月份换电脑，hugo环境没有了，正好迁移到主流的？<a href="https://hexo.io/" target="_blank" rel="external">hexo</a>，安装和配置还是挺简单的，而且有<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">中文说明</a>，这里讲讲hexo里面一些（我觉得）新的概念 和 跟之前hugo的不同之处。   </p><ol><li><p>流程更清晰<br> new/generate/deploy，对应写博客／生成静态文件／发布，三个步骤只需要运行hugo命令就行了，不需要再手动提交到github，操作简单很多。当然需要安装  hexo-deployer-git，并且定义好自己的仓库地址。</p></li><li><p>自定义的路径和url<br> 我希望md文件放在年份文件夹里，不要全部放在 _posts 文件夹下面。而且文件名要有日期前缀，要不然不好找。我在配置文件的 Writing 段落这样定义就可以了 <code>new_post_name: :year/:title.md</code>。当然 new post时，我手动吧日期敲进去。此外，生成页面的的url里面，默认是<code>:year/:month/:day/:title</code>，但是因为我文件名已经有日期了，所以url里面的日期就不要了，直接删成<code>:year/:title</code>这样就行。</p></li><li><p>草稿<br> 有个draft草稿的概念，这样的文件时看不到的；需要publish一下，才会吧draft变成post。好吧，其实对我没什么用。</p></li><li><p>分类<br> 原来hugo里面的category是并列的关系，跟tag一样，一片文章可以属于多个分类。但是hexo里面的category存在层次关系，[cat1, cat2]表示cat1下的子分类cat2，跟[cat2, cat1]是不一样的。</p></li></ol><p>暂时就用到了这么多。   </p><p>搬家快乐～～</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;原先放在 github pages上的博客系统是用hugo搭建的，8月份换电脑，hugo环境没有了，正好迁移到主流的？&lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;hexo&lt;/a&gt;，安装和配置还是挺简单的
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="github pages blog" scheme="https://youngspring1.github.io/tags/github-pages-blog/"/>
+    
+      <category term="hexo" scheme="https://youngspring1.github.io/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>迷上做饭视频</title>
+    <link href="https://youngspring1.github.io/2017/2017-07-02-food/"/>
+    <id>https://youngspring1.github.io/2017/2017-07-02-food/</id>
+    <published>2017-07-02T04:17:55.000Z</published>
+    <updated>2017-10-15T12:27:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近迷上了做饭视频，不讲话不编故事不提梦想的那种，就看演员安静地做菜，再满足地吃掉。<br>以前看一个讲座，程序员向普通人解释什么是计算机程序，拿菜谱来打比方，做菜时需要再特定的时间点上加入定量的食材，按照需要调节温度，外加偶尔翻炒十几秒，最后就出来一锅美味的菜肴。程序也是这样，输入数据、操作，就能出结果。<br>听到这里，我好像也会做饭了，假如给我一套现实世界的API的话……实际上我按照菜谱的说明，做出来的东西总是没有期待的好吃。现在想想，大概是因为我真的把做饭当成程序了，而不是一件快乐的事。只有怀着对美食和生活的爱，才能做出一盘好吃的菜吧？<br>传奇远而粥饭斤，一粥一饭皆为心意。   </p><p><a href="https://v.qq.com/x/cover/1jv433683n9m5h4/a0340dpqy8d.html" target="_blank" rel="external">陈晓卿 传奇远而粥饭斤</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近迷上了做饭视频，不讲话不编故事不提梦想的那种，就看演员安静地做菜，再满足地吃掉。&lt;br&gt;以前看一个讲座，程序员向普通人解释什么是计算机程序，拿菜谱来打比方，做菜时需要再特定的时间点上加入定量的食材，按照需要调节温度，外加偶尔翻炒十几秒，最后就出来一锅美味的菜肴。程序也是
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="美食" scheme="https://youngspring1.github.io/tags/%E7%BE%8E%E9%A3%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>集智网文章索引</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-25-jizhi/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-25-jizhi/</id>
+    <published>2017-06-24T20:12:05.000Z</published>
+    <updated>2017-10-15T12:28:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="jizhi.im">集智网</a>是个学习机器学习的好网站，翻译和原创了不少好文章，然而不太方便浏览，所以自己搞一个索引。<br>20170717更新。   </p><h3 id="Python入门"><a href="#Python入门" class="headerlink" title="Python入门"></a>Python入门</h3><p><a href="https://jizhi.im/blog/post/pyintro01" target="_blank" rel="external">[Python入门] 01 基本法则</a><br><a href="https://jizhi.im/blog/post/pyintro02" target="_blank" rel="external">[Python入门] 02 控制流</a><br><a href="https://jizhi.im/blog/post/pyintro03" target="_blank" rel="external">[Python入门] 03 字典</a><br><a href="https://jizhi.im/blog/post/pyintro04" target="_blank" rel="external">[Python入门] 04 文件与函数</a><br><a href="https://jizhi.im/blog/post/pyintro05" target="_blank" rel="external">[Python入门] 05 元组与数据库</a><br><a href="https://jizhi.im/blog/post/pyintro06" target="_blank" rel="external">[Python入门] 06 面向对象</a>   </p><h3 id="机器学习有意思"><a href="#机器学习有意思" class="headerlink" title="机器学习有意思"></a>机器学习有意思</h3><p><a href="https://jizhi.im/blog/post/ml_is_fun_01" target="_blank" rel="external">《机器学习有意思！ 01》- 世界上最简单的机器学习入门</a><br><a href="https://jizhi.im/blog/post/ml_is_fun_02" target="_blank" rel="external">《机器学习有意思！ 02》- 使用机器学习生成超级玛丽关卡</a><br><a href="https://jizhi.im/blog/post/ml_is_fun_03" target="_blank" rel="external">《机器学习有意思！ 03》- 深度学习与卷积神经网络</a></p><h3 id="Scikit-Learn"><a href="#Scikit-Learn" class="headerlink" title="Scikit Learn"></a>Scikit Learn</h3><p><a href="https://jizhi.im/blog/post/sklearntutorial01" target="_blank" rel="external">[Scikit-learn教程] 01 快速入门</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0201" target="_blank" rel="external">[Scikit-learn教程] 02.01 统计学习：基本设置和预测器对象</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0202" target="_blank" rel="external">[Scikit-learn教程] 02.02 从多维采样中预测输出</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0203" target="_blank" rel="external">[Scikit-learn教程] 02.03 模型选择：预测器及其参数</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0204" target="_blank" rel="external">[Scikit-learn教程] 02.04 无监督学习：追寻数据表征</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0205" target="_blank" rel="external">[Scikit-learn教程] 02.05 综合实践</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0301" target="_blank" rel="external">[Scikit-learn教程] 03.01 文本处理：特征提取</a><br><a href="https://jizhi.im/blog/post/sklearntutorial0302" target="_blank" rel="external">[Scikit-learn教程] 03.02 文本处理：分类与优化</a></p><h3 id="Kaggle"><a href="#Kaggle" class="headerlink" title="Kaggle"></a>Kaggle</h3><p><a href="https://jizhi.im/blog/post/kaggle_silver" target="_blank" rel="external">Kaggle 首战拿银总结 | 入门指导 (长文、干货）</a><br><a href="https://jizhi.im/blog/post/kaggletitanic01" target="_blank" rel="external">泰坦尼克号事故分析 01 数据清洗</a><br><a href="https://jizhi.im/blog/post/kaggletitanic02" target="_blank" rel="external">泰坦尼克号事故分析 02 机器学习</a><br><a href="https://jizhi.im/blog/post/kaggletitanic03" target="_blank" rel="external">泰坦尼克号事故分析 03 进阶模型</a><br><a href="https://jizhi.im/blog/post/kagglemonster" target="_blank" rel="external">什么鬼？Python开发照妖镜</a></p><h3 id="数学"><a href="#数学" class="headerlink" title="数学"></a>数学</h3><p><a href="https://jizhi.im/blog/post/learning_ai_suck_math_04" target="_blank" rel="external">数学不行还学AI-第4话-图解张量（内有恶猫）</a><br><a href="https://jizhi.im/blog/post/learning_ai_suck_math_05_1" target="_blank" rel="external">数学不行还学AI - 第5话 - 神经网络平话演义（上）</a><br><a href="https://jizhi.im/blog/post/learning_ai_suck_math_05_2" target="_blank" rel="external">数学不行还学AI - 第5话 - 神经网络平话演义（下）</a><br><a href="https://jizhi.im/blog/post/bayes1" target="_blank" rel="external">贝叶斯方法的概率编程与推断——贝叶斯推断的哲♂学</a>   </p><h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><p><a href="https://jizhi.im/blog/post/nn_py_ml" target="_blank" rel="external">Python搭建多层神经网络</a><br><a href="https://jizhi.im/blog/post/nn_py_9" target="_blank" rel="external">9行Python代码搭建神经网络</a><br><a href="https://jizhi.im/blog/post/intuitive_explanation_cnn" target="_blank" rel="external">卷积：如何成为一个很厉害的神经网络</a><br><a href="https://jizhi.im/blog/post/1hour_lstm" target="_blank" rel="external">LSTM by Example using Tensorflow</a></p><h3 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h3><p><a href="https://jizhi.im/blog/post/crawler_anti-crawler" target="_blank" rel="external">爬虫需谨慎！！！那些你不知道的爬虫反爬虫套路</a><br><a href="https://jizhi.im/blog/post/maoyan-anti-crawler" target="_blank" rel="external">[Python爬虫] 「暴力」破解猫眼电影票房数据的反爬虫机制</a><br><a href="https://jizhi.im/blog/post/crawler_excel" target="_blank" rel="external">[Python爬虫] 批量搜索Excel里的关键词</a><br><a href="https://jizhi.im/blog/post/bs4-label" target="_blank" rel="external">[Python爬虫] BeautifulSoup4基础问题：如何获取特定标签内的网页元素</a>   </p><h3 id="趣味项目"><a href="#趣味项目" class="headerlink" title="趣味项目"></a>趣味项目</h3><p><a href="https://jizhi.im/blog/post/how_to_create_mind" target="_blank" rel="external">如何创造心智：揭示人类思维的秘密</a><br><a href="https://jizhi.im/blog/post/asciiart" target="_blank" rel="external">如何挽救鉴黄师的职业生涯 - Python绘制像素图</a><br><a href="https://jizhi.im/blog/post/quickdraw" target="_blank" rel="external">来自Google的小游戏，让任何人都能参与到机器学习中来</a><br><a href="https://jizhi.im/blog/post/keras_av" target="_blank" rel="external">基于Keras的AV女优相似图像检索（译）</a><br><a href="https://jizhi.im/blog/post/pixelart" target="_blank" rel="external">一起来画像素画，我家的马赛克不可能这么萌！</a><br><a href="https://jizhi.im/blog/post/drawbycss" target="_blank" rel="external">用代码来画图——CSS绘制简单的卡通形象</a><br><a href="https://jizhi.im/blog/post/deep_traffic" target="_blank" rel="external">DeepTraffic:MIT模拟游戏利用深度学习来缓解交通拥堵</a><br><a href="https://jizhi.im/blog/post/ailearntowalk" target="_blank" rel="external">我家的AI才不会这么智障——DeepMind让人工智能学会如何走路</a>   </p><h3 id="浅说深度学习"><a href="#浅说深度学习" class="headerlink" title="浅说深度学习"></a>浅说深度学习</h3><p><a href="https://jizhi.im/blog/post/dl_nutshell_01" target="_blank" rel="external">浅说深度学习(1)：核心概念</a><br><a href="https://jizhi.im/blog/post/dl_nutshell_02" target="_blank" rel="external">浅说深度学习(2)：简史</a><br><a href="https://jizhi.im/blog/post/dl_nutshell_03" target="_blank" rel="external">浅说深度学习(3)：序列学习</a><br><a href="https://jizhi.im/blog/post/dl_nutshell_04" target="_blank" rel="external">浅说深度学习(4)：增强学习</a>   </p><h3 id="增强学习"><a href="#增强学习" class="headerlink" title="增强学习"></a>增强学习</h3><p><a href="https://jizhi.im/blog/post/rl_intro" target="_blank" rel="external">极简增强学习新手教程</a><br><a href="https://jizhi.im/blog/post/deep_reinforcement_learning" target="_blank" rel="external">深度增强学习前沿算法思想</a><br><a href="https://jizhi.im/blog/post/dqn" target="_blank" rel="external">深度增强学习DQN</a>   </p><h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>视频拍摄于1989年，向大神致敬！<br><a href="http://7xrjai.com1.z0.glb.clouddn.com/20170611-LeCun_CNN.mp4" target="_blank" rel="external">LeCun_CNN</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;jizhi.im&quot;&gt;集智网&lt;/a&gt;是个学习机器学习的好网站，翻译和原创了不少好文章，然而不太方便浏览，所以自己搞一个索引。&lt;br&gt;20170717更新。   &lt;/p&gt;
+&lt;h3 id=&quot;Python入门&quot;&gt;&lt;a href=&quot;#Python入门&quot; class=
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="机器学习" scheme="https://youngspring1.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(发福利)深度学习资料</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-24-DLmaterials/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-24-DLmaterials/</id>
+    <published>2017-06-24T07:07:22.000Z</published>
+    <updated>2017-10-15T12:28:37.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天找到的一些学习资料，想看的书，简单汇总一下。</p><p>这本<a href="https://www.amazon.cn/图书/dp/1491962291/ref=sr_1_1?ie=UTF8&amp;qid=1498317575&amp;sr=8-1&amp;keywords=Hands-On+Machine+Learning+with+Scikit-Learn+and+TensorFlow" target="_blank" rel="external">Hands-On Machine Learning with Scikit-Learn and TensorFlow</a> 想要早点看<br><a href="http://os25dzspj.bkt.clouddn.com/Hands-On%20Machine%20Learning%20with%20Scikit-Learn%20and%20TensorFlow.epub" target="_blank" rel="external">英文版 epub</a></p><p>这本是机器学习领域比较全面的入门书，打算看，模式识别和机器学习<a href="https://www.amazon.cn/gp/product/0387310738/ref=ox_sc_sfl_title_1?ie=UTF8&amp;psc=1&amp;smid=A1AJ19PSB66TGU" target="_blank" rel="external">Pattern Recognition and Machine Learning</a>，略贵，还好我提供了下载，嘿嘿嘿。<br><a href="http://os25dzspj.bkt.clouddn.com/Pattern%20Recognition%20And%20Machine%20Learning.pdf" target="_blank" rel="external">英文版PDF</a><br><a href="http://os25dzspj.bkt.clouddn.com/PRML_Chinese_vision.pdf" target="_blank" rel="external">中文版PDF</a>   </p><p>这本以后打算看<a href="https://www.amazon.cn/图书/dp/0262035618/ref=sr_1_1?ie=UTF8&amp;qid=1498317625&amp;sr=8-1&amp;keywords=deep+learning" target="_blank" rel="external">深度学习</a><br><a href="https://github.com/HFTrader/DeepLearningBook" target="_blank" rel="external">英文版</a><br><a href="https://github.com/exacity/deeplearningbook-chinese" target="_blank" rel="external">中文版</a></p><p>深度学习入门资料<br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484189&amp;idx=1&amp;sn=527b9a3646bddd1f89f3eb80c9a70749&amp;chksm=fb727fc1cc05f6d75266e263ce2f79fcd5975cac9a573d1d46f26f1b499b78351b5c50826b49&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之一）</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484190&amp;idx=1&amp;sn=8f79abe70ab2ad2194dd5828145b6c8b&amp;chksm=fb727fc2cc05f6d41e53a1d52acf6d1922bfbe395a6a423b15da7fcc50055505d4a30be42bee&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之二）</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484334&amp;idx=2&amp;sn=f94b8c5594a66ab9284e8435656a18d6&amp;chksm=fb727f72cc05f664097b795f873d4b52b4c26f2a95e2146724f48ad5156f630db894f498aab5&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之三）</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484372&amp;idx=1&amp;sn=2e9e4695588941d6e1a3cf527ff0ceb3&amp;chksm=fb727f08cc05f61e430f58db3a2bcfeeaf986b5f2789b66c7e44a84e58b94413a35007f1fee5&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之四）</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484400&amp;idx=2&amp;sn=5814b966229cd6e16eeffe1a577737ff&amp;chksm=fb727f2ccc05f63a0f4f7b8fa63daeea33cdcbbbc229b316f871216658dbc822f9fdd84223c2&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之五）</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU0NTAyNTQ1OQ==&amp;mid=2247484401&amp;idx=1&amp;sn=0095b2edcf54938a02b74bf7bf9a50e7&amp;chksm=fb727f2dcc05f63bb6719b0dece4124d6c29fb0dabd140ea6febc4cc15e7c917827b7177b0e1&amp;scene=21#wechat_redirect" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之六）</a><br><a href="https://mp.weixin.qq.com/s/epdKBddEkbp6aUDp0bPgQA" target="_blank" rel="external">简单易懂的讲解深度学习（入门系列之七）</a>   </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今天找到的一些学习资料，想看的书，简单汇总一下。&lt;/p&gt;
+&lt;p&gt;这本&lt;a href=&quot;https://www.amazon.cn/图书/dp/1491962291/ref=sr_1_1?ie=UTF8&amp;amp;qid=1498317575&amp;amp;sr=8-1&amp;amp;ke
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="深度学习" scheme="https://youngspring1.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>算法来自日常工作</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-24-fromdaily/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-24-fromdaily/</id>
+    <published>2017-06-24T00:44:27.000Z</published>
+    <updated>2017-10-15T12:28:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>越来越觉得工作中能够用到经典的算法，或者说，经典的算法并不是古代的程序员／数学家拍脑袋想出来的，而是真的需要，才称为经典算法。   </p><p>比如以前做一个消息分类，分类算法其实就是diff命令，也就是最小公共子串问题。<br>只是相关的几片论文到今天还没看完。。。   </p><p>最近写VBA从Excle抽数据给前端，有一个事例非常类似寻找众数的过程。<br>什么是寻找众数？在<a href="https://www.amazon.cn/图书/dp/B00X65PE0C/ref=sr_1_1?ie=UTF8&amp;qid=1498294341&amp;sr=8-1&amp;keywords=像程序员一样思考" target="_blank" rel="external">像程序员一样思考</a>有探讨：对数列[2,3,2,4,5,4,3,2,3,4,3]中找到最多的数以及它出现了多少次。<br>做法是先排序，再计数。<br>而我们工作中的需求是，把Excle中，同一个公司的条目都放到一起，用json格式输出，也就是输入可能是这样的：   </p><pre><code>公司1，222公司2，444公司3， 66公司1，  3公司3，666公司2， 88公司3，  9</code></pre><p>同样，我们的做法也是先排序，然后计数，找到一个公司的所有条目，再合并到一起输出。<br>最终输出大概是这样的结构：</p><pre><code>公司1:[222,3]公司2:[444,88]公司3:[66,666,9]</code></pre><p>中间为了找一个公司的起始行和结束行，用的循环有点多。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;越来越觉得工作中能够用到经典的算法，或者说，经典的算法并不是古代的程序员／数学家拍脑袋想出来的，而是真的需要，才称为经典算法。   &lt;/p&gt;
+&lt;p&gt;比如以前做一个消息分类，分类算法其实就是diff命令，也就是最小公共子串问题。&lt;br&gt;只是相关的几片论文到今天还没看完。。。 
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="算法" scheme="https://youngspring1.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据归一化方法</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-24-normalization/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-24-normalization/</id>
+    <published>2017-06-24T00:24:23.000Z</published>
+    <updated>2017-10-15T12:28:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近看的书<a href="https://www.amazon.cn/Python机器学习-预测分析核心算法-鲍尔斯/dp/B01MTY3ZAL/ref=sr_1_2?ie=UTF8&amp;qid=1498293116&amp;sr=8-2&amp;keywords=python+机器学习" target="_blank" rel="external">Python机器学习:预测分析核心算法</a>介绍了归一化方法，刚好在另外的一个可视化项目中也用到了，所以就简单总结一下。   </p><h4 id="归一化（Normalization）"><a href="#归一化（Normalization）" class="headerlink" title="归一化（Normalization）"></a>归一化（Normalization）</h4><p>归一化把数据变为（0，1）之间的小数。主要是为了方便数据处理，因为将数据映射到0～1范围之内，可以使处理过程更加便捷、快速。<br>归一化把有量纲表达式变换为无量纲表达式，成为纯量。经过归一化处理的数据，处于同一数量级，可以消除指标之间的量纲和量纲单位的影响，提高不同数据指标之间的可比性。比如两个人体重差10KG，身高差0.02M，在衡量两个人的差别时体重的差距会把身高的差距完全掩盖，归一化之后就不会有这样的问题。</p><p>主要方法：</p><ol><li>线性转换，即min-max归一化（常用方法）<br> y=(x-min)/(max-min)<br> 如果要映射到[-1,1]，y=(x-mean)/(max-min)</li><li>对数函数转换<br> y=log10(x)/log10(max)</li><li>反余切函数转换<br> y=atan(x)*2/PI</li></ol><h4 id="标准化（Standardization）"><a href="#标准化（Standardization）" class="headerlink" title="标准化（Standardization）"></a>标准化（Standardization）</h4><p>数据的标准化是将数据按比例缩放，使之落入一个小的特定区间。<br>主要方法：</p><ol><li>z-score标准化，即零-均值标准化（常用方法）<br>y=(x-μ)/σ是一种统计的处理，基于正态分布的假设，将数据变换为均值为0、标准差为1的标准正态分布。但即使数据不服从正态分布，也可以用此法。特别适用于数据的最大值和最小值未知，或存在孤立点。</li><li>小数定标标准化<br>y=x/10^j  （j确保max(|y|)&lt;1）<br>通过移动x的小数位置进行标准化</li><li>对数Logistic模式<br>y=1/(1+e^(-x))</li></ol><h4 id="正则化（Regularization）"><a href="#正则化（Regularization）" class="headerlink" title="正则化（Regularization）"></a>正则化（Regularization）</h4><p>用一组与原不适定问题相“邻近”的适定问题的解，去逼近原问题的解，这种方法称为正则化方法。如何建立有效的正则化方法是反问题领域中不适定问题研究的重要内容。通常的正则化方法有基于变分原理的Tikhonov 正则化、各种迭代方法以及其它的一些改进方法。<br>总的来说，归一化是为了消除不同数据之间的量纲，方便数据比较和共同处理，比如在神经网络中，归一化可以加快训练网络的收敛性；标准化是为了方便数据的下一步处理，而进行的数据缩放等变换，并不是为了方便与其他数据一同处理或比较，比如数据经过零-均值标准化后，更利于使用标准正态分布的性质，进行处理；正则化而是利用先验知识，在处理过程中引入正则化因子(regulator)，增加引导约束的作用，比如在逻辑回归中使用正则化，可有效降低过拟合的现象。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近看的书&lt;a href=&quot;https://www.amazon.cn/Python机器学习-预测分析核心算法-鲍尔斯/dp/B01MTY3ZAL/ref=sr_1_2?ie=UTF8&amp;amp;qid=1498293116&amp;amp;sr=8-2&amp;amp;keywords=p
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="数据分析" scheme="https://youngspring1.github.io/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/"/>
+    
+      <category term="归一化" scheme="https://youngspring1.github.io/tags/%E5%BD%92%E4%B8%80%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>神奇女侠</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-10-wonderwoman/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-10-wonderwoman/</id>
+    <published>2017-06-09T18:24:49.000Z</published>
+    <updated>2017-10-15T12:28:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>电影工业又造就了一位女神。<br>电影没什么值得讲的情节和故事，好看完全靠女神的魅力。宙斯的女儿，当然是神啦:)   </p><p>很多年前的女神电影，比如古墓丽影，只要女神身材好，就可以了；现在除了身材好，还迎合了大众新的口味，比如女权意识。所以电影工业也是善于捕捉民意，坚持政治正确呀。为票房当然得这么做。。。   </p><p>我们平时看过的新闻／热点，都是用AI（自己指定关注某一类的，系统按照你的口味推荐）或者SN（朋友分享的内容）过滤一遍的，那么我们看到的世界是不是越来越狭窄？   </p><p><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170610-wonderwoman.jpg" alt="wonderwoman.jpg"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;电影工业又造就了一位女神。&lt;br&gt;电影没什么值得讲的情节和故事，好看完全靠女神的魅力。宙斯的女儿，当然是神啦:)   &lt;/p&gt;
+&lt;p&gt;很多年前的女神电影，比如古墓丽影，只要女神身材好，就可以了；现在除了身材好，还迎合了大众新的口味，比如女权意识。所以电影工业也是善于捕捉民意
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="电影" scheme="https://youngspring1.github.io/tags/%E7%94%B5%E5%BD%B1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>人类简史</title>
+    <link href="https://youngspring1.github.io/2017/2017-06-04-brief-history/"/>
+    <id>https://youngspring1.github.io/2017/2017-06-04-brief-history/</id>
+    <published>2017-06-04T00:19:31.000Z</published>
+    <updated>2017-10-15T12:28:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>题外话：好久没有更新了，想了想还是要定期更新的，督促自己定期学习和产出；要不然没有任何output，会觉得完全无所作为。</p><p>今年第一本读了两遍的书，<a href="https://www.amazon.cn/人类简史-从动物到上帝-尤瓦尔·赫拉利/dp/B06VXL4CZN/ref=pd_bxgy_14_img_3?ie=UTF8&amp;psc=1&amp;refRID=S1S4H6TSED2WDD5KTE05" target="_blank" rel="external">人类简史</a>，内容和观点都很有说服力，更难得的是作者文笔非常了得，娓娓道来，完全不像一般的史书作者，更像是运筹帷幄的小说家。<br>此外，作者有两个观点真是令我非常赞同。   </p><ol><li>演化之路绝无退路<br> 人类从采集社会过渡到农业社会，（虽然什么原因不可知晓，但我相信是个偶然），是一个不可逆转的过程。周围的部落都去种植粮食了，树林就会越来越少，仅靠采集食物也会渐渐活不下去。<br> 现在也如此，互联网的日渐入侵我们的日常生活，想要恢复往日的时光已经不可能，只有拥抱未来，才有可能存活。</li><li>当局者迷和上帝之眼<br> 在历史发展中，当时的人看未来如同站在十字路口，未来有好多种可能；可是未来再回过头了看历史的踪迹，只能看到发生的一切，还以为都是历史的必然。</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;题外话：好久没有更新了，想了想还是要定期更新的，督促自己定期学习和产出；要不然没有任何output，会觉得完全无所作为。&lt;/p&gt;
+&lt;p&gt;今年第一本读了两遍的书，&lt;a href=&quot;https://www.amazon.cn/人类简史-从动物到上帝-尤瓦尔·赫拉利/dp/B06
+      
+    
+    </summary>
+    
+      <category term="读书" scheme="https://youngspring1.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+    
+    
+      <category term="人类简史" scheme="https://youngspring1.github.io/tags/%E4%BA%BA%E7%B1%BB%E7%AE%80%E5%8F%B2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(骗更)你想穿越到古代吗</title>
+    <link href="https://youngspring1.github.io/2017/2017-03-19-passthrough/"/>
+    <id>https://youngspring1.github.io/2017/2017-03-19-passthrough/</id>
+    <published>2017-03-19T06:55:52.000Z</published>
+    <updated>2017-10-15T12:29:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前看到一个题目，如果可以穿越到古代称为一个历史人物，你想扮演谁做些什么。有个伟岸的回答是，穿越到清朝成为慈禧太后救中国。<br>仔细想想，现在人可能无法适应古代的生活了。<br>衣<br>材料单一，没有现在这么多合身的裁剪。冬天保暖效果差，夏天还要穿的那么多。礼教严格繁复，可能会觉得麻烦。<br>食<br>调料和烹饪方法没有现在多。食材少，而且会有季节区别。而且叫不了外卖哦。<br>住<br>我就说没空调，没wifi，没电，没自来水，没热水器。<br>行<br>只有马车、船，要不就是步行了。我们目前几个小时就能飞过去的远方，必须好几个月才能到达。<br>要知道，现代人觉得理所当然的事情，在古人看来都是天方夜谭。   </p><p><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170319-5.JPG" alt="masiluo"></p><p>更重要的，我们现在看历史，都是站在上帝的角度看的，后面会发生什么事情，都一清二楚；然而放在当时，却如何能够知道以后会发生什么。再简化一点，就说说当时发生什么吧，即使是帝王，收集信息的效率和准确程度都远远不如现在的互联网时代，也无法立即得到全国各地的消息，进行决策时未必能作出后来人觉得正确的决策。   </p><p>所有人都知道，要考虑历史进程，可是谁有能看得清。   </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;之前看到一个题目，如果可以穿越到古代称为一个历史人物，你想扮演谁做些什么。有个伟岸的回答是，穿越到清朝成为慈禧太后救中国。&lt;br&gt;仔细想想，现在人可能无法适应古代的生活了。&lt;br&gt;衣&lt;br&gt;材料单一，没有现在这么多合身的裁剪。冬天保暖效果差，夏天还要穿的那么多。礼教严格繁复
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="穿越" scheme="https://youngspring1.github.io/tags/%E7%A9%BF%E8%B6%8A/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不得不了解的背景</title>
+    <link href="https://youngspring1.github.io/2017/2017-01-22-background/"/>
+    <id>https://youngspring1.github.io/2017/2017-01-22-background/</id>
+    <published>2017-01-22T07:34:45.000Z</published>
+    <updated>2017-10-15T12:29:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>以前读帖或者读诗的时候，往往只看其本身，比如字写的怎么样，或者诗文中描写了怎样的情景。最近读了蒋勋《<a href="https://www.amazon.cn/dp/9866377946/ref=sr_1_1?s=home-appliances&amp;ie=UTF8&amp;qid=1485099675&amp;sr=8-1&amp;keywords=南朝岁月" target="_blank" rel="external">手帖：南朝岁月</a>》后，豁然发现，比起书法技巧，更需要了解手帖成文时候的历史背景和人物当时的感情。这也是为什么王羲之酒醒之后，就再也写不出《兰亭序》了。哦，这也是为什么行书top3都是草稿。最重要的还是情怀啊。<br>读诗也是同样，如果不了解历史和人物，也无法领会更深层次的内涵吧。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170122-kxsq.jpeg" alt="快雪时晴"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;以前读帖或者读诗的时候，往往只看其本身，比如字写的怎么样，或者诗文中描写了怎样的情景。最近读了蒋勋《&lt;a href=&quot;https://www.amazon.cn/dp/9866377946/ref=sr_1_1?s=home-appliances&amp;amp;ie=UTF8&amp;a
+      
+    
+    </summary>
+    
+      <category term="读书" scheme="https://youngspring1.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+    
+    
+      <category term="背景知识" scheme="https://youngspring1.github.io/tags/%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>比利林恩的内心世界</title>
+    <link href="https://youngspring1.github.io/2017/2017-01-07-bilylyne/"/>
+    <id>https://youngspring1.github.io/2017/2017-01-07-bilylyne/</id>
+    <published>2017-01-07T05:42:40.000Z</published>
+    <updated>2017-10-15T12:29:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>一个普通人的内心世界</p><p>和1900一样，待在家里、待在美国更麻烦，才回战场的吧。毕竟那里才是他擅长的地方。</p><p>封面很素气。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170107-billytext.JPG" alt="book"></p><p>读到这一句的时候惊心动魄。<br>人生大部分时间是慵懒而得过且过的，也许某天出现了一些酸甜苦辣，但往往第二天就淡了，最终变成索然无味的一团。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170107-billybook.jpg" alt="txt"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;一个普通人的内心世界&lt;/p&gt;
+&lt;p&gt;和1900一样，待在家里、待在美国更麻烦，才回战场的吧。毕竟那里才是他擅长的地方。&lt;/p&gt;
+&lt;p&gt;封面很素气。&lt;br&gt;&lt;img src=&quot;http://7xrjai.com1.z0.glb.clouddn.com/20170107-bil
+      
+    
+    </summary>
+    
+      <category term="读书" scheme="https://youngspring1.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+    
+    
+      <category term="小说" scheme="https://youngspring1.github.io/tags/%E5%B0%8F%E8%AF%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习的数学基础02－条件概率和逆条件概率</title>
+    <link href="https://youngspring1.github.io/2016/2016-12-20-ml02-bayes/"/>
+    <id>https://youngspring1.github.io/2016/2016-12-20-ml02-bayes/</id>
+    <published>2016-12-20T06:43:37.000Z</published>
+    <updated>2017-10-15T12:56:16.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>样本空间<br>最需要搞清楚的就是什么是你的样本空间。我们通过两个非常相似然而及其容易混淆的例子来说明。   </p><p>条件概率公式<br>A条件下，发生B的概率。</p><p>乘法公式<br>条件概率的变形</p><p>全概率公式</p><p>逆条件概率（贝叶斯公式）</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;样本空间&lt;br&gt;最需要搞清楚的就是什么是你的样本空间。我们通过两个非常相似然而及其容易混淆的例子来说明。   &lt;/p&gt;
+&lt;p&gt;条件概率公式&lt;br&gt;A条件下，发生B的概率。&lt;/p&gt;
+&lt;p&gt;乘法公式&lt;br&gt;条件概率的变形&lt;/p&gt;
+&lt;p&gt;全概率公式&lt;/p&gt;
+&lt;p&gt;逆条件概率（贝叶
+      
+    
+    </summary>
+    
+      <category term="机器学习的数学基础" scheme="https://youngspring1.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="概率" scheme="https://youngspring1.github.io/tags/%E6%A6%82%E7%8E%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习的数学基础01－概率与上帝视角</title>
+    <link href="https://youngspring1.github.io/2016/2016-12-20-ml01-prob/"/>
+    <id>https://youngspring1.github.io/2016/2016-12-20-ml01-prob/</id>
+    <published>2016-12-20T01:57:36.000Z</published>
+    <updated>2017-10-15T12:56:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>现在无比流行的机器学习，其实对大量数据进行统计，计算其主要特征。以前叫做“统计学习”，倒是非常明确地说出了它的本质，其实就是统计；然后在计算时候呢，会涉及到一些代数的知识。这个专栏就按照自己的理解，一点点地讲些肤浅的数学基础。<br>这次就说说概率吧。</p><p>最常听到的概率问题就是，明天有40%的概率会下雨。那么应该如何理解呢？因为40% &lt; 50% ，所以明天不会下雨吗？想知道40%的含义，我们就得知道概率是如何算出来的。拿天气预报作为例子，天气预报员会在电脑里模拟出当前的天气状况，然后加入可能的影响参数，这些参数会有不同的取值，这些取值的不同，就会导致模拟的明天的天气状况不同。假如我们模拟了10000种不同的取值，有4000次电脑中的“明天”下雨了，另外6000次没有下雨，那么就得到结论“明天有40%的概率会下雨”。<br>也就是说，概率就是一个数（三声）数（四声）的结果。正经地讲，进行足够多次的互不影响的实验，统计这些实验的结果的数量，其占总数的比例就是概率。<br>电脑能够模拟出多次互不影响的实验，可是要我们在现实生活中进行足够多次的实验，那是很麻烦的。这是我们需要从上帝视角来看待这些实验，假设我们是上帝，能够观测各个平行世界中的实验，就能比较直观的理解概率的真正内涵了。</p><p>题外话：“机器学习”真是个非常投机取巧的名字，搞得很多外行人以为只要有台机器就可以学习了。实际上这是建立在大量数据，以及数学运算的基础上的。人工智能，有人做苦工才会带来智能，并不是像科幻片那样，想到就能做到。统计和代数的知识早就成熟了，机器学习以前没有流行，主要是因为人类还没攒下足够多的数据。   </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;现在无比流行的机器学习，其实对大量数据进行统计，计算其主要特征。以前叫做“统计学习”，倒是非常明确地说出了它的本质，其实就是统计；然后在计算时候呢，会涉及到一些代数的知识。这个专栏就按照自己的理解，一点点地讲些肤浅的数学基础。&lt;br&gt;这次就说说概率吧。&lt;/p&gt;
+&lt;p&gt;最常听
+      
+    
+    </summary>
+    
+      <category term="机器学习的数学基础" scheme="https://youngspring1.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="概率" scheme="https://youngspring1.github.io/tags/%E6%A6%82%E7%8E%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>今年都没看赛车</title>
+    <link href="https://youngspring1.github.io/2016/2016-11-27-f1/"/>
+    <id>https://youngspring1.github.io/2016/2016-11-27-f1/</id>
+    <published>2016-11-27T07:14:17.000Z</published>
+    <updated>2017-10-15T12:56:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天F1最后一站。突然发现这个赛季都没有看赛车，也没有感觉失去了什么。以前那么热衷的运动赛事，NBA、赛车，就不知不觉的远离了。变化这么悄然无声的发生了，真不敢轻易说一辈子。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今天F1最后一站。突然发现这个赛季都没有看赛车，也没有感觉失去了什么。以前那么热衷的运动赛事，NBA、赛车，就不知不觉的远离了。变化这么悄然无声的发生了，真不敢轻易说一辈子。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="赛车" scheme="https://youngspring1.github.io/tags/%E8%B5%9B%E8%BD%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>比拼每年读多少书是没有意义的</title>
+    <link href="https://youngspring1.github.io/2016/2016-11-18-books/"/>
+    <id>https://youngspring1.github.io/2016/2016-11-18-books/</id>
+    <published>2016-11-18T02:40:17.000Z</published>
+    <updated>2017-10-15T12:55:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今年把所有读的书都摞成一叠，看上去还真挺多的。<br>但是顺着书脊一本一本扫过去，大部分以后大概都不会再翻开了。</p><p>读的大部分书是消遣，这个层次和看电影、吃美食本质上并没有太大的区别。事实上，我是在消费别人创造的内容，并不值得炫耀。自己创造出来的产物，才是更有价值的东西。希望明年可以读更少的书，但是其中让自己愿意再读几遍的书能够更多。</p><p>反正我家也放不下更多的书了。摊手</p><p>总之，不要因为读书、或者读什么样的书而产生优越感。这些不算。</p><p><img src="http://7xrjai.com1.z0.glb.clouddn.com/IMG_0269.JPG" alt="aa"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今年把所有读的书都摞成一叠，看上去还真挺多的。&lt;br&gt;但是顺着书脊一本一本扫过去，大部分以后大概都不会再翻开了。&lt;/p&gt;
+&lt;p&gt;读的大部分书是消遣，这个层次和看电影、吃美食本质上并没有太大的区别。事实上，我是在消费别人创造的内容，并不值得炫耀。自己创造出来的产物，才是更有价
+      
+    
+    </summary>
+    
+      <category term="读书" scheme="https://youngspring1.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+    
+    
+      <category term="读书" scheme="https://youngspring1.github.io/tags/%E8%AF%BB%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>神剧 西部世界 westworld</title>
+    <link href="https://youngspring1.github.io/2016/2016-11-15-westworld/"/>
+    <id>https://youngspring1.github.io/2016/2016-11-15-westworld/</id>
+    <published>2016-11-15T05:53:12.000Z</published>
+    <updated>2017-10-15T12:55:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>本季神剧 西部世界，渐入佳境。</p><p>-The only thing I had when I was a kid were books. I used to live in them. I used to go to sleep dreaming I’d wake up inside one of them, ‘cause they had meaning. This place, this is like I woke up inside one of those stories. I guess I just wanna find out what it means.</p><p>-I don’t wanna be in a story. All O want is to not look forward or back. I just wanna be … in the moment I’m in.</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;本季神剧 西部世界，渐入佳境。&lt;/p&gt;
+&lt;p&gt;-The only thing I had when I was a kid were books. I used to live in them. I used to go to sleep dreaming I’d wake
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="west world" scheme="https://youngspring1.github.io/tags/west-world/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>无知的游历</title>
+    <link href="https://youngspring1.github.io/2016/2016-11-07-travellor/"/>
+    <id>https://youngspring1.github.io/2016/2016-11-07-travellor/</id>
+    <published>2016-11-07T03:56:32.000Z</published>
+    <updated>2017-10-15T12:55:47.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今年读了几本书，是作者在中国生活、游历的记录。<br>和两位作者的观点一样，我觉得游历的重点，自然是遇到的人和他们的故事。<br>所以以后出去玩要在一个地方待久点，和当地人一起生活，不要匆匆忙忙只做游客。   </p><p>PS 不要比读过多少书，要看读过的书中，有多少还愿意再读的。这部分才是真的该买的书。</p><hr><p>彼得•海斯勒 <a href="https://www.amazon.cn/江城-彼得•海斯勒/dp/B0074E7CVU/ref=sr_1_1?ie=UTF8&amp;qid=1478519919&amp;sr=8-1&amp;keywords=江城" target="_blank" rel="external">江城</a><br>彼得•海斯勒 <a href="https://www.amazon.cn/寻路中国-从乡村到工厂的自驾之旅-彼得•海斯勒/dp/B004IJO942/ref=sr_1_1?ie=UTF8&amp;qid=1478519980&amp;sr=8-1&amp;keywords=寻路中国" target="_blank" rel="external">寻路中国</a><br>比尔•波特 <a href="https://www.amazon.cn/dp/B00FCT5Q1W/ref=tmm_pap_swatch_0?_encoding=UTF8&amp;qid=1478520079&amp;sr=8-3" target="_blank" rel="external">丝绸之路</a><br>比尔•波特 <a href="https://www.amazon.cn/图书/dp/B00MO05IP6/ref=sr_1_1?ie=UTF8&amp;qid=1478520167&amp;sr=8-1&amp;keywords=黄河之旅" target="_blank" rel="external">黄河之旅</a><br>比尔•波特 <a href="https://www.amazon.cn/禅的行囊-比尔·波特/dp/B00KLUX2LS/ref=sr_1_1?ie=UTF8&amp;qid=1478520254&amp;sr=8-1&amp;keywords=禅的行囊" target="_blank" rel="external">禅的行囊</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今年读了几本书，是作者在中国生活、游历的记录。&lt;br&gt;和两位作者的观点一样，我觉得游历的重点，自然是遇到的人和他们的故事。&lt;br&gt;所以以后出去玩要在一个地方待久点，和当地人一起生活，不要匆匆忙忙只做游客。   &lt;/p&gt;
+&lt;p&gt;PS 不要比读过多少书，要看读过的书中，有多少还
+      
+    
+    </summary>
+    
+      <category term="读书" scheme="https://youngspring1.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+    
+    
+      <category term="旅行" scheme="https://youngspring1.github.io/tags/%E6%97%85%E8%A1%8C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一些想法</title>
+    <link href="https://youngspring1.github.io/2016/2016-10-23-thoughts/"/>
+    <id>https://youngspring1.github.io/2016/2016-10-23-thoughts/</id>
+    <published>2016-10-23T06:37:46.000Z</published>
+    <updated>2017-10-15T12:55:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>如果能看清楚，自己成功／失败的原因，有多少是因为时势，有多少是因为自己所处的平台，有多少是自己的努力，那真是相当睿智啊。</p><p>活着，应该压抑享乐的天性，过着苦行僧般的生活；还是应该尽情释放自己，及时行乐？</p><p>如果眼光能看到未来几年的发展趋势多好啊。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;如果能看清楚，自己成功／失败的原因，有多少是因为时势，有多少是因为自己所处的平台，有多少是自己的努力，那真是相当睿智啊。&lt;/p&gt;
+&lt;p&gt;活着，应该压抑享乐的天性，过着苦行僧般的生活；还是应该尽情释放自己，及时行乐？&lt;/p&gt;
+&lt;p&gt;如果眼光能看到未来几年的发展趋势多好啊。&lt;/
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="感受" scheme="https://youngspring1.github.io/tags/%E6%84%9F%E5%8F%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>三只流浪猫的丛林法则</title>
+    <link href="https://youngspring1.github.io/2016/2016-10-16-cat/"/>
+    <id>https://youngspring1.github.io/2016/2016-10-16-cat/</id>
+    <published>2016-10-15T21:51:55.000Z</published>
+    <updated>2017-10-15T12:55:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>小区有很多流浪猫。有只猫妈妈常常在我们楼道串门儿。<br>今天的主角就是这只猫妈妈和她的两只子女。一只黑灰色花纹，就叫小灰吧；另外一只黄色花纹，脖子上有一道白毛，就像婴儿的口水巾。。。就叫小黄吧，小黄胆子最小，每次看到它都是探出半个脑袋在看我。   </p><p>我中午点的披萨多了一块吃不下，放门口了。回想起来还是第一次喂猫。<br>首先过来的是猫妈妈，它只吃馅儿。旁边馋死小灰，喵喵的叫；而小黄都不敢走近过来闻个味儿。小灰馋得受不了，就上来，结果就被妈妈揍，消停一会儿，再过来，再被揍。（PS妈妈出手可快了，还有声音）这样被揍了三四回。猫妈妈终于把馅儿吃完了，走开，再揍一次小灰，去洗脸。   </p><p>接着过来的是小灰，终于吃上了“面饼”，一边吃还一边呜呜的叫。可是猫是没有撕咬能力的，只能一只爪子按着饼，一边啃，或者更确切的说，是“刮”。这时候小黄敢过来闻味儿了，但是还是不敢靠近，也不敢叫。小灰把面饼吃完了，走开，去洗脸。   </p><p>最后，小黄只剩下硬梆梆的边儿了，它不敢在我面前吃（刚刚吃饱的两位都是在我面前吃的），叼走去远处吃了。吃完跑过来舔地上的屑。   </p><p>平时看流浪猫喵喵叫，感觉很萌，没有意料到争夺食物时是这样残忍。要生存就会有政治。流浪猫会给楼道环境和小区生态带来巨大的影响，反正我以后是不会喂流浪猫了，   </p><p>PS今天终于弄明白楼道里经常有“嘤嘤嘤”的奶猫叫声是从哪里来的了。猫妈妈在水表箱了又生了一窝崽。。。   </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;小区有很多流浪猫。有只猫妈妈常常在我们楼道串门儿。&lt;br&gt;今天的主角就是这只猫妈妈和她的两只子女。一只黑灰色花纹，就叫小灰吧；另外一只黄色花纹，脖子上有一道白毛，就像婴儿的口水巾。。。就叫小黄吧，小黄胆子最小，每次看到它都是探出半个脑袋在看我。   &lt;/p&gt;
+&lt;p&gt;我中午点
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="猫" scheme="https://youngspring1.github.io/tags/%E7%8C%AB/"/>
+    
+  </entry>
+  
+</feed>
