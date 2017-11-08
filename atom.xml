@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://youngspring1.github.io/"/>
-  <updated>2017-10-20T06:30:03.000Z</updated>
+  <updated>2017-11-08T08:28:39.000Z</updated>
   <id>https://youngspring1.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>python里面if __name__ == &quot;__main__&quot;:是干什么的</title>
+    <link href="https://youngspring1.github.io/2017/2017-11-08-python-name-main/"/>
+    <id>https://youngspring1.github.io/2017/2017-11-08-python-name-main/</id>
+    <published>2017-11-08T08:11:39.000Z</published>
+    <updated>2017-11-08T08:28:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>又来骗更啦。<br>python里面if __name__ == “__main__“:是干什么的？<br>今天看到一个答案<a href="https://stackoverflow.com/questions/419163/what-does-if-name-main-do" target="_blank" rel="external">第二个回答</a>讲得很清楚，竟然不是最高赞。我简单搬运一下。   </p><p>简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。   </p><ul><li>如果是直接运行当前这个python文件，那么变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">* 如果是从其他地方调用当前这个python文件，那么变量不是```&quot;\_\_main\_\_&quot;```，不会运行if代码块中的内容。</div><div class="line"></div><div class="line">如果讲不清楚，直接看代码吧。   </div><div class="line">第一个文件</div><div class="line"></div><div class="line"># file one.py</div><div class="line">def func():</div><div class="line">    print(&quot;func() in one.py&quot;)</div><div class="line"></div><div class="line">print(&quot;top-level in one.py&quot;)</div><div class="line"></div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    print(&quot;one.py is being run directly&quot;)</div><div class="line">else:</div><div class="line">    print(&quot;one.py is being imported into another module&quot;)</div><div class="line"></div><div class="line">第二个文件</div><div class="line"></div><div class="line"># file two.py</div><div class="line">import one</div><div class="line"></div><div class="line">print(&quot;top-level in two.py&quot;)</div><div class="line">one.func()</div><div class="line"></div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    print(&quot;two.py is being run directly&quot;)</div><div class="line">else:</div><div class="line">    print(&quot;two.py is being imported into another module&quot;)</div><div class="line"></div><div class="line"></div><div class="line">如果运行```python one.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">top-level in one.py</div><div class="line">one.py is being run directly</div><div class="line"></div><div class="line">如果运行```python two.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">top-level in one.py</div><div class="line">one.py is being imported into another module</div><div class="line">top-level in two.py</div><div class="line">func() in one.py</div><div class="line">two.py is being run directly</div><div class="line"></div><div class="line">当one被import的时候，变量```\_\_name\_\_```的值不是```&quot;\_\_main\_\_&quot;```而是```&quot;one&quot;</div></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;又来骗更啦。&lt;br&gt;python里面if __name__ == “__main__“:是干什么的？&lt;br&gt;今天看到一个答案&lt;a href=&quot;https://stackoverflow.com/questions/419163/what-does-if-name-main-
+      
+    
+    </summary>
+    
+      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+    
+    
+      <category term="python" scheme="https://youngspring1.github.io/tags/python/"/>
+    
+  </entry>
   
   <entry>
     <title>用 Python 解析 Excel 发现的小坑</title>
@@ -515,32 +540,6 @@
     
     
       <category term="感受" scheme="https://youngspring1.github.io/tags/%E6%84%9F%E5%8F%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>三只流浪猫的丛林法则</title>
-    <link href="https://youngspring1.github.io/2016/2016-10-16-cat/"/>
-    <id>https://youngspring1.github.io/2016/2016-10-16-cat/</id>
-    <published>2016-10-15T21:51:55.000Z</published>
-    <updated>2017-10-15T12:55:34.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>小区有很多流浪猫。有只猫妈妈常常在我们楼道串门儿。<br>今天的主角就是这只猫妈妈和她的两只子女。一只黑灰色花纹，就叫小灰吧；另外一只黄色花纹，脖子上有一道白毛，就像婴儿的口水巾。。。就叫小黄吧，小黄胆子最小，每次看到它都是探出半个脑袋在看我。   </p><p>我中午点的披萨多了一块吃不下，放门口了。回想起来还是第一次喂猫。<br>首先过来的是猫妈妈，它只吃馅儿。旁边馋死小灰，喵喵的叫；而小黄都不敢走近过来闻个味儿。小灰馋得受不了，就上来，结果就被妈妈揍，消停一会儿，再过来，再被揍。（PS妈妈出手可快了，还有声音）这样被揍了三四回。猫妈妈终于把馅儿吃完了，走开，再揍一次小灰，去洗脸。   </p><p>接着过来的是小灰，终于吃上了“面饼”，一边吃还一边呜呜的叫。可是猫是没有撕咬能力的，只能一只爪子按着饼，一边啃，或者更确切的说，是“刮”。这时候小黄敢过来闻味儿了，但是还是不敢靠近，也不敢叫。小灰把面饼吃完了，走开，去洗脸。   </p><p>最后，小黄只剩下硬梆梆的边儿了，它不敢在我面前吃（刚刚吃饱的两位都是在我面前吃的），叼走去远处吃了。吃完跑过来舔地上的屑。   </p><p>平时看流浪猫喵喵叫，感觉很萌，没有意料到争夺食物时是这样残忍。要生存就会有政治。流浪猫会给楼道环境和小区生态带来巨大的影响，反正我以后是不会喂流浪猫了，   </p><p>PS今天终于弄明白楼道里经常有“嘤嘤嘤”的奶猫叫声是从哪里来的了。猫妈妈在水表箱了又生了一窝崽。。。   </p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;小区有很多流浪猫。有只猫妈妈常常在我们楼道串门儿。&lt;br&gt;今天的主角就是这只猫妈妈和她的两只子女。一只黑灰色花纹，就叫小灰吧；另外一只黄色花纹，脖子上有一道白毛，就像婴儿的口水巾。。。就叫小黄吧，小黄胆子最小，每次看到它都是探出半个脑袋在看我。   &lt;/p&gt;
-&lt;p&gt;我中午点
-      
-    
-    </summary>
-    
-      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
-    
-    
-      <category term="猫" scheme="https://youngspring1.github.io/tags/%E7%8C%AB/"/>
     
   </entry>
   

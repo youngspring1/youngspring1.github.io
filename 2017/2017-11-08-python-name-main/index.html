@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>MIT:The Analytics Edge 笔记05－文本分析 | 行行重行行</title>
+  <title>python里面if __name__ == &#34;__main__&#34;:是干什么的 | 行行重行行</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="MIT课程 15.071x The Analytics Edge 第五单元的学习记录。  Text Analytics第五单元的主题是文本分析。 1.理论Bag of Words一段文本，可以看作是多个单词的集合。统计这些单词的特征，可以归纳文本的倾向。    首先，我们需要对文本进行下面这几步预处理：     clean up irregularities(统一大小写) remove punct">
-<meta name="keywords" content="R">
+  <meta name="description" content="又来骗更啦。python里面if __name__ == “__main__“:是干什么的？今天看到一个答案第二个回答讲得很清楚，竟然不是最高赞。我简单搬运一下。    简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。     如果是直接运行当前这个python文件，那么变量12345678910111213141">
+<meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MIT:The Analytics Edge 笔记05－文本分析">
-<meta property="og:url" content="https://youngspring1.github.io/2016/2016-05-10-R05/index.html">
+<meta property="og:title" content="python里面if __name__ == &quot;__main__&quot;:是干什么的">
+<meta property="og:url" content="https://youngspring1.github.io/2017/2017-11-08-python-name-main/index.html">
 <meta property="og:site_name" content="行行重行行">
-<meta property="og:description" content="MIT课程 15.071x The Analytics Edge 第五单元的学习记录。  Text Analytics第五单元的主题是文本分析。 1.理论Bag of Words一段文本，可以看作是多个单词的集合。统计这些单词的特征，可以归纳文本的倾向。    首先，我们需要对文本进行下面这几步预处理：     clean up irregularities(统一大小写) remove punct">
-<meta property="og:updated_time" content="2017-10-15T12:53:24.000Z">
+<meta property="og:description" content="又来骗更啦。python里面if __name__ == “__main__“:是干什么的？今天看到一个答案第二个回答讲得很清楚，竟然不是最高赞。我简单搬运一下。    简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。     如果是直接运行当前这个python文件，那么变量12345678910111213141">
+<meta property="og:updated_time" content="2017-11-08T08:28:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MIT:The Analytics Edge 笔记05－文本分析">
-<meta name="twitter:description" content="MIT课程 15.071x The Analytics Edge 第五单元的学习记录。  Text Analytics第五单元的主题是文本分析。 1.理论Bag of Words一段文本，可以看作是多个单词的集合。统计这些单词的特征，可以归纳文本的倾向。    首先，我们需要对文本进行下面这几步预处理：     clean up irregularities(统一大小写) remove punct">
+<meta name="twitter:title" content="python里面if __name__ == &quot;__main__&quot;:是干什么的">
+<meta name="twitter:description" content="又来骗更啦。python里面if __name__ == “__main__“:是干什么的？今天看到一个答案第二个回答讲得很清楚，竟然不是最高赞。我简单搬运一下。    简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。     如果是直接运行当前这个python文件，那么变量12345678910111213141">
   
     <link rel="alternate" href="/atom.xml" title="行行重行行" type="application/atom+xml">
   
@@ -64,14 +64,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2016-05-10-R05" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2017-11-08-python-name-main" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/2016-05-10-R05/" class="article-date">
-  <time datetime="2016-05-14T07:19:28.000Z" itemprop="datePublished">2016-05-14</time>
+    <a href="/2017/2017-11-08-python-name-main/" class="article-date">
+  <time datetime="2017-11-08T08:11:39.000Z" itemprop="datePublished">2017-11-08</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
+    <a class="article-category-link" href="/categories/新知/">新知</a>
   </div>
 
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MIT:The Analytics Edge 笔记05－文本分析
+      python里面if __name__ == &#34;__main__&#34;:是干什么的
     </h1>
   
 
@@ -90,145 +90,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="external">15.071x The Analytics Edge</a> 第五单元的学习记录。</p>
-<hr>
-<h2 id="Text-Analytics"><a href="#Text-Analytics" class="headerlink" title="Text Analytics"></a>Text Analytics</h2><p>第五单元的主题是文本分析。</p>
-<h3 id="1-理论"><a href="#1-理论" class="headerlink" title="1.理论"></a>1.理论</h3><h4 id="Bag-of-Words"><a href="#Bag-of-Words" class="headerlink" title="Bag of Words"></a>Bag of Words</h4><p>一段文本，可以看作是多个单词的集合。<br>统计这些单词的特征，可以归纳文本的倾向。   </p>
-<p>首先，我们需要对文本进行下面这几步预处理：   </p>
-<ol>
-<li>clean up irregularities(统一大小写)</li>
-<li>remove punctuations(去掉标点或者特殊符号)</li>
-<li>remove stop words(去掉the／who／is／do这些单词)</li>
-<li>stemming(获取词干，也就是去除动词变形，比如agrued，agrues，agruing，都变成agru)</li>
-</ol>
-<p>然后，我们统计文本中剩下这些单词的出现次数，生成一个矩阵，类似这样的格式：</p>
-<table>
-<thead>
-<tr>
-<th>text num</th>
-<th>word1</th>
-<th>word2</th>
-<th>word3</th>
-<th>…</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>text1</td>
-<td>2</td>
-<td>5</td>
-<td>0</td>
-<td>…</td>
-</tr>
-<tr>
-<td>text2</td>
-<td>0</td>
-<td>3</td>
-<td>4</td>
-<td>…</td>
-</tr>
-<tr>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-</tr>
-</tbody>
-</table>
-<p>在实际中，生成的矩阵是个稀疏矩阵（有很多0），我们只选取出现次数比较多的，忽略那些不常见的单词。<br>比如选取至少出现过20次的单词，其他的忽略。<br>这样的矩阵，每列的列名就是自变量，矩阵的值就用做自变量的取值。   </p>
-<p>最后，手动添加一列，作为因变量，这样就可以根据这些单词的出现次数，预测因变量的取值了。<br>所以，这一列因变量的数值如何定义，它的实际意义是什么，其实是比较复杂的。   </p>
-<p>在课程的例子中，它定义了”好感度”，并且只有下面五种取值，{-2,-1,0,1,2}，最终要建立模型预测哪些文本暗示发推的人对苹果公司很没有好感（好感度是－2）。最终发现，文本中含有”hate”,”wtf”的情况，推主对苹果公司很没有好感。😄</p>
-<h4 id="IBM-Watson"><a href="#IBM-Watson" class="headerlink" title="IBM Watson"></a>IBM Watson</h4><p>Watson的工作步骤是这样的：</p>
-<ol>
-<li>Find LAT<br> 首先得搞明白问题是什么，也就是要找到问题的LAT(Lexial Answer Type)。<br> 问题”Mozart’s last and perhaps most powerful symphony shares its name with this planet.”的LAT是”this planet”，因为把答案”Jupiter”替换进原来的句子，<br> “Mozart’s last and perhaps most powerful symphony shares its name with Jupiter”<br> 仍然是说得通的。</li>
-<li>Generate Hypothesis<br> 在数据库中搜索上百个候选答案，替换掉LAT，生成很多假说。</li>
-<li>Score Hypothesis<br> 对每个假说，进行文本搜索，可以将搜索的到的结果数目作为评分。</li>
-<li>Rank Hypothesis<br> 对评分进行排序，选取评分最高的那个作为答案。</li>
-</ol>
-<h3 id="2-建模和评估"><a href="#2-建模和评估" class="headerlink" title="2.建模和评估"></a>2.建模和评估</h3><p>预处理</p>
-<pre><code># Read in the data
-# 不要把文本转化为因子
-tweets = read.csv(&quot;tweets.csv&quot;, stringsAsFactors=FALSE)
+        <p>又来骗更啦。<br>python里面if __name__ == “__main__“:是干什么的？<br>今天看到一个答案<a href="https://stackoverflow.com/questions/419163/what-does-if-name-main-do" target="_blank" rel="external">第二个回答</a>讲得很清楚，竟然不是最高赞。我简单搬运一下。   </p>
+<p>简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。   </p>
+<ul>
+<li>如果是直接运行当前这个python文件，那么变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">* 如果是从其他地方调用当前这个python文件，那么变量不是```&quot;\_\_main\_\_&quot;```，不会运行if代码块中的内容。</div><div class="line"></div><div class="line">如果讲不清楚，直接看代码吧。   </div><div class="line">第一个文件</div><div class="line"></div><div class="line">	# file one.py</div><div class="line">	def func():</div><div class="line">	    print(&quot;func() in one.py&quot;)</div><div class="line">	</div><div class="line">	print(&quot;top-level in one.py&quot;)</div><div class="line">	</div><div class="line">	if __name__ == &quot;__main__&quot;:</div><div class="line">	    print(&quot;one.py is being run directly&quot;)</div><div class="line">	else:</div><div class="line">	    print(&quot;one.py is being imported into another module&quot;)</div><div class="line"></div><div class="line">第二个文件</div><div class="line"></div><div class="line">	# file two.py</div><div class="line">	import one</div><div class="line">	</div><div class="line">	print(&quot;top-level in two.py&quot;)</div><div class="line">	one.func()</div><div class="line">	</div><div class="line">	if __name__ == &quot;__main__&quot;:</div><div class="line">	    print(&quot;two.py is being run directly&quot;)</div><div class="line">	else:</div><div class="line">	    print(&quot;two.py is being imported into another module&quot;)</div><div class="line"></div><div class="line"></div><div class="line">如果运行```python one.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">	top-level in one.py</div><div class="line">	one.py is being run directly</div><div class="line"></div><div class="line">如果运行```python two.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">	top-level in one.py</div><div class="line">	one.py is being imported into another module</div><div class="line">	top-level in two.py</div><div class="line">	func() in one.py</div><div class="line">	two.py is being run directly</div><div class="line">	</div><div class="line">当one被import的时候，变量```\_\_name\_\_```的值不是```&quot;\_\_main\_\_&quot;```而是```&quot;one&quot;</div></pre></td></tr></table></figure></li>
+</ul>
 
-# Create dependent variable
-tweets$Negative = as.factor(tweets$Avg &lt;= -1)
-
-# Install new packages
-install.packages(&quot;tm&quot;)
-library(tm)
-install.packages(&quot;SnowballC&quot;)
-library(SnowballC)
-
-# Create corpus
-corpus = Corpus(VectorSource(tweets$Tweet))
-
-# Convert to lower-case
-corpus = tm_map(corpus, tolower)
-corpus = tm_map(corpus, PlainTextDocument)
-
-# Remove punctuation
-corpus = tm_map(corpus, removePunctuation)
-
-# Remove stopwords and apple
-corpus = tm_map(corpus, removeWords, c(&quot;apple&quot;, stopwords(&quot;english&quot;)))
-
-# Stem document 
-corpus = tm_map(corpus, stemDocument)
-</code></pre><p>统计，生成单词出现次数的矩阵</p>
-<pre><code># Create matrix
-frequencies = DocumentTermMatrix(corpus)
-
-# Look at matrix 
-inspect(frequencies[1000:1005,505:515])
-
-# Check for sparsity
-# 找出出现次数至少有20次的单词
-findFreqTerms(frequencies, lowfreq=20)
-
-# 忽略99.5%的稀疏数据，只选取0.5%作为有效数据
-# Remove sparse terms 
-sparse = removeSparseTerms(frequencies, 0.995)
-
-# Convert to a data frame
-tweetsSparse = as.data.frame(as.matrix(sparse))
-# Make all variable names R-friendly
-colnames(tweetsSparse) = make.names(colnames(tweetsSparse))
-
-# Add dependent variable
-tweetsSparse$Negative = tweets$Negative
-</code></pre><p>建模和评估</p>
-<pre><code># Split the data
-library(caTools)
-set.seed(123)
-split = sample.split(tweetsSparse$Negative, SplitRatio = 0.7)
-trainSparse = subset(tweetsSparse, split==TRUE)
-testSparse = subset(tweetsSparse, split==FALSE)
-
-# Build a CART model
-library(rpart)
-library(rpart.plot)
-tweetCART = rpart(Negative ~ ., data=trainSparse, method=&quot;class&quot;)
-# Evaluate the performance of the model
-predictCART = predict(tweetCART, newdata=testSparse, type=&quot;class&quot;)
-table(testSparse$Negative, predictCART)
-
-
-# Random forest model
-library(randomForest)
-set.seed(123)
-tweetRF = randomForest(Negative ~ ., data=trainSparse)
-# Make predictions:
-predictRF = predict(tweetRF, newdata=testSparse)
-table(testSparse$Negative, predictRF)
-</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R05/" data-id="cj9qs9bw40048pfty3vnvbmgz" class="article-share-link">Partager</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-11-08-python-name-main/" data-id="cj9qs9bsx000mpftyt0h7zptd" class="article-share-link">Partager</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -236,19 +110,10 @@ table(testSparse$Negative, predictRF)
     
 <nav id="article-nav">
   
-    <a href="/2016/2016-05-18-R06/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
-      <div class="article-nav-title">
-        
-          MIT:The Analytics Edge 笔记06－集群
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/2016-05-10-zuozhuan/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/2017-10-20-parse-date-in-xlsx/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">眼前：漫游在《左传》的世界</div>
+      <div class="article-nav-title">用 Python 解析 Excel 发现的小坑</div>
     </a>
   
 </nav>
