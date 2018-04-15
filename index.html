@@ -53,7 +53,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
@@ -64,14 +64,14 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-2017-11-08-python-name-main" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-2018-04-15-tour-de-hyrule" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/2017-11-08-python-name-main/" class="article-date">
-  <time datetime="2017-11-08T08:11:39.000Z" itemprop="datePublished">2017-11-08</time>
+    <a href="/2018/2018-04-15-tour-de-hyrule/" class="article-date">
+  <time datetime="2018-04-15T01:46:17.000Z" itemprop="datePublished">2018-04-15</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/新知/">新知</a>
+    <a class="article-category-link" href="/categories/生活/">生活</a>
   </div>
 
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/2017-11-08-python-name-main/">python里面if __name__ == &#34;__main__&#34;:是干什么的</a>
+      <a class="article-title" href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
     </h1>
   
 
@@ -90,44 +90,30 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>又来骗更啦。<br>python里面 if __name__ == “__main__“: 是干什么的？   </p>
-<p>今天看到一个答案<a href="https://stackoverflow.com/questions/419163/what-does-if-name-main-do" target="_blank" rel="external">第二个回答</a>讲得很清楚，竟然不是最高赞。我简单搬运一下。   </p>
-<p>简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。   </p>
-<ul>
-<li>如果是直接运行当前这个python文件，那么变量 __name__会被设置为”__main__“，那么代码运行到这个if语句的时候，可以继续运行if代码块中的内容。   </li>
-<li>如果是从其他地方调用当前这个python文件，那么变量不是 “__main__“，不会运行if代码块中的内容。</li>
-</ul>
-<p>如果讲不清楚，直接看代码吧。<br>第一个文件</p>
-<pre><code># file one.py
-def func():
-    print(&quot;func() in one.py&quot;)
-
-print(&quot;top-level in one.py&quot;)
-
-if __name__ == &quot;__main__&quot;:
-    print(&quot;one.py is being run directly&quot;)
-else:
-    print(&quot;one.py is being imported into another module&quot;)
-</code></pre><p>第二个文件</p>
-<pre><code># file two.py
-import one
-
-print(&quot;top-level in two.py&quot;)
-one.func()
-
-if __name__ == &quot;__main__&quot;:
-    print(&quot;two.py is being run directly&quot;)
-else:
-    print(&quot;two.py is being imported into another module&quot;)
-</code></pre><p>如果运行<figure class="highlight python"><figcaption><span>one.py```   </span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">结果会是</div><div class="line"></div><div class="line">	top-level <span class="keyword">in</span> one.py</div><div class="line">	one.py <span class="keyword">is</span> being run directly</div><div class="line"></div><div class="line">如果运行```python two.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">	top-level <span class="keyword">in</span> one.py</div><div class="line">	one.py <span class="keyword">is</span> being imported into another module</div><div class="line">	top-level <span class="keyword">in</span> two.py</div><div class="line">	func() <span class="keyword">in</span> one.py</div><div class="line">	two.py <span class="keyword">is</span> being run directly</div><div class="line">	</div><div class="line">当one被<span class="keyword">import</span>的时候，变量```\_\_name\_\_```的值不是```<span class="string">"\_\_main\_\_"</span>```而是```<span class="string">"one"</span></div></pre></td></tr></table></figure></p>
+        <p>#海拉鲁大陆旅行指南</p>
+<h3 id="海角"><a href="#海角" class="headerlink" title="海角"></a>海角</h3><p>乌洛克海角位于海拉鲁大陆最东南，本身就是一处悬崖，从这里可以眺望海上的潮起潮落、天空的云卷云舒。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/01-cape2.jpg" alt="cape2"><br>相对海拉鲁大陆其他地点，这里容易到达而且绝无妖怪打扰。如果在这里扎营，还可以观赏日出。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/01-cape1.jpg" alt="cape1"></p>
+<h3 id="阿卡莱海岸"><a href="#阿卡莱海岸" class="headerlink" title="阿卡莱海岸"></a>阿卡莱海岸</h3><p>又一处奇妙的海岸，沙滩蜿蜒成螺旋形，这便是马秋兹半岛，但是附近怪物众多，只适合在高处远望。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/02-beach4.jpg" alt="beach4"><br>阿卡莱海岸就是从马秋兹半岛开始，一直到大陆最北方的古代研究所，如果你厌倦了平坦的沙滩，不妨骑马沿着海岸旅行。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/02-beach2.jpg" alt="beach2"></p>
+<h3 id="阿卡莱高原"><a href="#阿卡莱高原" class="headerlink" title="阿卡莱高原"></a>阿卡莱高原</h3><p>在阿卡莱海岸的内侧，分布着一片片树林。一年四季都能保持着五彩斑斓的颜色，一眼看上去还以为到了秋天。然而美景中确暗藏着杀机，守护者、人马等顶级妖怪生活在这里。因此推荐在东阿卡莱驿站附近观赏，有飞翔伞的旅行者可以从火山或者阿卡莱之塔飞行观赏。</p>
+<p>塔林湿地<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/03-woods2.jpg" alt="woods2"><br>北阿卡莱平原<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/03-woods1.jpg" alt="woods1"></p>
+<h3 id="骷髅池塘"><a href="#骷髅池塘" class="headerlink" title="骷髅池塘"></a>骷髅池塘</h3><p>这里是怪物商人曾经的创业地，如今怪物商人已经将连锁店开满了海拉鲁大陆上各个村庄。看着骷髅池塘里盛开的异色花朵，大概也能想象怪物商人对妖怪有多么热爱了。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/04-monsterpool1.jpg" alt="monsterpool1"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/04-mounsterpool2.jpg" alt="monsterpool2"></p>
+<h3 id="克洛格森林"><a href="#克洛格森林" class="headerlink" title="克洛格森林"></a>克洛格森林</h3><p>克洛格森林中心，英雄取回传说之剑的地方，有一棵参天大树，占据了整个森林1/9的面积，如果有诀窍进入森林，一定记得爬树欣赏。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/05-forest1.jpg" alt="forest"></p>
+<h3 id="海布拉山北岳"><a href="#海布拉山北岳" class="headerlink" title="海布拉山北岳"></a>海布拉山北岳</h3><p>去海拉鲁大陆最北端的山上，深夜也许能看到极光和月亮同时出现。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/06-aurora1.jpg" alt="aurora1"><br>凌晨可以看见东方浮现的微光。然而等到白天又是大雪纷飞。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/06-aurora4.jpg" alt="aurora4"></p>
+<h3 id="被遗忘的雕像"><a href="#被遗忘的雕像" class="headerlink" title="被遗忘的雕像"></a>被遗忘的雕像</h3><p>在大陆边境，有一处巨型的雕像，依托山谷而建。<br>面无表情，脸上的细节早已风化在时光中，交叉双手，然而手中的大剑却出现在海拔更高的格鲁德山顶。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/09-statue2.jpg" alt="statue2"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/09-statue1.jpg" alt="statue1"></p>
+<h3 id="萨托利山"><a href="#萨托利山" class="headerlink" title="萨托利山"></a>萨托利山</h3><p>山上的湖边有一棵大树，跟克洛格森林中的那棵同样品种，不过稍小。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/08-lordmountain1.jpg" alt="lordmountain1"><br>每天凌晨山神和卢米会出现，放慢脚步不要吓到它们。山神出现温度会降低，注意保暖。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/08-lordmountain2.jpg" alt="lordmountain2"></p>
+<h3 id="卡尔萨谷"><a href="#卡尔萨谷" class="headerlink" title="卡尔萨谷"></a>卡尔萨谷</h3><p>恐怖组织易家队老巢的入口，从沙漠进来，通道突然变窄，周围的岩石在光线下明暗交错，简直照搬了美国羚羊峡谷。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/07-valley2.jpg" alt="valley2"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/07-valley1.jpg" alt="valley1"></p>
+<h3 id="山顶的湖"><a href="#山顶的湖" class="headerlink" title="山顶的湖"></a>山顶的湖</h3><p>位于南方卡尔山上的湖，是心的形状，传说这里可以找到真爱。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/10-lake2.jpg" alt="lake2"><br>然而位于艾波尼山上的湖，是心碎的形状，有一个懵逼的单身狗找错了地方，一直徘徊在这里。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/10-lake1.jpg" alt="lake1"></p>
+<h3 id="小渔村"><a href="#小渔村" class="headerlink" title="小渔村"></a>小渔村</h3><p>粗心的旅行者大概不会注意到，海底竟然有如此丰富的细节。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/11-fishvillage.jpg" alt="fishvillage"></p>
+<h3 id="龙"><a href="#龙" class="headerlink" title="龙"></a>龙</h3><p>在特定的地方，可以看到龙腾空飞过。<br>雷龙<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/12-dragon2.jpg" alt="dragon2"><br>冰龙<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/12-dragon1.jpg" alt="dragon1"></p>
+<h3 id="无论何地"><a href="#无论何地" class="headerlink" title="无论何地"></a>无论何地</h3><p>雨后，总是会遇见彩虹。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/13-rainbow1.jpg" alt="rainbow1"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/13-rainbow2.jpg" alt="rainbow2"><br>画框中的风景。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/14-huakuang.jpg" alt="image"></p>
+<h3 id="终"><a href="#终" class="headerlink" title="终"></a>终</h3><p>感谢任天堂<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/00-homepage.jpg" alt="zelda"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-11-08-python-name-main/" data-id="cj9qs9bsx000mpftyt0h7zptd" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2018/2018-04-15-tour-de-hyrule/" data-id="cjg0qm5ja0000yyw8sickybxi" class="article-share-link">Delen</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/游戏/">游戏</a></li></ul>
 
     </footer>
   </div>
@@ -204,7 +190,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-10-20-parse-date-in-xlsx/" data-id="cj9qs9bt4000vpftyg80qlv9i" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-10-20-parse-date-in-xlsx/" data-id="cjg0qm5ls001gyyw8jico0aqb" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Excel/">Excel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xlrd/">xlrd</a></li></ul>
@@ -259,7 +245,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-10-15-hexo/" data-id="cj9qs9bt2000spftyzs3w85tl" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-10-15-hexo/" data-id="cjg0qm5lo001fyyw8ozvmv3p3" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
@@ -303,7 +289,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-07-02-food/" data-id="cj9qs9bss000fpftyn6zb9qmh" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-07-02-food/" data-id="cjg0qm5jz000ayyw884tqvhrj" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/美食/">美食</a></li></ul>
@@ -357,7 +343,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-25-jizhi/" data-id="cj9qs9bsz000opfty57pxiieo" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-25-jizhi/" data-id="cjg0qm5k6000gyyw8k757cu8z" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
@@ -404,7 +390,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-DLmaterials/" data-id="cj9qs9bsu000ipftyzhjtaxh8" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-DLmaterials/" data-id="cjg0qm5jp0005yyw8fubz08i0" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li></ul>
@@ -461,7 +447,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-fromdaily/" data-id="cj9qs9bsl000apftyuk8yao0p" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-fromdaily/" data-id="cjg0qm5js0006yyw8yytrk5l3" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -518,7 +504,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-normalization/" data-id="cj9qs9bso000bpftymgzqiyyf" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-normalization/" data-id="cjg0qm5jw0009yyw8pgww3vu5" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/归一化/">归一化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据分析/">数据分析</a></li></ul>
@@ -564,7 +550,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-10-wonderwoman/" data-id="cj9qs9bse0005pftypiesz1we" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-10-wonderwoman/" data-id="cjg0qm5jn0004yyw8qnyje2ho" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/电影/">电影</a></li></ul>
@@ -612,7 +598,7 @@ macOS  : 1904-01-01T00:00:00
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-04-brief-history/" data-id="cj9qs9bsi0006pftyof6iskbb" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-04-brief-history/" data-id="cjg0qm5ll001dyyw80snlk2fc" class="article-share-link">Delen</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/人类简史/">人类简史</a></li></ul>
@@ -635,7 +621,7 @@ macOS  : 1904-01-01T00:00:00
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">Categorieën</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
     </div>
@@ -645,9 +631,9 @@ macOS  : 1904-01-01T00:00:00
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Labels</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
     </div>
   </div>
 
@@ -657,16 +643,16 @@ macOS  : 1904-01-01T00:00:00
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 10px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archieven</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -674,12 +660,12 @@ macOS  : 1904-01-01T00:00:00
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Recente berichten</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2017/2017-11-08-python-name-main/">python里面if __name__ == &#34;__main__&#34;:是干什么的</a>
+            <a href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
           </li>
         
           <li>
@@ -710,7 +696,7 @@ macOS  : 1904-01-01T00:00:00
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2017 youngspring1<br>
+      &copy; 2018 youngspring1<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

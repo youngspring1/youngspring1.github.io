@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://youngspring1.github.io/"/>
-  <updated>2017-11-08T10:00:07.000Z</updated>
+  <updated>2018-04-15T11:38:02.563Z</updated>
   <id>https://youngspring1.github.io/</id>
   
   <author>
@@ -17,28 +17,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>python里面if __name__ == &quot;__main__&quot;:是干什么的</title>
-    <link href="https://youngspring1.github.io/2017/2017-11-08-python-name-main/"/>
-    <id>https://youngspring1.github.io/2017/2017-11-08-python-name-main/</id>
-    <published>2017-11-08T08:11:39.000Z</published>
-    <updated>2017-11-08T10:00:07.000Z</updated>
+    <title>海拉鲁大陆旅行指南</title>
+    <link href="https://youngspring1.github.io/2018/2018-04-15-tour-de-hyrule/"/>
+    <id>https://youngspring1.github.io/2018/2018-04-15-tour-de-hyrule/</id>
+    <published>2018-04-15T01:46:17.000Z</published>
+    <updated>2018-04-15T11:38:02.563Z</updated>
     
-    <content type="html"><![CDATA[<p>又来骗更啦。<br>python里面 if __name__ == “__main__“: 是干什么的？   </p><p>今天看到一个答案<a href="https://stackoverflow.com/questions/419163/what-does-if-name-main-do" target="_blank" rel="external">第二个回答</a>讲得很清楚，竟然不是最高赞。我简单搬运一下。   </p><p>简单的讲，这是为了标志当前的module（当前这个python文件），既能够直接运行，也能够作为module被其他代码import。   </p><ul><li>如果是直接运行当前这个python文件，那么变量 __name__会被设置为”__main__“，那么代码运行到这个if语句的时候，可以继续运行if代码块中的内容。   </li><li>如果是从其他地方调用当前这个python文件，那么变量不是 “__main__“，不会运行if代码块中的内容。</li></ul><p>如果讲不清楚，直接看代码吧。<br>第一个文件</p><pre><code># file one.pydef func():    print(&quot;func() in one.py&quot;)print(&quot;top-level in one.py&quot;)if __name__ == &quot;__main__&quot;:    print(&quot;one.py is being run directly&quot;)else:    print(&quot;one.py is being imported into another module&quot;)</code></pre><p>第二个文件</p><pre><code># file two.pyimport oneprint(&quot;top-level in two.py&quot;)one.func()if __name__ == &quot;__main__&quot;:    print(&quot;two.py is being run directly&quot;)else:    print(&quot;two.py is being imported into another module&quot;)</code></pre><p>如果运行<figure class="highlight python"><figcaption><span>one.py```   </span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">结果会是</div><div class="line"></div><div class="line">top-level <span class="keyword">in</span> one.py</div><div class="line">one.py <span class="keyword">is</span> being run directly</div><div class="line"></div><div class="line">如果运行```python two.py```   </div><div class="line">结果会是</div><div class="line"></div><div class="line">top-level <span class="keyword">in</span> one.py</div><div class="line">one.py <span class="keyword">is</span> being imported into another module</div><div class="line">top-level <span class="keyword">in</span> two.py</div><div class="line">func() <span class="keyword">in</span> one.py</div><div class="line">two.py <span class="keyword">is</span> being run directly</div><div class="line"></div><div class="line">当one被<span class="keyword">import</span>的时候，变量```\_\_name\_\_```的值不是```<span class="string">"\_\_main\_\_"</span>```而是```<span class="string">"one"</span></div></pre></td></tr></table></figure></p>]]></content>
+    <content type="html"><![CDATA[<p>#海拉鲁大陆旅行指南</p><h3 id="海角"><a href="#海角" class="headerlink" title="海角"></a>海角</h3><p>乌洛克海角位于海拉鲁大陆最东南，本身就是一处悬崖，从这里可以眺望海上的潮起潮落、天空的云卷云舒。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/01-cape2.jpg" alt="cape2"><br>相对海拉鲁大陆其他地点，这里容易到达而且绝无妖怪打扰。如果在这里扎营，还可以观赏日出。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/01-cape1.jpg" alt="cape1"></p><h3 id="阿卡莱海岸"><a href="#阿卡莱海岸" class="headerlink" title="阿卡莱海岸"></a>阿卡莱海岸</h3><p>又一处奇妙的海岸，沙滩蜿蜒成螺旋形，这便是马秋兹半岛，但是附近怪物众多，只适合在高处远望。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/02-beach4.jpg" alt="beach4"><br>阿卡莱海岸就是从马秋兹半岛开始，一直到大陆最北方的古代研究所，如果你厌倦了平坦的沙滩，不妨骑马沿着海岸旅行。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/02-beach2.jpg" alt="beach2"></p><h3 id="阿卡莱高原"><a href="#阿卡莱高原" class="headerlink" title="阿卡莱高原"></a>阿卡莱高原</h3><p>在阿卡莱海岸的内侧，分布着一片片树林。一年四季都能保持着五彩斑斓的颜色，一眼看上去还以为到了秋天。然而美景中确暗藏着杀机，守护者、人马等顶级妖怪生活在这里。因此推荐在东阿卡莱驿站附近观赏，有飞翔伞的旅行者可以从火山或者阿卡莱之塔飞行观赏。</p><p>塔林湿地<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/03-woods2.jpg" alt="woods2"><br>北阿卡莱平原<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/03-woods1.jpg" alt="woods1"></p><h3 id="骷髅池塘"><a href="#骷髅池塘" class="headerlink" title="骷髅池塘"></a>骷髅池塘</h3><p>这里是怪物商人曾经的创业地，如今怪物商人已经将连锁店开满了海拉鲁大陆上各个村庄。看着骷髅池塘里盛开的异色花朵，大概也能想象怪物商人对妖怪有多么热爱了。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/04-monsterpool1.jpg" alt="monsterpool1"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/04-mounsterpool2.jpg" alt="monsterpool2"></p><h3 id="克洛格森林"><a href="#克洛格森林" class="headerlink" title="克洛格森林"></a>克洛格森林</h3><p>克洛格森林中心，英雄取回传说之剑的地方，有一棵参天大树，占据了整个森林1/9的面积，如果有诀窍进入森林，一定记得爬树欣赏。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/05-forest1.jpg" alt="forest"></p><h3 id="海布拉山北岳"><a href="#海布拉山北岳" class="headerlink" title="海布拉山北岳"></a>海布拉山北岳</h3><p>去海拉鲁大陆最北端的山上，深夜也许能看到极光和月亮同时出现。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/06-aurora1.jpg" alt="aurora1"><br>凌晨可以看见东方浮现的微光。然而等到白天又是大雪纷飞。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/06-aurora4.jpg" alt="aurora4"></p><h3 id="被遗忘的雕像"><a href="#被遗忘的雕像" class="headerlink" title="被遗忘的雕像"></a>被遗忘的雕像</h3><p>在大陆边境，有一处巨型的雕像，依托山谷而建。<br>面无表情，脸上的细节早已风化在时光中，交叉双手，然而手中的大剑却出现在海拔更高的格鲁德山顶。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/09-statue2.jpg" alt="statue2"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/09-statue1.jpg" alt="statue1"></p><h3 id="萨托利山"><a href="#萨托利山" class="headerlink" title="萨托利山"></a>萨托利山</h3><p>山上的湖边有一棵大树，跟克洛格森林中的那棵同样品种，不过稍小。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/08-lordmountain1.jpg" alt="lordmountain1"><br>每天凌晨山神和卢米会出现，放慢脚步不要吓到它们。山神出现温度会降低，注意保暖。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/08-lordmountain2.jpg" alt="lordmountain2"></p><h3 id="卡尔萨谷"><a href="#卡尔萨谷" class="headerlink" title="卡尔萨谷"></a>卡尔萨谷</h3><p>恐怖组织易家队老巢的入口，从沙漠进来，通道突然变窄，周围的岩石在光线下明暗交错，简直照搬了美国羚羊峡谷。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/07-valley2.jpg" alt="valley2"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/07-valley1.jpg" alt="valley1"></p><h3 id="山顶的湖"><a href="#山顶的湖" class="headerlink" title="山顶的湖"></a>山顶的湖</h3><p>位于南方卡尔山上的湖，是心的形状，传说这里可以找到真爱。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/10-lake2.jpg" alt="lake2"><br>然而位于艾波尼山上的湖，是心碎的形状，有一个懵逼的单身狗找错了地方，一直徘徊在这里。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/10-lake1.jpg" alt="lake1"></p><h3 id="小渔村"><a href="#小渔村" class="headerlink" title="小渔村"></a>小渔村</h3><p>粗心的旅行者大概不会注意到，海底竟然有如此丰富的细节。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/11-fishvillage.jpg" alt="fishvillage"></p><h3 id="龙"><a href="#龙" class="headerlink" title="龙"></a>龙</h3><p>在特定的地方，可以看到龙腾空飞过。<br>雷龙<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/12-dragon2.jpg" alt="dragon2"><br>冰龙<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/12-dragon1.jpg" alt="dragon1"></p><h3 id="无论何地"><a href="#无论何地" class="headerlink" title="无论何地"></a>无论何地</h3><p>雨后，总是会遇见彩虹。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/13-rainbow1.jpg" alt="rainbow1"><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/13-rainbow2.jpg" alt="rainbow2"><br>画框中的风景。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/14-huakuang.jpg" alt="image"></p><h3 id="终"><a href="#终" class="headerlink" title="终"></a>终</h3><p>感谢任天堂<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/00-homepage.jpg" alt="zelda"></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;又来骗更啦。&lt;br&gt;python里面 if __name__ == “__main__“: 是干什么的？   &lt;/p&gt;
-&lt;p&gt;今天看到一个答案&lt;a href=&quot;https://stackoverflow.com/questions/419163/what-does-if-n
+        &lt;p&gt;#海拉鲁大陆旅行指南&lt;/p&gt;
+&lt;h3 id=&quot;海角&quot;&gt;&lt;a href=&quot;#海角&quot; class=&quot;headerlink&quot; title=&quot;海角&quot;&gt;&lt;/a&gt;海角&lt;/h3&gt;&lt;p&gt;乌洛克海角位于海拉鲁大陆最东南，本身就是一处悬崖，从这里可以眺望海上的潮起潮落、天空的云卷云舒。&lt;br&gt;
       
     
     </summary>
     
-      <category term="新知" scheme="https://youngspring1.github.io/categories/%E6%96%B0%E7%9F%A5/"/>
+      <category term="生活" scheme="https://youngspring1.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
     
     
-      <category term="python" scheme="https://youngspring1.github.io/tags/python/"/>
+      <category term="游戏" scheme="https://youngspring1.github.io/tags/%E6%B8%B8%E6%88%8F/"/>
+    
+      <category term="塞尔达传说" scheme="https://youngspring1.github.io/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/"/>
     
   </entry>
   
