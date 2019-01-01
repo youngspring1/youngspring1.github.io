@@ -53,7 +53,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
@@ -63,6 +63,138 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-2016-05-18-R06" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-05-18-R06/" class="article-date">
+  <time datetime="2016-05-18T00:40:09.000Z" itemprop="datePublished">2016-05-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-05-18-R06/">MIT:The Analytics Edge 笔记06－集群</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="external">15.071x The Analytics Edge</a> 第六单元的学习记录。</p>
+<hr>
+<h2 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h2><p>第六单元的主题是集群。它用来找到数据内的相似性。</p>
+<h3 id="1-理论"><a href="#1-理论" class="headerlink" title="1.理论"></a>1.理论</h3><h4 id="Recommendation-Systems"><a href="#Recommendation-Systems" class="headerlink" title="Recommendation Systems"></a>Recommendation Systems</h4><p>Collaborative filtering:<br>过滤出用户间的共同特征／相似性。只使用了用户信息，跟电影内容本身无关。  </p>
+<p>Content filtering:<br>利用电影本身的信息，过滤出有共同导演／演员／类别的电影。跟其他用户无关。</p>
+<h4 id="clustering"><a href="#clustering" class="headerlink" title="clustering"></a>clustering</h4><p>clustering 集群是一种非监督学习，”unsupervised learning”，将有共同特征的数据分在同一组。   </p>
+<h6 id="Hierarchical-clustering"><a href="#Hierarchical-clustering" class="headerlink" title="Hierarchical clustering"></a>Hierarchical clustering</h6><p>Hierarchical clustering的步骤：   </p>
+<ol>
+<li>计算距离</li>
+<li>生成集群</li>
+<li>生成cutree</li>
+</ol>
+<p>注意1:计算距离时，有可能造成内存溢出。计算每两点间的距离，得到的结果是n*(n-1)/2个，我们需要保存这个结果，如果n很大，保存结果的矩阵也很大，可能会导致内存溢出。<br>注意2:计算距离的三种方法：<br>Euclidean distance：点与点之间的欧几里得距离<br>Manhattan Distance：绝对值之和<br>Maximum Coordinate：偏离最严重的点   </p>
+<h6 id="K-means-clustering"><a href="#K-means-clustering" class="headerlink" title="K-means clustering"></a>K-means clustering</h6><p>K-means clustering的步骤：</p>
+<ol>
+<li>指定集群数目k</li>
+<li>随机分配所有的点</li>
+<li>计算每个集群的中心点</li>
+<li>计算每个点到这些中心点的距离，选择最近的，重新分配点到离他最近的集群</li>
+<li>重新计算每个集群的中心点</li>
+<li>重复4和5多次，直到没有提升</li>
+</ol>
+<p>注意：centroid distance 集群中所有点的平均值间的距离。</p>
+<h4 id="normalize"><a href="#normalize" class="headerlink" title="normalize"></a>normalize</h4><p>如果不同列的数值不是同样的数量级，那么运算后较小的值可能会被忽略，所以需要调整到同样的数量级。</p>
+<pre><code>library(caret)
+preproc = preProcess(airlines)
+airlinesNorm = predict(preproc, airlines)
+</code></pre><p>效果就是，所有列的平均值都是0。</p>
+<h3 id="2-建模和评估"><a href="#2-建模和评估" class="headerlink" title="2.建模和评估"></a>2.建模和评估</h3><h4 id="Hierarchical-clustering-1"><a href="#Hierarchical-clustering-1" class="headerlink" title="Hierarchical clustering"></a>Hierarchical clustering</h4><pre><code># After following the steps in the video, load the data into R
+movies = read.table(&quot;movieLens.txt&quot;, header=FALSE, sep=&quot;|&quot;,quote=&quot;\&quot;&quot;)
+# Add column names
+colnames(movies) = c(&quot;ID&quot;, &quot;Title&quot;, &quot;ReleaseDate&quot;, &quot;VideoReleaseDate&quot;, &quot;IMDB&quot;, &quot;Unknown&quot;, &quot;Action&quot;, &quot;Adventure&quot;, &quot;Animation&quot;, &quot;Childrens&quot;, &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Documentary&quot;, &quot;Drama&quot;, &quot;Fantasy&quot;, &quot;FilmNoir&quot;, &quot;Horror&quot;, &quot;Musical&quot;, &quot;Mystery&quot;, &quot;Romance&quot;, &quot;SciFi&quot;, &quot;Thriller&quot;, &quot;War&quot;, &quot;Western&quot;)
+# Remove unnecessary variables
+movies$ID = NULL
+movies$ReleaseDate = NULL
+movies$VideoReleaseDate = NULL
+movies$IMDB = NULL
+# Remove duplicates
+movies = unique(movies)
+
+# Compute distances
+distances = dist(movies[2:20], method = &quot;euclidean&quot;)
+
+# Hierarchical clustering
+# clusterMovies = hclust(distances, method = &quot;ward&quot;) 
+clusterMovies = hclust(distances, method = &quot;ward.D&quot;)
+
+# Plot the dendrogram
+plot(clusterMovies)
+
+# Assign points to clusters
+clusterGroups = cutree(clusterMovies, k = 10)
+# Create a new data set with just the movies from cluster 2
+cluster2 = subset(movies, clusterGroups==2)
+</code></pre><h4 id="K-means-clustering-1"><a href="#K-means-clustering-1" class="headerlink" title="K-means clustering"></a>K-means clustering</h4><pre><code>healthy = read.csv(&quot;healthy.csv&quot;, header=FALSE)
+# 注意
+# data.frame-&gt;matrix-&gt;vector 变成一个2500的vector
+# data.frame-&gt;vector 还是一个50*50的data.frame
+healthyMatrix = as.matrix(healthy)
+healthyVector = as.vector(healthyMatrix)
+
+# Specify number of clusters
+k = 5
+# Run k-means
+set.seed(1)
+KMC = kmeans(healthyVector, centers = k, iter.max = 1000)
+
+# Extract clusters
+healthyClusters = KMC$cluster
+
+# Plot the image with the clusters
+dim(healthyClusters) = c(nrow(healthyMatrix), ncol(healthyMatrix))
+
+image(healthyClusters, axes = FALSE, col=rainbow(k))
+
+# Apply to a test image
+tumor = read.csv(&quot;tumor.csv&quot;, header=FALSE)
+tumorMatrix = as.matrix(tumor)
+tumorVector = as.vector(tumorMatrix)
+
+# Apply clusters from before to new image, using the flexclust package
+# kcca K-Centroids Cluster Analysis
+install.packages(&quot;flexclust&quot;)
+library(flexclust)
+KMC.kcca = as.kcca(KMC, healthyVector)
+tumorClusters = predict(KMC.kcca, newdata = tumorVector)
+
+# Visualize the clusters
+dim(tumorClusters) = c(nrow(tumorMatrix), ncol(tumorMatrix))
+image(tumorClusters, axes = FALSE, col=rainbow(k))
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-05-18-R06/" data-id="cjqdu9qle005dubw8hig561a5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-2016-05-10-R05" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -225,7 +357,7 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R05/" data-id="cjg0qm5no003tyyw8s258pj52" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R05/" data-id="cjqdu9qkz004rubw8lk1ffxu5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -272,7 +404,7 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-zuozhuan/" data-id="cjg0qm5nm003qyyw83qza288q" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-zuozhuan/" data-id="cjqdu9qlb0059ubw88v23ebjm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/历史/">历史</a></li></ul>
@@ -319,7 +451,7 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-xianluoyang/" data-id="cjg0qm5ne003hyyw8p75v5iwc" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-xianluoyang/" data-id="cjqdu9ql60052ubw82txi49qi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/西安/">西安</a></li></ul>
@@ -478,7 +610,7 @@ PredictTest = predict(ClaimsTree, newdata = ClaimsTest, type = &quot;class&quot;
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R04/" data-id="cjg0qm5nk003nyyw8qbn7cqaz" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R04/" data-id="cjqdu9ql4004zubw87hqmtcsw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -604,7 +736,7 @@ loans[vars.for.imputation] = imputed
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-26-R03/" data-id="cjg0qm5n8003eyyw8mtj1gl4d" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-26-R03/" data-id="cjqdu9ql1004uubw8z7dzxd0p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -871,7 +1003,7 @@ cor(DF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-23-R02/" data-id="cjg0qm5n00031yyw8pa96r9tn" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-23-R02/" data-id="cjqdu9qkw004mubw8tijdng83" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -984,7 +1116,7 @@ table(DF$var1, DF$var2)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-18-R01/" data-id="cjg0qm5n20033yyw8u53zp2if" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-18-R01/" data-id="cjqdu9qkr004kubw8sqzq0qsh" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -1275,7 +1407,7 @@ DT.c2
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-08-datatable5/" data-id="cjg0qm5mv002vyyw82xims35f" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-08-datatable5/" data-id="cjqdu9qn5007wubw8jqpl83g6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -1346,318 +1478,10 @@ DT.c2
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-07-human-task-switches/" data-id="cjg0qm5n6003ayyw881cvap2i" class="article-share-link">Delen</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-07-human-task-switches/" data-id="cjqdu9qkn004fubw8f4v8ihsn" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/joel-on-software/">joel on software</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-04-02-datatable4" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-04-02-datatable4/" class="article-date">
-  <time datetime="2016-04-01T15:38:11.000Z" itemprop="datePublished">2016-04-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/data-table教程/">data.table教程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-04-02-datatable4/">data.table 教程4－二级索引和自动索引</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>目录：   </p>
-<ol>
-<li><a href="http://youngspring1.github.io/post/2016/2016-03-13-datatable1/">data.table 介绍</a>   </li>
-<li><a href="http://youngspring1.github.io/post/2016/2016-03-21-datatable2/">语义引用</a>      </li>
-<li><a href="http://youngspring1.github.io/post/2016/2016-03-22-datatable3/">主键、基于二分法搜索的subset</a>    </li>
-<li><a href="http://youngspring1.github.io/post/2016/2016-04-02-datatable4/">二次索引和自动索引</a>   </li>
-<li><a href="http://youngspring1.github.io/post/2016/2016-04-08-datatable5/">数据拆分和合并</a>   </li>
-</ol>
-<p>原文地址：<br><a href="https://github.com/Rdatatable/data.table/wiki/Getting-started" target="_blank" rel="external">data.table/wiki/Getting-started</a></p>
-<hr>
-<p>感谢<a href="http://weibo.com/u/2120911240" target="_blank" rel="external">G_天星</a>的提醒，貌似现在版本的data.table中还没有setindex()函数，所以可能应该使用set2key()函数。或者通过代码安装data.table试试。</p>
-<hr>
-<h1 id="二级索引和自动索引"><a href="#二级索引和自动索引" class="headerlink" title="二级索引和自动索引"></a>二级索引和自动索引</h1><p>本教程假定读者已经熟悉data.table的[i, j, by]语法、懂得如何基于二分法的选取了。如果你对这些不熟悉，请学习上面三讲 <a href="http://youngspring1.github.io/post/2016-03-13-datatable1/">data.table 介绍</a> 、 <a href="http://youngspring1.github.io/post/2016-03-21-datatable2/">语义引用</a>和<a href="http://youngspring1.github.io/post/2016-03-22-datatable3/">主键、基于快速二分法搜索的subset</a>。 </p>
-<hr>
-<h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><p>我们继续使用已经保存到本地的航班信息flights。</p>
-<pre><code>flights &lt;- fread(&quot;flights14.csv&quot;)
-head(flights)
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
-# 2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
-# 3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
-# 4: 2014     1   1        -8       -26      AA    LGA  PBI      157     1035    7
-# 5: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
-# 6: 2014     1   1         4         0      AA    EWR  LAX      339     2454   18
-dim(flights)
-# [1] 253316     11
-</code></pre><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在这一讲，我们会：   </p>
-<ul>
-<li>讨论二级索引。  </li>
-<li>再次演示快速subset，但这次我们使用新的参数on，它能自动设置二级索引。</li>
-<li>最后进一步的，来看一下自动索引，它也能自动设置索引，但是它是基于R的原生语法来做subset的。</li>
-</ul>
-<h2 id="1-二级索引"><a href="#1-二级索引" class="headerlink" title="1.二级索引"></a>1.二级索引</h2><h4 id="a-什么是二级索引"><a href="#a-什么是二级索引" class="headerlink" title="a) 什么是二级索引"></a>a) 什么是二级索引</h4><p>二级索引和data.table的主键类似，但有以下两点不同：</p>
-<ul>
-<li>它不会再内存里将整个data.table重新排序。它只会计算某列的顺序，将这个顺序向量保存在一个额外的，叫做index的属性里面。</li>
-<li>一个data.table可以有多个二级索引，这是我们下面要演示的。</li>
-</ul>
-<h4 id="b-设置和获取二级索引"><a href="#b-设置和获取二级索引" class="headerlink" title="b) 设置和获取二级索引"></a>b) 设置和获取二级索引</h4><p>－如何将origin列设置为该data.table的二级索引</p>
-<pre><code>setindex(flights, origin)
-head(flights)
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
-# 2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
-# 3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
-# 4: 2014     1   1        -8       -26      AA    LGA  PBI      157     1035    7
-# 5: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
-# 6: 2014     1   1         4         0      AA    EWR  LAX      339     2454   18
-
-## alternatively we can provide character vectors to the function &apos;setindexv()&apos;
-# setindexv(flights, &quot;origin&quot;) # useful to program with
-
-# &apos;index&apos; attribute added
-names(attributes(flights))
-# [1] &quot;names&quot;             &quot;row.names&quot;         &quot;class&quot;             &quot;.internal.selfref&quot;
-# [5] &quot;index&quot;
-</code></pre><p>说明：   </p>
-<ul>
-<li>函数setindex 和 setindexv()可以对data.table添加一个二级索引。</li>
-<li>注意flights实际上没有按照origin列的升序重新排列。还记得吗？setkey()会重新排序！</li>
-<li>setindex(flights, NULL)会删除所有的二级索引。</li>
-</ul>
-<p>－如何取得flights的二级索引</p>
-<pre><code>indices(flights)
-# [1] &quot;origin&quot;
-
-setindex(flights, origin, dest)
-indices(flights)
-# [1] &quot;origin&quot;       &quot;origin__dest&quot;
-</code></pre><p>说明：   </p>
-<ul>
-<li>函数indices()返回一个data.table所有的二级索引。如果该data.table没有二级索引，那么返回NULL。</li>
-<li>注意我们对 origin列,dest列创建了另一个二级索引的时候，我们没有丢掉之前创建的第一个二级索引。也就是说，我们可以创建多个二级索引。</li>
-</ul>
-<h4 id="c-为什么使用二级索引"><a href="#c-为什么使用二级索引" class="headerlink" title="c) 为什么使用二级索引"></a>c) 为什么使用二级索引</h4><p>－对一个data.table重新排序成本太高<br>考虑一下这种情况，当你想用主键origin列来subset所有“JFK”的时候，我们得这么做：</p>
-<pre><code>## not run
-setkey(flights, origin)
-flights[&quot;JFK&quot;] # or flights[.(&quot;JFK&quot;)]
-</code></pre><p>说明：</p>
-<pre><code>setkey()需要：
-a.计算得出origin列的排序向量，并且
-b.基于刚刚的排序向量，对整个data.table重新排序
-</code></pre><p>排序并不是最花时间的，因为data.table使用对整型、字符型、数值型的向量进行radix排序。然而重新排序却很花时间。<br>除非我们需要对某一列重复地进行subset，否则二分法快速subset的高效可能被重新排序抵消。   </p>
-<p>－为添加／更新列而对整个data.table重新排序并不理想<br>－最多只能有一个主键<br>现在我们如果想对dest列是“LAX”的行，重复地进行某个特定的操作，那么我们必须再调用函数setkey() 设置一次主键。   </p>
-<pre><code>## not run
-setkey(flights, dest)
-flights[&quot;LAX&quot;]
-</code></pre><p>这样，flights又再次按dest列重新排序了。其实我们真正想做的是，快速地subset同时又不必重新排序。<br>这时候，二级索引就派上用场了！   </p>
-<p>－二级索引可以被重用<br>既然一个data.table中可以有多个二级索引，并且创建一个二级索引就和将一个排序向量保存为属性一样简单，那么创建二级索引后，我们可以省下重新排序的时间。<br>－参数on使得语法更简洁，并且能自动创建并重用二级索引<br>我们下面一节会说明参数on的几个优点：   </p>
-<p>参数on</p>
-<ul>
-<li>通过创建索引进行subset。每次都能节省setindex()的时间。</li>
-<li>通过检查属性，可以简单地重用已经存在的二级索引。</li>
-<li>语法简单。<br>注意参数on也可以用来指定主键。事实上，为了更佳的可读性，我们鼓励在参数on里面指定主键。</li>
-</ul>
-<h2 id="2-使用参数on和索引进行快速subset"><a href="#2-使用参数on和索引进行快速subset" class="headerlink" title="2.使用参数on和索引进行快速subset"></a>2.使用参数on和索引进行快速subset</h2><h4 id="a-参数i里的subset"><a href="#a-参数i里的subset" class="headerlink" title="a) 参数i里的subset"></a>a) 参数i里的subset</h4><p>－subset所有origin是“JFK”的行</p>
-<pre><code>flights[&quot;JFK&quot;, on = &quot;origin&quot;]
-#        year month day dep_delay arr_delay carrier origin dest air_time distance hour
-#     1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
-#     2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
-#     3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
-#     4: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
-#     5: 2014     1   1        -2       -18      AA    JFK  LAX      338     2475   21
-#    ---
-# 81479: 2014    10  31        -4       -21      UA    JFK  SFO      337     2586   17
-# 81480: 2014    10  31        -2       -37      UA    JFK  SFO      344     2586   18
-# 81481: 2014    10  31         0       -33      UA    JFK  LAX      320     2475   17
-# 81482: 2014    10  31        -6       -38      UA    JFK  SFO      343     2586    9
-# 81483: 2014    10  31        -6       -38      UA    JFK  LAX      323     2475   11
-
-## alternatively
-# flights[.(&quot;JFK&quot;), on = &quot;origin&quot;] (or) 
-# flights[list(&quot;JFK&quot;), on = &quot;origin&quot;]
-</code></pre><p>说明：</p>
-<ul>
-<li>这段语句执行的subset也是通过创建二级索引，基于快速二分法搜索的。但记住，它不会把这个二级索引自动创建为data.table的一个属性。当然后面我们也会教你如何将它设置为一个属性。   </li>
-<li>如果我们已经添加了一个二级索引了，那么参数on就可以直接使用这个二级索引，而不是再对整个航班信息flights进行计算。   </li>
-</ul>
-<p>我们来看下面 verbose = TRUE 的用法：</p>
-<pre><code>setindex(flights, origin)
-flights[&quot;JFK&quot;, on = &quot;origin&quot;, verbose = TRUE][1:5]
-# names(on) = NULL. Assigning &apos;on&apos; to names(on)&apos; as well.
-# Looking for existing (secondary) index... found. Reusing index.
-# Starting bmerge ...done in 0 secs
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
-# 2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
-# 3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
-# 4: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
-# 5: 2014     1   1        -2       -18      AA    JFK  LAX      338     2475   21
-</code></pre><p>－如何对origin列和dest列进行subset<br>举个例子，如果我们想选取所有从“JFK”起飞到达“LAX”的所有航班：</p>
-<pre><code>flights[.(&quot;JFK&quot;, &quot;LAX&quot;), on = c(&quot;origin&quot;, &quot;dest&quot;)][1:5]
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014     1   1        14        13      AA    JFK  LAX      359     2475    9
-# 2: 2014     1   1        -3        13      AA    JFK  LAX      363     2475   11
-# 3: 2014     1   1         2         9      AA    JFK  LAX      351     2475   19
-# 4: 2014     1   1         2         1      AA    JFK  LAX      350     2475   13
-# 5: 2014     1   1        -2       -18      AA    JFK  LAX      338     2475   21
-</code></pre><p>说明：</p>
-<ul>
-<li>在参数i里面指定取值，在参数on里面指定列名。参数on必须是一个字符型的向量。   </li>
-<li>因为计算索引非常快，所以我们不需要使用setindex()。除非你需要对某一列重复地进行subset操作。   </li>
-</ul>
-<h4 id="b-参数j里的select"><a href="#b-参数j里的select" class="headerlink" title="b) 参数j里的select"></a>b) 参数j里的select</h4><p>下面我们将要讨论的所有操作，跟我们在上一讲里面学习的类似。只是我们现在使用参数on。<br>－返回满足条件 origin = “LGA” and dest = “TPA”的 arr_delay列的值</p>
-<pre><code>flights[.(&quot;LGA&quot;, &quot;TPA&quot;), .(arr_delay), on = c(&quot;origin&quot;, &quot;dest&quot;)]
-#       arr_delay
-#    1:         1
-#    2:        14
-#    3:       -17
-#    4:        -4
-#    5:       -12
-#   ---          
-# 1848:        39
-# 1849:       -24
-# 1850:       -12
-# 1851:        21
-# 1852:       -11
-</code></pre><h4 id="c-Chaining"><a href="#c-Chaining" class="headerlink" title="c) Chaining"></a>c) Chaining</h4><p>－在上面的基础上，使用chaining来将结果降序排列</p>
-<pre><code>flights[.(&quot;LGA&quot;, &quot;TPA&quot;), .(arr_delay), on = c(&quot;origin&quot;, &quot;dest&quot;)][order(-arr_delay)]
-#       arr_delay
-#    1:       486
-#    2:       380
-#    3:       351
-#    4:       318
-#    5:       300
-#   ---          
-# 1848:       -40
-# 1849:       -43
-# 1850:       -46
-# 1851:       -48
-# 1852:       -49
-</code></pre><h4 id="d-参数j里的计算"><a href="#d-参数j里的计算" class="headerlink" title="d) 参数j里的计算"></a>d) 参数j里的计算</h4><p>－找出满足条件 origin = “LGA” and dest = “TPA”的 arr_delay列的最大值（航班到达的最长延误时间）</p>
-<pre><code>flights[.(&quot;LGA&quot;, &quot;TPA&quot;), max(arr_delay), on = c(&quot;origin&quot;, &quot;dest&quot;)]
-# [1] 486
-</code></pre><h4 id="e-参数j里使用操作符”-”进行sub-assign"><a href="#e-参数j里使用操作符”-”进行sub-assign" class="headerlink" title="e) 参数j里使用操作符”:=”进行sub-assign"></a>e) 参数j里使用操作符”:=”进行sub-assign</h4><p>在上一讲中，我们学习过了类似的功能。同样地，现在我们看看如何找到在flights里面，hours列所有可能的取值：   </p>
-<pre><code># get all &apos;hours&apos; in flights
-flights[, sort(unique(hour))]
-#  [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
-</code></pre><p>可以看到，一共有25种不同的取值。但是0点和24点其实是同样的。下面我们把24全部替换成0，但是这次我们使用参数on。   </p>
-<pre><code>flights[.(24L), hour := 0L, on = &quot;hour&quot;]
-</code></pre><p>现在我们再来看看24是不是都被替换成0了：   </p>
-<pre><code>flights[, sort(unique(hour))]
-#  [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-</code></pre><p>说明：</p>
-<ul>
-<li>这真是二级索引的一大优点。以前，只是为了更新一些行的hour列的取值，我们不得不调用函数setkey()将hour列设置为主键，这必须对整个data.table进行重新排序。但是现在，用参数on，原数据的顺序并没有改变，操作反而更快了！而代码还是如此简洁。   </li>
-</ul>
-<h4 id="f-通过参数by聚合"><a href="#f-通过参数by聚合" class="headerlink" title="f) 通过参数by聚合"></a>f) 通过参数by聚合</h4><p>－找到每月从“JFK”起飞的航班起飞的最长延误时间，并按照月份排序</p>
-<pre><code>ans &lt;- flights[&quot;JFK&quot;, max(dep_delay), keyby = month, on = &quot;origin&quot;]
-head(ans)
-#    month   V1
-# 1:     1  881
-# 2:     2 1014
-# 3:     3  920
-# 4:     4 1241
-# 5:     5  853
-# 6:     6  798
-</code></pre><p>说明：</p>
-<ul>
-<li>如果我们不使用二级索引，也就是不在参数on里面指定，那么我们就必须把origin设置为主键。   </li>
-</ul>
-<h4 id="g-参数mult"><a href="#g-参数mult" class="headerlink" title="g) 参数mult"></a>g) 参数mult</h4><p>参数mult和上一讲一样。它的默认值是“all”。我们可以选择是第一条还是最后一条符合条件的行被返回。<br>－subset满足条件dest ＝ “BOS” 和 “DAY”的第一行   </p>
-<pre><code>flights[c(&quot;BOS&quot;, &quot;DAY&quot;), on = &quot;dest&quot;, mult = &quot;first&quot;]
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014     1   1         3         1      AA    JFK  BOS       39      187   12
-# 2: 2014     1   1        25        35      EV    EWR  DAY      102      533   17
-</code></pre><p>－subset满足条件 origin ＝ “LGA” 或者 “JFK” 或者 “EWR”，并且 dest ＝ “XNA” 的最后一行   </p>
-<pre><code>flights[.(c(&quot;LGA&quot;, &quot;JFK&quot;, &quot;EWR&quot;), &quot;XNA&quot;), on = c(&quot;origin&quot;, &quot;dest&quot;), mult = &quot;last&quot;]
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014    10  31        -5       -11      MQ    LGA  XNA      165     1147    6
-# 2:   NA    NA  NA        NA        NA      NA    JFK  XNA       NA       NA   NA
-# 3: 2014    10  31        -2       -25      EV    EWR  XNA      160     1131    6
-</code></pre><h4 id="h-参数nomatch"><a href="#h-参数nomatch" class="headerlink" title="h) 参数nomatch"></a>h) 参数nomatch</h4><p>如果查询语句没有找到任何匹配的数据，通过指定参数nomatch，我们可以选择是返回 NA，还是忽略。<br>－在上面这个列子中，忽略没有实际意义的数据   </p>
-<pre><code>flights[.(c(&quot;LGA&quot;, &quot;JFK&quot;, &quot;EWR&quot;), &quot;XNA&quot;), mult = &quot;last&quot;, on = c(&quot;origin&quot;, &quot;dest&quot;), nomatch = 0L]
-#    year month day dep_delay arr_delay carrier origin dest air_time distance hour
-# 1: 2014    10  31        -5       -11      MQ    LGA  XNA      165     1147    6
-# 2: 2014    10  31        -2       -25      EV    EWR  XNA      160     1131    6
-</code></pre><p>说明：</p>
-<ul>
-<li>没有航班从“JFK”起飞到达“XNA”，所以结果里面，这一行被忽略了。   </li>
-</ul>
-<h2 id="3-自动索引"><a href="#3-自动索引" class="headerlink" title="3.自动索引"></a>3.自动索引</h2><p>回顾一下，我们先学习如何通过主键使用快速二分法搜索进行subset。接着，我们学习了使用二级索引，它带来更好的效果，而且语法也更简洁。<br>等等，有没有更好的方法？有！优化R的原生语法，使用内置的索引。这样我们毋需使用新的语法，就能得到同样的效果。<br>这就是自动索引。<br>目前，它只支持操作符 == 和 %in% 。而且只对一列起作用。某一列会被自动创建为索引，并且作为data.table的属性保存起来。这跟参数on不同，参数on会每次创建一个临时索引，所以才会被叫做“二级索引”。   </p>
-<p>让我们创建一个极大的data.table来凸显它的优势。  </p>
-<pre><code>set.seed(1L)
-dt = data.table(x = sample(1e5L, 1e7L, TRUE), y = runif(100L))
-print(object.size(dt), units = &quot;Mb&quot;)
-# 114.4 Mb
-</code></pre><p>当我们第一次对某一列使用 == 或者 %in% 的时候，会自动创建一个二级索引，它会被用来进行subset。</p>
-<pre><code># have a look at all the attribute names
-names(attributes(dt))
-# [1] &quot;names&quot;             &quot;row.names&quot;         &quot;class&quot;             &quot;.internal.selfref&quot;
-
-## run thefirst time
-(t1 &lt;- system.time(ans &lt;- dt[x == 989L]))
-#    user  system elapsed 
-#   0.235   0.013   0.249
-head(ans)
-#      x         y
-# 1: 989 0.5372007
-# 2: 989 0.5642786
-# 3: 989 0.7151100
-# 4: 989 0.3920405
-# 5: 989 0.9547465
-# 6: 989 0.2914710
-
-## secondary index is created
-names(attributes(dt))
-# [1] &quot;names&quot;             &quot;row.names&quot;         &quot;class&quot;             &quot;.internal.selfref&quot;
-# [5] &quot;index&quot;
-
-indices(dt)
-# [1] &quot;x&quot;
-</code></pre><p>第一次subset的时候，就是创建索引的时候。因为创建二级索引只会引入一个排序向量，在很多情况下，这种操作符的方式会比扫描向量快得多。所以，从第二次subset开始，自动索引的优势就非常明显了：</p>
-<pre><code>## successive subsets
-(t2 &lt;- system.time(dt[x == 989L]))
-#    user  system elapsed 
-#   0.001   0.000   0.001
-system.time(dt[x %in% 1989:2012])
-#    user  system elapsed 
-#   0.001   0.000   0.001
-</code></pre><p>说明：</p>
-<ul>
-<li>第一次subset花了0.228秒，但是第二次只花了0.001秒！   </li>
-<li>可以通过设置全局参数关闭自动索引：options(datatable.auto.index = FALSE)。   </li>
-</ul>
-<p>我们正在将二分法搜索扩展到其它的操作符，比如 &lt;, &lt;= 和 &gt;=。完成之后，就能直接用在其他操作符上了。<br>在将来，我们计划将自动索引扩展到参数中的其它列。   </p>
-<p>在下一讲“结合和滚动结合”中，我们会学习使用主键和二级索引进行快速subset。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-02-datatable4/" data-id="cjg0qm5n40037yyw8yiz00tgu" class="article-share-link">Delen</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
 
     </footer>
   </div>
@@ -1677,7 +1501,7 @@ system.time(dt[x %in% 1989:2012])
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categorieën</h3>
+    <h3 class="widget-title">Categories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
     </div>
@@ -1687,9 +1511,9 @@ system.time(dt[x %in% 1989:2012])
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
     </div>
   </div>
 
@@ -1699,16 +1523,16 @@ system.time(dt[x %in% 1989:2012])
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -1716,9 +1540,13 @@ system.time(dt[x %in% 1989:2012])
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/2019-01-01-happynewyear/">又是新的一年</a>
+          </li>
         
           <li>
             <a href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
@@ -1736,10 +1564,6 @@ system.time(dt[x %in% 1989:2012])
             <a href="/2017/2017-07-02-food/">迷上做饭视频</a>
           </li>
         
-          <li>
-            <a href="/2017/2017-06-25-jizhi/">集智网文章索引</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1752,7 +1576,7 @@ system.time(dt[x %in% 1989:2012])
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 youngspring1<br>
+      &copy; 2019 youngspring1<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
