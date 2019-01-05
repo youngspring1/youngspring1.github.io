@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
@@ -63,6 +63,77 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-2016-04-07-human-task-switches" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-04-07-human-task-switches/" class="article-date">
+  <time datetime="2016-04-07T06:31:55.000Z" itemprop="datePublished">2016-04-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/读书/">读书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-04-07-human-task-switches/">转：任务切换有害论</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>书摘，来自《软件随想录》，Joel Spolsky </p>
+</blockquote>
+<p>在管理一个程序团队时，第一件要学的事就是任务配置(task allocation)要正确。「任务配置」只是把事情分给大家做的夸大说法。用希伯来文的普通话来说就是「倒文件」(因为你会把文件倒在某人身上)。有些事情做得对会得到不可思议的生产力利益，决定哪些文件要倒在谁身上就是其中之一。反过来没做好的话可能就会陷入麻烦的状况，没有人能做好何任何事情而且大家都抱怨「在这里什么事都做不起来。」</p>
+<p>由于这是个针对程序员的网站，我要拿个程序设计问题让你的脑袋动一动暖暖身。</p>
+<p>假设你有A和B两件运算要做。每一件都需10秒的CPU时间。现在你有一颗CPU，为了简化问题，所以工作序列中没有其他东西。</p>
+<p>在我们的CPU中可以选择是否用多工处理。所以你可以先做好一件再做另一件。</p>
+<h5 id="循序处理"><a href="#循序处理" class="headerlink" title="循序处理"></a>循序处理</h5><p>运算A<br>1    2    3    4    5    6    7    8    9    10<br>运算B<br>11    12    13    14    15    16    17    18    19    20   </p>
+<p>也可以使用多工方式。如果用多工的话可以假设这颗特别的CPU每个工作每次可以执行一秒，而且工作切换完全不花时间。</p>
+<h5 id="多工处理"><a href="#多工处理" class="headerlink" title="多工处理"></a>多工处理</h5><p>运算A<br>1    3    5    7    9    11    13    15    17    19<br>运算B<br>2    4    6    8    10    12    14    16    18    20   </p>
+<p>你会选哪一种方式呢？大部份人的直觉反应都认为多工比较好。不管哪一种状况，都得等20秒才能两件运算都完成。不过可以想想单就各件运算来说要多久才有结果。</p>
+<p>在两种状况下，运算B(标成蓝色)都要20秒才得到结果。不过运算A的结果在多工时需要19秒。可是循序时就只要10秒就好了。</p>
+<p>换句话来说在这个安排好的例子中，循序处理的每件运算的平均时间比多工处理少(15秒对19.5秒)。(事实上这例子也并不是真的那么假 - 它是源于Jared在工作上必须解决的一个真实问题。)</p>
+<p>方法    运算A花的时间    运算B花的时间    平均<br>循序处理    10秒    20秒    15<br>多工处理    19秒    20秒    19.5   </p>
+<p>我刚刚说过「工作切换完全不花时间」。其实在真的CPU中工作切换是需要一点点时间的，基本上要足够储存CPU暂存器的状态并载入其他工作的CPU暂存器。实际上这短到几乎可以忽略。不过为了让生活更多乐趣，让我们假设工作切换需要半秒。现在情况变得更糟了：</p>
+<p>方法    运算A花的时间    运算B花的时间    平均<br>循序处理    10秒    20秒 + 1次工作切换 = 20.5秒    15.25<br>多工处理    19秒 + 18次工作切换 = 28秒    20秒 + 19次工作切换 = 29.5秒    28.75   </p>
+<p>现在呢，虽然我知道这有点蠢，不过就算为了让我高兴一下，想想如果工作切换需要一分钟拿如何？</p>
+<p>方法    运算A花的时间    运算B花的时间    平均<br>循序处理    10秒    20秒 + 1次工作切换 = 80秒    45秒<br>多工处理    19秒 + 18次工作切换 = 1099秒    20秒 + 19次工作切换 = 1160秒    几近19分钟!!   </p>
+<p>工作切换用的时间愈长，多工处理的代价愈大。</p>
+<p>这件事本身不怎么新奇，不是吗？不久大概就会有些白痴气愤地写信指控我「反对」多工处理了。他们会质问我：「你真的想要回到那种得先结束WordPerfect才能执行Lotus 1-2-3的DOS时代吗？」</p>
+<p>不过那并不是我的意思。我只是想要你同意，在这类例子中：</p>
+<ul>
+<li>循序处理会让结果平均上比较快得到，而且</li>
+<li>工作切换需要愈久，多工处理所付的代价就愈大。</li>
+</ul>
+<p>够了，别管CPU了，来管管人吧，这有趣多了。这里的重点在于管理「程序员」时，工作切换会需要很长很长的时间。因为程序设计这种工作必须同时在脑袋里记很多东西。另外记住的东西愈多，写程序时生产力愈高。用全速写程序的程序员脑里随时都会记住无数的事情：变量名称，数据结构，重要的API，写过常要用到的辅助函数名称，甚至存放源代码的次目录名称，一切东西都要记住。如果你把程序员送到克利特岛去度假三星期，他所有东西通通都会忘掉。人脑似乎会把东西移出短期RAM，改存到永远都读不回来的备份磁带上。</p>
+<p>要多久呢？嗯，我的软件公司最近放下手头上在做的事(开发一套代号CityDesk的软件产品)，花了三星期去帮助某个客户处理一个紧急状况。当我们回到办公室时，感觉好像要另外三星期才能回复全速制作CityDesk。</p>
+<p>就个人层次来说，你曾经注意过某件事吗？叫某人做一个工作可以做得很好，可是如果给他两个工作，他会把其中一个做好却忽略另一个，不然就是两件工作都做得很慢，慢到你觉得懒鬼都比他勤劳。这是因为程序设计的工作就是需要很长的切换时间。就我自己来说，当我需要同时完成两个程序设计项目时，切换时间大概要六个小时。以一天八小时来看，等于说多工处理把我的生产力降到每天只剩二小时。真令人沮丧啊。</p>
+<p>同样的道理，如果你给某人两件工作，应该要感谢他们只做一件工作而放弃另一件，因为这样能做好更多的事，而且平均上也能更快完成工作。事实上这一切的重点就是绝对不要让人同时做一件以上的事。请确定你有明白它的意思。好的经理人会认为自己的责任是消除障碍，好让大家都能专注在一件事情并把它真的完成。遇到紧急状况时，请先想想能不能自己处理掉，真的不行再丢给深陷在项目中的程序员吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-04-07-human-task-switches/" data-id="cjqj71z6y003hl3w8td6b8zcy" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/joel-on-software/">joel on software</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-2016-04-02-datatable4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -360,7 +431,7 @@ system.time(dt[x %in% 1989:2012])
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-02-datatable4/" data-id="cjqdu9qkh004bubw8jsz9fnpv" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-04-02-datatable4/" data-id="cjqj71z75003nl3w8uazwbfub" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -455,7 +526,7 @@ system.time(dt[x %in% 1989:2012])
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-30-write-fd/" data-id="cjqdu9qjd0023ubw8xhvcssm5" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-30-write-fd/" data-id="cjqj71z70003kl3w8spfk9rc5" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/software/">software</a></li></ul>
@@ -505,7 +576,7 @@ system.time(dt[x %in% 1989:2012])
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-27-joe-on-soft/" data-id="cjqdu9qje0026ubw8zhg2de5m" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-27-joe-on-soft/" data-id="cjqj71z6u003dl3w8atomr3ef" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/software/">software</a></li></ul>
@@ -595,7 +666,7 @@ system.time(dt[x %in% 1989:2012])
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-26-work-simpler/" data-id="cjqdu9qja0020ubw8lohy9zh7" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-26-work-simpler/" data-id="cjqj71z6n0036l3w8ojo4kzci" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/简单工作/">简单工作</a></li></ul>
@@ -687,7 +758,7 @@ http://localhost:3838/11_timer/
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-26-shinyserver-jp/" data-id="cjqdu9qj9001yubw809gnewi0" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-26-shinyserver-jp/" data-id="cjqj71z6l0035l3w8guq76hsi" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shiny-server/">shiny server</a></li></ul>
@@ -779,7 +850,7 @@ http://localhost:3838/11_timer/
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-25-shinyserver/" data-id="cjqdu9qj4001tubw86w1ihcl0" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-25-shinyserver/" data-id="cjqj71z6r003al3w8hr02x8h4" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shiny-server/">shiny server</a></li></ul>
@@ -1275,7 +1346,7 @@ identical(ans1$val, ans2$val)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-22-datatable3/" data-id="cjqdu9qkf004aubw88z4v8kvj" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-22-datatable3/" data-id="cjqj71z6g0031l3w86oem36kq" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -1653,7 +1724,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-21-datatable2/" data-id="cjqdu9qkk004eubw8srsmjr6s" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-21-datatable2/" data-id="cjqj71z6e0030l3w841br1wo4" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -1709,7 +1780,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjqdu9qiz001mubw8asnai480" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjqj71z58001dl3w83qwcxnoo" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单车/">单车</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
@@ -1721,71 +1792,10 @@ DT_n
 
 
   
-    <article id="post-2016-03-15-career" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-03-15-career/" class="article-date">
-  <time datetime="2016-03-15T06:51:30.000Z" itemprop="datePublished">2016-03-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/生活/">生活</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-03-15-career/">转：某T的职级系统</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre><code>原文链接：http://www.cyzone.cn/a/20140828/262150.html   
-</code></pre><p>腾讯的职级系统有26个职业通道，如果你是一个一张白纸只有素质没有任何职业能力的毕业生，可以从这个26个通道，比如行政、财务、设计、运维、开发、运营、产品…….的任何一个1-1级开始，修炼，打怪升级，直到千万年薪。如同一个完整的人生指引。</p>
-<p><strong>横轴是26个职业通道，专业技能各不相同，纵轴是4个大层级。</strong></p>
-<p>以下是按照我的理解来写了。(直接抄原文会被企鹅摔着打的)。</p>
-<p>我觉得腾讯的职业四大层级，几乎就是人生发展的四大层级。</p>
-<p><strong>第一层是动作执行层、第二层是任务执行层、第三层是战略管理层、第四层是战略决策层。</strong></p>
-<p>先说动作执行层。一个企业最多的就是这个层面的员工。或者每个人初入职场，都是从练好一个动作开始。比如，画原型，写代码，写稿子……</p>
-<p>而腾讯对动作执行层的要求是：按照品质要求，完成动作、优化效率。注意，没有品质要求的动作，毫无意义。用户体验的不是产品而是品质感。就像你去一个川餐馆吃鱼香肉丝，你感受到的是这家鱼香肉丝的品质。大厨的工作不单是保证把菜炒出来，更是要保证菜品在一个什么样的品质感里。所以麦当劳的桌子永远擦的干净，同样的人在另外一个餐馆未必达到这种清洁标准。因为麦当劳不是要求把桌子擦了，而是清晰地要求达到什么样的清洁品质。</p>
-<p>达成品质要求之后，在谈完成动作与优化效率。</p>
-<p>任务执行层。就是要把分配的任务及指标，拆解成动作。由不同人组合完成，或者一个团队次序完成。需要在整个过程中，控制人心，安排动作序列，并配置风险，保证完成任务，达成指标。几乎所有铁血创业者都是从这个层级冒出来的。</p>
-<p>战略管理层。就是大家永远不理解的那批副总。带兄弟痛快淋漓干活的都是总监。而副总，心累。他们需要根据战略决策，确定任务优先级，配置资源，鼓舞士气。保证战略方向不偏差。</p>
-<p>而最高的战略决策层，几乎就是个CEO的活。他需要有前瞻，推动相关资源方做出战略决策，并且获取战略资源。就像亮剑里的李云龙。在除了自己，什么都没有的情况，他可以沟通，说服。一个队伍打没了，马上再拉起一个队伍。只要他还要打下去。</p>
-<p><strong>四个层级的核心工作不同，对人的特性的核心需求也不同。</strong></p>
-<p>在动作执行层，才气很重要。</p>
-<p>在任务执行层，责任心，执行力的价值，远大于才气。甚至需要放弃自己的才气，把时间交给众多的兄弟，才能实现任务的完成。</p>
-<p>而一个人能否达到战略管理层，核心要考核的是：心力。心力是什么?就是无止无尽操心的能力。资源永远有限，战略常常在变，兄弟都是亲的，永远没人满意。所以，一堆人拉我去当副总，我都谢谢了。因为自己清楚，心力真心不足啊～</p>
-<p>战略决策层。愿力。其实我在《决策》那篇文章中谈过愿力的问题。没有愿景支撑的决策都是机会主义。一个人如果心中没有愿，那真是谁都帮不了他。看上去再大都是纸老虎。</p>
-<p>所以，人会在哪个层级呆着，度过一生，其实都是因为吃不了其他层级的苦。其实发展个人才气，在动作层呆着，是人生最舒适的选择。</p>
-<p>不过那些以才子自居的人，创业往往格外困难，因为在整个创业的战略确定到达成的过程里，最不值钱的，也就是才气。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-15-career/" data-id="cjqdu9qj2001pubw8afe4qxkr" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/career/">career</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/5/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">__('next') &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -1793,7 +1803,7 @@ DT_n
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">Catégories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
     </div>
@@ -1803,9 +1813,9 @@ DT_n
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
     </div>
   </div>
 
@@ -1813,9 +1823,9 @@ DT_n
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -1832,9 +1842,13 @@ DT_n
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约</a>
+          </li>
         
           <li>
             <a href="/2019/2019-01-01-happynewyear/">又是新的一年</a>
@@ -1852,10 +1866,6 @@ DT_n
             <a href="/2017/2017-10-15-hexo/">迁移博客系统到hexo</a>
           </li>
         
-          <li>
-            <a href="/2017/2017-07-02-food/">迷上做饭视频</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1869,7 +1879,7 @@ DT_n
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2019 youngspring1<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

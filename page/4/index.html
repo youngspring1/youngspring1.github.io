@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
@@ -63,6 +63,59 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-2016-07-18-LCS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-07-18-LCS/" class="article-date">
+  <time datetime="2016-07-18T02:45:09.000Z" itemprop="datePublished">2016-07-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/新知/">新知</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-07-18-LCS/">最长公共子串(Longest Common Substring)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对两个字符串，找到它们的最长公共子串(Longest Common Substring)。   </p>
+<p>今天面试中把一个小妹妹坑惨了。<br>于是试着自己写出来。<br>本来想两个循环暴力找，但是觉得写不下去了。后来想了一个理解起来更简单的方法：</p>
+<ol>
+<li>拿str1跟str2比较。</li>
+<li>拿str1的最长的两个子串跟str2比较。</li>
+<li>拿str1的次长的三个子串跟str2比较。</li>
+<li>……</li>
+</ol>
+<p>python代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">str1=&quot;entertenmant&quot;</div><div class="line">str2=&quot;experting&quot;</div><div class="line"></div><div class="line">length1 = len(str1)</div><div class="line">length2 = len(str2)</div><div class="line">if str1 == str2:</div><div class="line">	print(&quot;common string:&quot; + str1)</div><div class="line">else:</div><div class="line">	found = False</div><div class="line">	for del_len in range(1,length1):</div><div class="line">		for begin_index in range(0, del_len+1):</div><div class="line">			end_index = begin_index + (length1 - del_len)</div><div class="line">			checkstr = str1[begin_index: end_index]</div><div class="line">			if str2.count(checkstr) &gt; 0:</div><div class="line">				print(&quot;find &quot; + checkstr + &quot; in str2. break.&quot;)</div><div class="line">				found = True</div><div class="line">				break</div><div class="line">		if found:</div><div class="line">			break</div><div class="line"></div><div class="line">	print(&quot;common string:&quot; + checkstr)</div></pre></td></tr></table></figure>
+<p>不过这样的复杂度还是至少O(n^3)吧，肉眼可见的两个for循环，再加上一个count函数。<br>网上搜了有更普遍的方法，周末细看。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-07-18-LCS/" data-id="cjqj71z8g005fl3w8hxzlta6a" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LCS/">LCS</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-2016-07-16-thoughts" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -95,7 +148,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-07-16-thoughts/" data-id="cjqdu9qlv0062ubw833o2bhel" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-07-16-thoughts/" data-id="cjqj71z8h005il3w8c0oumz90" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/想法/">想法</a></li></ul>
@@ -139,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-21-lisence/" data-id="cjqdu9qm10069ubw89jpnrjkh" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-21-lisence/" data-id="cjqj71z8c0058l3w8relmf4k9" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li></ul>
@@ -267,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-20-R10/" data-id="cjqdu9qly0066ubw83u5z5mk9" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-20-R10/" data-id="cjqj71z8e005cl3w8yh9g7he0" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -314,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-20-R09/" data-id="cjqdu9qlt005zubw88mwhzflf" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-20-R09/" data-id="cjqj71z890055l3w87gv9s6mn" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -470,7 +523,7 @@ get.variables(AirlineConnecting)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-19-R08/" data-id="cjqdu9qlr005vubw8dmm3aa36" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-19-R08/" data-id="cjqj71z860051l3w8zf987d1o" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -515,7 +568,7 @@ get.variables(AirlineConnecting)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-17-life/" data-id="cjqdu9qlm005oubw8pdb3wbjt" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-17-life/" data-id="cjqj71z83004yl3w87t5pwt7v" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
@@ -561,7 +614,7 @@ get.variables(AirlineConnecting)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-17-taishan/" data-id="cjqdu9qlo005subw8qprh1mnd" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-17-taishan/" data-id="cjqj71z80004ul3w81zg4zoaw" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/泰山/">泰山</a></li></ul>
@@ -606,7 +659,7 @@ get.variables(AirlineConnecting)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-15-focus/" data-id="cjqdu9qlk005lubw8o2az07ep" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-15-focus/" data-id="cjqj71z7y004rl3w8v7vjy7gh" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/专注/">专注</a></li></ul>
@@ -660,7 +713,7 @@ get.variables(AirlineConnecting)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-06-lonely/" data-id="cjqdu9qlh005gubw8c9ncds9a" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-06-lonely/" data-id="cjqj71z7u004kl3w81a2e38wv" class="article-share-link">Partager</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/诗/">诗</a></li></ul>
@@ -672,270 +725,10 @@ get.variables(AirlineConnecting)
 
 
   
-    <article id="post-2016-05-24-R07" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-05-24-R07/" class="article-date">
-  <time datetime="2016-05-23T17:18:29.000Z" itemprop="datePublished">2016-05-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-05-24-R07/">MIT:The Analytics Edge 笔记07－可视化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="external">15.071x The Analytics Edge</a> 第七单元的学习记录。</p>
-<hr>
-<h2 id="Visualization"><a href="#Visualization" class="headerlink" title="Visualization"></a>Visualization</h2><p>第七单元的主题是可视化。</p>
-<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>plot和ggplot2的比较<br>plot：只有简单的点和线，不容易添加其他元素。<br>ggplot2：引入图层，很容易添加其他元素   </p>
-<h4 id="ggplot2"><a href="#ggplot2" class="headerlink" title="ggplot2"></a>ggplot2</h4><p>ggplot2三要素：</p>
-<ol>
-<li>Data<br> 数据，使用data.frame。</li>
-<li>Aesthetic mapping<br> 指定如何将 data.frame里的变量映射到图形属性上。比如，颜色，形状，比例，x／y坐标，分组等等。</li>
-<li>Geometric objects<br> 决定数据以什么样的形式显示。比如，点，线，箱线图，条形图，多边形等等。</li>
-</ol>
-<p>结合下面这条命令，参数WHO就是提供数据的data.frame，参数aes()就是Aesthetic mapping，后面用加号连结的类似geom_point()就是Geometric objects。</p>
-<pre><code># 形式
-# ggplot(data = NULL, mapping = aes(), ..., environment = parent.frame())
-# 例子
-ggplot(WHO, aes(x = GNI, y = FertilityRate, color = Region)) + geom_point()
-</code></pre><p>ase()即可以作为ggplot()的参数，又可以作为geom_XXXX()的参数</p>
-<h4 id="Aesthetic-mapping"><a href="#Aesthetic-mapping" class="headerlink" title="Aesthetic mapping"></a>Aesthetic mapping</h4><p>坐标相关</p>
-<pre><code>aes(x, y, xmin, xmax, ymin, ymax, xend, yend)
-# 当然就是x，y坐标分别指定data.frame的某一列
-</code></pre><p>注：坐标相关的，一般作为ggplot()的参数，其他的都可以作为geom()的参数。   </p>
-<h4 id="Geometric-objects"><a href="#Geometric-objects" class="headerlink" title="Geometric objects"></a>Geometric objects</h4><p>颜色相关</p>
-<pre><code>aes(colour, fill, alpha)
-# colour 颜色
-# fill   填充指标，data.frame的某一列。也类似于分类，比如该列有两个因子，那么会用两种不同的颜色填充
-# alpha  透明度，0到1之间的小数
-</code></pre><p>分组相关</p>
-<pre><code>aes(group)
-# group 分组指标，可以指定为1，那所有数据都在1组。也可以指定data.frame的某一列
-</code></pre><p>形态相关</p>
-<pre><code>aes(linetype, size, shape)
-# linetype 即lty，线段的类型
-# size     点的大小，线的粗细。指定整数数值。
-# shape    图形的类型
-</code></pre><p>图形的类型，即geom_point(shape = n)中n的取值<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160524-shapes.png" alt="shapes"></p>
-<p>线段的类型，即geom_point(lty = n)中n的取值<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160524-line-types.png" alt="line-types"></p>
-<p>描绘形状</p>
-<pre><code>geom_point()  点
-geom_line()   线
-geom_tile()   条形图
-geom_bar()    直方图
-geom_ploygen()多边形
-</code></pre><p>注：<br>binwidth = 5 :粒度？<br>geom_bar(stat=”identity”) :use the value of the y variable as is<br>geom_histogram(position = “identity”) :not to stack the histograms</p>
-<h3 id="2-实战"><a href="#2-实战" class="headerlink" title="2.实战"></a>2.实战</h3><h4 id="绘图"><a href="#绘图" class="headerlink" title="绘图"></a>绘图</h4><pre><code># Read in data
-WHO = read.csv(&quot;WHO.csv&quot;)
-str(WHO)
-
-# Plot from Week 1
-plot(WHO$GNI, WHO$FertilityRate)
-
-# Let&apos;s redo this using ggplot 
-# Install and load the ggplot2 library:
-install.packages(&quot;ggplot2&quot;)
-library(ggplot2)
-
-# Create the ggplot object with the data and the aesthetic mapping:
-scatterplot = ggplot(WHO, aes(x = GNI, y = FertilityRate))
-
-# Add the geom_point geometry
-scatterplot + geom_point()
-
-# Make a line graph instead:
-scatterplot + geom_line()
-
-# Switch back to our points:
-scatterplot + geom_point()
-
-# Redo the plot with blue triangles instead of circles:
-scatterplot + geom_point(color = &quot;blue&quot;, size = 3, shape = 17) 
-
-# Another option:
-scatterplot + geom_point(color = &quot;darkred&quot;, size = 3, shape = 8) 
-
-# Add a title to the plot:
-scatterplot + geom_point(colour = &quot;blue&quot;, size = 3, shape = 17) + ggtitle(&quot;Fertility Rate vs. Gross National Income&quot;)
-</code></pre><h4 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h4><pre><code># 因子，以颜色区分    
-# Color the points by region: 
-ggplot(WHO, aes(x = GNI, y = FertilityRate, color = Region)) + geom_point()
-
-# 数值，以颜色深浅区分
-# Color the points according to life expectancy:
-ggplot(WHO, aes(x = GNI, y = FertilityRate, color = LifeExpectancy)) + geom_point()
-</code></pre><h4 id="拟合"><a href="#拟合" class="headerlink" title="拟合"></a>拟合</h4><pre><code># Is the fertility rate of a country was a good predictor of the percentage of the population under 15?
-ggplot(WHO, aes(x = FertilityRate, y = Under15)) + geom_point()
-
-# Let&apos;s try a log transformation:
-ggplot(WHO, aes(x = log(FertilityRate), y = Under15)) + geom_point()
-
-# Simple linear regression model to predict the percentage of the population under 15, using the log of the fertility rate:
-mod = lm(Under15 ~ log(FertilityRate), data = WHO)
-summary(mod)
-
-# Add this regression line to our plot:
-ggplot(WHO, aes(x = log(FertilityRate), y = Under15)) + geom_point() +     stat_smooth(method = &quot;lm&quot;)
-
-# 99% confidence interval
-ggplot(WHO, aes(x = log(FertilityRate), y = Under15)) + geom_point() + stat_smooth(method = &quot;lm&quot;, level = 0.99)
-
-# No confidence interval in the plot
-ggplot(WHO, aes(x = log(FertilityRate), y = Under15)) + geom_point() + stat_smooth(method = &quot;lm&quot;, se = FALSE)
-
-# Change the color of the regression line:
-ggplot(WHO, aes(x = log(FertilityRate), y = Under15)) + geom_point() + stat_smooth(method = &quot;lm&quot;, colour = &quot;orange&quot;)
-</code></pre><h4 id="热力图"><a href="#热力图" class="headerlink" title="热力图"></a>热力图</h4><p>热力图（数据越多颜色越深）的效果，依靠scale_fill_gradient()来实现，可以通过low和high指定深浅区域的颜色，然后自动形成渐变效果。旁边的图例通过参数guide = “legend”来指定。<br>最终的命令如下，如何生成数据的，就不啰嗦了。</p>
-<pre><code># Change the color scheme
-ggplot(DayHourCounts, aes(x = Hour, y = Var1)) + geom_tile(aes(fill = Freq)) + scale_fill_gradient(name=&quot;Total MV Thefts&quot;, low=&quot;white&quot;, high=&quot;red&quot;) + theme(axis.title.y = element_blank())
-</code></pre><h4 id="地理热力图"><a href="#地理热力图" class="headerlink" title="地理热力图"></a>地理热力图</h4><p>顾名思义，地理热力图就是在地图上显示热力图。<br>包map内置了美国地图、世界地图、法国地图、意大利地图等。地图的原理跟图片类似，图片就是按照某个粒度分成很多个像素点，然后保存像素点的颜色信息；地图就是按照经纬度分成很多点，保存每个点的信息（比如这个点位于哪个州，这样就形成一个美国地图）。<br>对比刚才的 ggplot() + geom_tile() + scale_fill_gradient()<br>我们现在使用 ggmap() + geom_point() + scale_fill_gradient()</p>
-<pre><code># Install and load two new packages:
-install.packages(&quot;maps&quot;)
-install.packages(&quot;ggmap&quot;)
-library(maps)
-library(ggmap)
-
-# Load a map of Chicago into R:
-chicago = get_map(location = &quot;chicago&quot;, zoom = 11)
-
-# Look at the map
-ggmap(chicago)
-
-# Plot the first 100 motor vehicle thefts:
-ggmap(chicago) + geom_point(data = mvt[1:100,], aes(x = Longitude, y = Latitude))
-
-# Round our latitude and longitude to 2 digits of accuracy, and create a crime counts data frame for each area:
-LatLonCounts = as.data.frame(table(round(mvt$Longitude,2), round(mvt$Latitude,2)))
-
-str(LatLonCounts)
-
-# Convert our Longitude and Latitude variable to numbers:
-LatLonCounts$Long = as.numeric(as.character(LatLonCounts$Var1))
-LatLonCounts$Lat = as.numeric(as.character(LatLonCounts$Var2))
-
-# Plot these points on our map:
-ggmap(chicago) + geom_point(data = LatLonCounts, aes(x = Long, y = Lat, color = Freq, size=Freq))
-
-# Change the color scheme:
-ggmap(chicago) + geom_point(data = LatLonCounts, aes(x = Long, y = Lat, color = Freq, size=Freq)) + scale_colour_gradient(low=&quot;yellow&quot;, high=&quot;red&quot;)
-
-# We can also use the geom_tile geometry
-ggmap(chicago) + geom_tile(data = LatLonCounts, aes(x = Long, y = Lat, alpha = Freq), fill=&quot;red&quot;)
-</code></pre><h4 id="云图"><a href="#云图" class="headerlink" title="云图"></a>云图</h4><pre><code># 先准备下数据，我们需要很多单词。
-# 跟文本处理类似，依旧使用tweets推文，只是我们这次不抽取词干。
-library(tm)
-tweets = read.csv(&quot;tweets.csv&quot;, stringsAsFactors=FALSE)
-corpus = Corpus(VectorSource(tweets$Tweet))
-corpus = tm_map(corpus, tolower)
-corpus = tm_map(corpus, PlainTextDocument)
-corpus = tm_map(corpus, removePunctuation)
-corpus = tm_map(corpus, removeWords, stopwords(&quot;english&quot;))
-frequencies = DocumentTermMatrix(corpus)
-allTweets = as.data.frame(as.matrix(frequencies))
-
-# 我们需要的单词就是列名
-colnames(allTweets)
-# 我们需要的另一个指标是单词的频率
-colSums(allTweets)
-
-# 现在加载wordcloud这个包
-library(wordcloud)
-wordcloud(colnames(allTweets), colSums(allTweets), scale=c(2, .25))
-
-# 参数 scale 指定了文字的大小
-# scale=c(2, .25) 表示出现频率最高的单词，显示的字号为2，出现频率最小的单词，显示的字号为0.25
-wordcloud(colnames(allTweets), colSums(allTweets))
-# 等效于
-wordcloud(colnames(allTweets), colSums(allTweets), scale=c(4, 0.5))
-
-# min.freq
-# 只显示出现频率大于指定值的单词
-
-# max.words
-# 最多只显示指定数目的单词
-
-# random.order == FALSE
-# 最先显示出现频率最高的单词
-
-# rot.per = 0.5
-# 有一半的单词垂直显示。默认值是0.1。
-
-# random.color == TRUE
-# 使用随机颜色
-</code></pre><p>颜色<br>包RColorBrewer支持下面这些调色板，可以输入 display.brewer.all() 看到下面这张图。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160606-brewer.all.png" alt="brewer.all"></p>
-<pre><code>ibrary(RColorBrewer)
-display.brewer.all()
-
-# 像这样使用
-colors=brewer.pal(9, &quot;Blues&quot;)[5:9]
-wordcloud(colnames(allTweets), colSums(allTweets), colors)
-</code></pre><h4 id="保存"><a href="#保存" class="headerlink" title="保存"></a>保存</h4><pre><code># Save our plot:
-fertilityGNIplot = scatterplot + geom_point(colour = &quot;blue&quot;, size = 3, shape = 17) + ggtitle(&quot;Fertility Rate vs. Gross National Income&quot;)
-pdf(&quot;MyPlot.pdf&quot;)
-print(fertilityGNIplot)
-dev.off()
-</code></pre><h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><h6 id="R中星期的显示"><a href="#R中星期的显示" class="headerlink" title="R中星期的显示"></a>R中星期的显示</h6><p>在中文系统上，weekdays()返回的结果是 “星期二 星期六 星期日 星期三 星期四 星期五 星期一”，如果希望输出的结果是“Friday    Monday  Saturday    Sunday  Thursday   Tuesday Wednesday”，应该怎么做？   </p>
-<pre><code># Convert the Date variable to a format that R will recognize:
-mvt$Date = strptime(mvt$Date, format=&quot;%m/%d/%y %H:%M&quot;)
-mvt$Weekday = weekdays(mvt$Date)
-
-table(mvt$Weekday)
-星期二 星期六 星期日 星期三 星期四 星期五 星期一 
-26791  27118  26316  27416  27319  29284  27397 
-
-Sys.getlocale()
-&quot;zh_CN.UTF-8/zh_CN.UTF-8/zh_CN.UTF-8/C/zh_CN.UTF-8/zh_CN.UTF-8&quot;
-Sys.setlocale(&quot;LC_TIME&quot;, &quot;en_US.UTF-8&quot;)
-&quot;en_US&quot;
-Sys.getlocale()
-&quot;zh_CN.UTF-8/zh_CN.UTF-8/zh_CN.UTF-8/C/en_US.UTF-8/zh_CN.UTF-8&quot;
-
-table(mvt$Weekday)
-Friday    Monday  Saturday    Sunday  Thursday   Tuesday Wednesday 
-29284     27397     27118     26316     27319     26791     27416
-</code></pre><p>另外注意到，不管是中文还是英文，都是按照字母表顺序排列的，不是按照实际中有意义的顺序排列的。</p>
-<pre><code>WeekdayCounts = as.data.frame(table(mvt$Weekday))
-WeekdayCounts$Var1 = factor(WeekdayCounts$Var1, ordered=TRUE, levels=c(&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;,&quot;Saturday&quot;))
-</code></pre><h6 id="factor转数字"><a href="#factor转数字" class="headerlink" title="factor转数字"></a>factor转数字</h6><p>先把factor转成character，再转成数字</p>
-<pre><code># Convert the second variable, Var2, to numbers and call it Hour:
-DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
-</code></pre><hr>
-<p>参考：<br><a href="http://www.cookbook-r.com/Graphs/Shapes_and_line_types/" target="_blank" rel="external">形状和线段的类型</a><br><a href="http://www.cookbook-r.com/Graphs/Colors_\(ggplot2\" target="_blank" rel="external">颜色</a>)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-24-R07/" data-id="cjqdu9ql90056ubw8m9193qsu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">__('next') &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -943,7 +736,7 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">Catégories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
     </div>
@@ -953,9 +746,9 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">Mot-clés</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
     </div>
   </div>
 
@@ -963,9 +756,9 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">Nuage de mot-clés</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -982,9 +775,13 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约</a>
+          </li>
         
           <li>
             <a href="/2019/2019-01-01-happynewyear/">又是新的一年</a>
@@ -1002,10 +799,6 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
             <a href="/2017/2017-10-15-hexo/">迁移博客系统到hexo</a>
           </li>
         
-          <li>
-            <a href="/2017/2017-07-02-food/">迷上做饭视频</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1019,7 +812,7 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2019 youngspring1<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
