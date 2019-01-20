@@ -53,7 +53,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜尋"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://youngspring1.github.io"></form>
@@ -63,6 +63,384 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-2016-03-21-datatable2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-03-21-datatable2/" class="article-date">
+  <time datetime="2016-03-21T03:56:45.000Z" itemprop="datePublished">2016-03-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/data-table教程/">data.table教程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-03-21-datatable2/">data.table 教程2－语义引用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>目录：   </p>
+<ol>
+<li><a href="http://youngspring1.github.io/post/2016/2016-03-13-datatable1/">data.table 介绍</a>   </li>
+<li><a href="http://youngspring1.github.io/post/2016/2016-03-21-datatable2/">语义引用</a>      </li>
+<li><a href="http://youngspring1.github.io/post/2016/2016-03-22-datatable3/">主键、基于二分法搜索的subset</a>    </li>
+<li><a href="http://youngspring1.github.io/post/2016/2016-04-02-datatable4/">二次索引和自动索引</a>   </li>
+<li><a href="http://youngspring1.github.io/post/2016/2016-04-08-datatable5/">数据拆分和合并</a>   </li>
+</ol>
+<p>原文地址：<br><a href="https://github.com/Rdatatable/data.table/wiki/Getting-started" target="_blank" rel="external">data.table/wiki/Getting-started</a></p>
+<hr>
+<p>本教程讨论data.table的语义引用，它允许通过引用来add/update/delete列，然后通过参数i和by结合。它主要给那些熟悉data.table语法、知道如何subset行／select列／分组的人使用。如果你对这些不熟悉，请学习上一讲 <a href="http://youngspring1.github.io/post/2016-03-13-datatable1/">data.table 介绍</a>。   </p>
+<hr>
+<h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><p>我们继续使用上一讲中使用的航班信息flights。</p>
+<pre><code>flights &lt;- fread(&quot;https://raw.githubusercontent.com/wiki/arunsrinivasan/    flights/NYCflights14/flights14.csv&quot;)
+flights
+#         year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight
+#      1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1
+#      2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3
+#      3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21
+#      4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29
+#      5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117
+#     ---                                                                                      
+# 253312: 2014    10  31     1459         1     1747       -30         0      UA  N23708   1744
+# 253313: 2014    10  31      854        -5     1147       -14         0      UA  N33132   1758
+# 253314: 2014    10  31     1102        -8     1311        16         0      MQ  N827MQ   3591
+# 253315: 2014    10  31     1106        -4     1325        15         0      MQ  N511MQ   3592
+# 253316: 2014    10  31      824        -5     1045         1         0      MQ  N813MQ   3599
+#         origin dest air_time distance hour min
+#      1:    JFK  LAX      359     2475    9  14
+#      2:    JFK  LAX      363     2475   11  57
+#      3:    JFK  LAX      351     2475   19   2
+#      4:    LGA  PBI      157     1035    7  22
+#      5:    JFK  LAX      350     2475   13  47
+#     ---                                       
+# 253312:    LGA  IAH      201     1416   14  59
+# 253313:    EWR  IAH      189     1400    8  54
+# 253314:    LGA  RDU       83      431   11   2
+# 253315:    LGA  DTW       75      502   11   6
+# 253316:    LGA  SDF      110      659    8  24
+dim(flights)
+# [1] 253316     17
+</code></pre><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在这一讲，我们会：   </p>
+<pre><code>* 简要讨论“语义引用”，然后比较操作符“:=”的两种不同的形式。
+* 学习如何在参数j里面使用操作符“:=”来add/update/delete列，如何与参数i和by相结合。
+* 了解操作符“:=”的副作用，并学习如何用 copy() 来避免这些副作用。
+</code></pre><h2 id="1-语义引用"><a href="#1-语义引用" class="headerlink" title="1. 语义引用"></a>1. 语义引用</h2><p>到目前为止，我们学习到的所有的操作都会生成一个新的数据集。接下来，我们会学习如何在原来数据集的基础上，添加／更新／删除那些已经存在的列。      </p>
+<h4 id="a-背景"><a href="#a-背景" class="headerlink" title="a) 背景"></a>a) 背景</h4><p>在学习语义引用之前，我们先来看下面这个data.frame：   </p>
+<pre><code>DF = data.frame(ID = c(&quot;b&quot;,&quot;b&quot;,&quot;b&quot;,&quot;a&quot;,&quot;a&quot;,&quot;c&quot;), a = 1:6, b = 7:12, c=13:18)
+DF
+#   ID a  b  c
+# 1  b 1  7 13
+# 2  b 2  8 14
+# 3  b 3  9 15
+# 4  a 4 10 16
+# 5  a 5 11 17
+# 6  c 6 12 18
+</code></pre><p>当我们执行下面的命令：   </p>
+<pre><code>DF$c &lt;- 18:13               # (1) -- replace entire column
+# or
+DF$c[DF$ID == &quot;b&quot;] &lt;- 15:13 # (2) -- subassign in column &apos;c&apos;
+</code></pre><p>在R语言V3.1之前的版本里，上面这两种方法都会导致对整个data.frame的深度拷贝[^1]。而且还会拷贝多次[^2]。为了提高效率避免冗余操作，data.tabel使用了操作符”:=”。R里面本来就有定义了这个操作符，但却没有使用[^3]。<br>[^1]:<a href="http://r.789695.n4.nabble.com/speeding-up-perception-td3640920.html#a3646694" target="_blank" rel="external">Speeding up perception</a><br>[^2]:<a href="http://stackoverflow.com/questions/23898969/is-data-really-copied-four-times-in-rs-replacement-functions" target="_blank" rel="external">Is data really copied four times in R’s replacement functions?</a><br>[^3]:<a href="http://stackoverflow.com/questions/7033106/why-has-data-table-defined-rather-than-overloading" target="_blank" rel="external">Why has data.table defined := rather than overloading &lt;-?</a></p>
+<p>在R语言V3.1之前的版本里，方法(1)只做影子拷贝，处理性能有了很大提升。然而，方法(2)还是会做深度拷贝。这就意味着，对于同样的查询语句，想要选取的列越多，需要做的深度拷贝就越多。   </p>
+<pre><code>影子拷贝 vs 深度拷贝
+影子拷贝，只是一份指向列的指针向量的拷贝，它会随着data.frame或者data.table的变化而变化。但在内存里，数据不是真的被复制了。   
+深度拷贝，正相反，它会复制整个数据，并且保存在内存里。
+</code></pre><p>如果使用操作符”:=”，不管在R语言的什么版本里，不管是方法(1)还是方法(2)，都不会再拷贝。这是因为，操作符”:=”通过引用更新列。</p>
+<h4 id="b-操作符“-”"><a href="#b-操作符“-”" class="headerlink" title="b) 操作符“:=”"></a>b) 操作符“:=”</h4><p>在参数j中，操作符“:=”有两种使用方法：<br>a.左右等式的形式</p>
+<pre><code>DT[, c(&quot;colA&quot;, &quot;colB&quot;, ...) := list(valA, valB, ...)]
+
+# when you have only one column to assign to you 
+# can drop the quotes and list(), for convenience
+DT[, colA := valA]
+</code></pre><p>b.函数形式</p>
+<pre><code>DT[, `:=`(colA = valA, # valA is assigned to colA
+      colB = valB, # valB is assigned to colB
+      ...
+)]
+</code></pre><p>注意：</p>
+<pre><code>上面的两个例子只是用来说明使用的形式，并不是实际可以运行的代码示例。我们会在下一节中，用航班信息flight的data.table来举例说明。
+</code></pre><p>说明：</p>
+<pre><code>* 形式(a)比较容易编码，特别是，事先不知道需要被赋值的列的时候。
+* 相对而言，形式(b)更加趁手，如果你愿意追加点注释😄。
+* 操作符“:=”没有返回值。
+* 既然参数j里面可以使用操作符“:=”，那么，就像上一讲中学习到的内容，我们可以和参数i和参数by一起，做些聚合的运算。
+</code></pre><p>在上面两种形式里，注意我们没有把运算的结果赋值给一个变量。因为完全没必要。我们直接更新data.table。让我们通过一些例子来说明。<br>在接下来的教程里，我们对航班信息flight，这个data.table来示例。   </p>
+<h2 id="2-添加／更新／删除列"><a href="#2-添加／更新／删除列" class="headerlink" title="2. 添加／更新／删除列"></a>2. 添加／更新／删除列</h2><h4 id="a-添加列"><a href="#a-添加列" class="headerlink" title="a) 添加列"></a>a) 添加列</h4><p>－如何对每次航班，添加 speed 和 total delay 两列</p>
+<pre><code>flights[, `:=`(speed = distance / (air_time/60), # speed in km/hr
+           delay = arr_delay + dep_delay)]       # delay in minutes
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min    speed delay
+# 1:  LAX      359     2475    9  14 413.6490    27
+# 2:  LAX      363     2475   11  57 409.0909    10
+# 3:  LAX      351     2475   19   2 423.0769    11
+# 4:  PBI      157     1035    7  22 395.5414   -34
+# 5:  LAX      350     2475   13  47 424.2857     3
+# 6:  LAX      339     2454   18  24 434.3363     4
+
+## alternatively, using the &apos;LHS := RHS&apos; form
+# flights[, c(&quot;speed&quot;, &quot;delay&quot;) := list(distance/(air_time/60), arr_delay + dep_delay)]
+</code></pre><p>注意：</p>
+<pre><code>* 我们不需要将结果赋值给 flights。
+* flights 现在包含了刚刚追加的两列。这就是我们说的“添加列”。
+* 我们用函数形式，这样就可以在旁边写注释了。当然也可以用等式的形式。
+</code></pre><h4 id="b-更新列（sub-assign）"><a href="#b-更新列（sub-assign）" class="headerlink" title="b) 更新列（sub-assign）"></a>b) 更新列（sub-assign）</h4><p>现在留意一下 fligths 里的 hour列。</p>
+<pre><code># get all &apos;hours&apos; in flights
+flights[, sort(unique(hour))]
+#  [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+</code></pre><p>可以看到，hour列有25种不同的取值。但是0点和24点应该是一样的，我们来把24点全部替换成0点。<br>－将 hour=24 替换成0</p>
+<pre><code># subassign by reference
+flights[hour == 24L, hour := 0L]
+</code></pre><p>说明：</p>
+<pre><code>* 就像在上一讲中学习的一样，我们可以使用参数i 和 参数j里的操作符“:=”一起使用。
+* 只有满足了参数i 中指定的条件 hour == 24L 的那些列，它们的值会被替换成0。
+* 操作符“:=”没有返回值。有时候需要查看运行的结果，我们可以在查询语句的最后加一对方括号[]，来达到这个目的。
+flights[hour == 24L, hour := 0L][]
+#         year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight
+#      1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1
+#      2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3
+#      3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21
+#      4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29
+#      5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117
+#     ---                                                                                      
+# 253312: 2014    10  31     1459         1     1747       -30         0      UA  N23708   1744
+# 253313: 2014    10  31      854        -5     1147       -14         0      UA  N33132   1758
+# 253314: 2014    10  31     1102        -8     1311        16         0      MQ  N827MQ   3591
+# 253315: 2014    10  31     1106        -4     1325        15         0      MQ  N511MQ   3592
+# 253316: 2014    10  31      824        -5     1045         1         0      MQ  N813MQ   3599
+#         origin dest air_time distance hour min    speed delay
+#      1:    JFK  LAX      359     2475    9  14 413.6490    27
+#      2:    JFK  LAX      363     2475   11  57 409.0909    10
+#      3:    JFK  LAX      351     2475   19   2 423.0769    11
+#      4:    LGA  PBI      157     1035    7  22 395.5414   -34
+#      5:    JFK  LAX      350     2475   13  47 424.2857     3
+#     ---                                                      
+# 253312:    LGA  IAH      201     1416   14  59 422.6866   -29
+# 253313:    EWR  IAH      189     1400    8  54 444.4444   -19
+# 253314:    LGA  RDU       83      431   11   2 311.5663     8
+# 253315:    LGA  DTW       75      502   11   6 401.6000    11
+# 253316:    LGA  SDF      110      659    8  24 359.4545    -4
+</code></pre><p>现在我们再来看下 hour列。</p>
+<pre><code># check again for &apos;24&apos;
+flights[, sort(unique(hour))]
+#  [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+</code></pre><h4 id="c-删除列"><a href="#c-删除列" class="headerlink" title="c) 删除列"></a>c) 删除列</h4><p>－删除 delay列</p>
+<pre><code>flights[, c(&quot;delay&quot;) := NULL]
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min    speed
+# 1:  LAX      359     2475    9  14 413.6490
+# 2:  LAX      363     2475   11  57 409.0909
+# 3:  LAX      351     2475   19   2 423.0769
+# 4:  PBI      157     1035    7  22 395.5414
+# 5:  LAX      350     2475   13  47 424.2857
+# 6:  LAX      339     2454   18  24 434.3363
+
+## or using the functional form
+# flights[, `:=`(delay = NULL)]
+</code></pre><p>说明：</p>
+<pre><code>* 将一列赋值为 NULL，就会删除那一列。删除立即生效。
+* 使用左右等式的形式的时候，除了指定列名，我们也可以指定列号。但还是忘记吧，指定列名是个好的编码习惯。
+* 为了方便，如果只需要删除一列，可以去掉 c(&quot;&quot;)，只指定列名，像这样：
+flights[, delay := NULL]
+这和上面的方法是等效的。
+</code></pre><h4 id="d-“-”和分组"><a href="#d-“-”和分组" class="headerlink" title="d) “:=”和分组"></a>d) “:=”和分组</h4><p>我们已经在b)里面学习了如何跟参数i 一起使用，现在我们来学习如何跟参数by 一起使用。<br>－如何追加一列，用来保存某对起飞／到达机场间的最快飞行速度</p>
+<pre><code>flights[, max_speed := max(speed), by=.(origin, dest)]
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min    speed max_speed
+# 1:  LAX      359     2475    9  14 413.6490  526.5957
+# 2:  LAX      363     2475   11  57 409.0909  526.5957
+# 3:  LAX      351     2475   19   2 423.0769  526.5957
+# 4:  PBI      157     1035    7  22 395.5414  517.5000
+# 5:  LAX      350     2475   13  47 424.2857  526.5957
+# 6:  LAX      339     2454   18  24 434.3363  518.4507
+</code></pre><p>说明：</p>
+<pre><code>* 我们用操作符“:=”追加了一列 max_speed。
+* 和上一讲学习到的内容一样，我们将所有数据进行分组。对于每组数据，计算最快速度。对于一对机场，这个最快速度是唯一的。循环复制这个值到一个list，直到跟该组数据的行数一样多。航班信息flights会被就地更新，不会因拷贝浪费内存空间。
+* 和上一讲学习到的内容一样，我们也可以对参数by指定一个字符型的向量，形式是这样：
+by = c(&quot;origin&quot;, &quot;dest&quot;)
+</code></pre><h4 id="e-“-”和复数列"><a href="#e-“-”和复数列" class="headerlink" title="e) “:=”和复数列"></a>e) “:=”和复数列</h4><p>－如何再追加两列，用于保存每个月的最大起飞延误时间dep_delay 和到达延误时间arr_delay<br>小提示：要用到上一讲学习到的 .SD</p>
+<pre><code>in_cols  = c(&quot;dep_delay&quot;, &quot;arr_delay&quot;)
+out_cols = c(&quot;max_dep_delay&quot;, &quot;max_arr_delay&quot;)
+flights[, c(out_cols) := lapply(.SD, max), by = month, .SDcols = in_cols]
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min    speed max_speed max_dep_delay max_arr_delay
+# 1:  LAX      359     2475    9  14 413.6490  526.5957           973           996
+# 2:  LAX      363     2475   11  57 409.0909  526.5957           973           996
+# 3:  LAX      351     2475   19   2 423.0769  526.5957           973           996
+# 4:  PBI      157     1035    7  22 395.5414  517.5000           973           996
+# 5:  LAX      350     2475   13  47 424.2857  526.5957           973           996
+# 6:  LAX      339     2454   18  24 434.3363  518.4507           973           996
+</code></pre><p>说明：</p>
+<pre><code>* 为了更好的可读性，我们使用了左右等式的形式。我们事先保存了输入的列名到变量in_cols，作为 .SDcols的参数。我们还事先保存了输出的列名到变量out_cols，作为左边的表达式。
+* 注意一下，我们在c)里面讲过，如果只需要追加一列，那么可以省略双引号，只指定列名。但是这里我们需要指定 c(out_cols) 或者 (out_cols)。 
+* 左右等式的形式，允许我们操作复数的列。在右边的表达式里，为了对指定在 .SDcols 里的列计算最大值，我们使用了R的基础函数 lapply()。这些我们在上一讲中都学习过了。它返回有两个元素的list，包含每组的 dep_delay 和 arr_delay 这两列的最大值。
+</code></pre><p>在进行下一节的学习之前，让我们删除刚刚追加的几列：speed, max_speed, max_dep_delay 和 max_arr_delay。</p>
+<pre><code># RHS gets automatically recycled to length of LHS
+flights[, c(&quot;speed&quot;, &quot;max_speed&quot;, &quot;max_dep_delay&quot;, &quot;max_arr_delay&quot;) := NULL]
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min
+# 1:  LAX      359     2475    9  14
+# 2:  LAX      363     2475   11  57
+# 3:  LAX      351     2475   19   2
+# 4:  PBI      157     1035    7  22
+# 5:  LAX      350     2475   13  47
+# 6:  LAX      339     2454   18  24
+</code></pre><h2 id="3-“-”和copy"><a href="#3-“-”和copy" class="headerlink" title="3. “:=”和copy()"></a>3. “:=”和copy()</h2><p>操作符“:=”会更新原数据。和我们之前学过的功能不同，有时候，我们希望更新原数据。但有时候，我们不想更新原数据，这种情况下，我们可以用函数 copy()。</p>
+<h4 id="a-“-”的副作用"><a href="#a-“-”的副作用" class="headerlink" title="a) “:=”的副作用"></a>a) “:=”的副作用</h4><p>如果我们想创建一个函数，用于返回每个月的最快速度。但是此时，我们也想对 flights 追加一列 speed。可以像下面这样做：</p>
+<pre><code>foo &lt;- function(DT) {
+  DT[, speed := distance / (air_time/60)]
+  DT[, .(max_speed = max(speed)), by=month]
+}
+ans = foo(flights)
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min    speed
+# 1:  LAX      359     2475    9  14 413.6490
+# 2:  LAX      363     2475   11  57 409.0909
+# 3:  LAX      351     2475   19   2 423.0769
+# 4:  PBI      157     1035    7  22 395.5414
+# 5:  LAX      350     2475   13  47 424.2857
+# 6:  LAX      339     2454   18  24 434.3363
+head(ans)
+#    month max_speed
+# 1:     1  535.6425
+# 2:     2  535.6425
+# 3:     3  549.0756
+# 4:     4  585.6000
+# 5:     5  544.2857
+# 6:     6  608.5714
+</code></pre><p>说明：</p>
+<pre><code>* 注意一个新的列 speed 被追加到 flight 里了。这时因为我们用了操作符“:=”。既然 DT 和flights都指向内存中同一个对象，对 DT 的操作，也会对 flights 生效。
+* 返回值 ans 包含了每月的最快速度。
+</code></pre><h4 id="b-函数copy"><a href="#b-函数copy" class="headerlink" title="b) 函数copy()"></a>b) 函数copy()</h4><p>在前面一节，我们利用了操作符“:=”的副作用来更新原数据。但是不会一直希望这样又是，我们希望给函数传递data.table参数，使用操作符“:=”的功能，但是不想改变原数据。我们可以用函数 copy() 来做到这一点。</p>
+<pre><code>函数 copy() 对输入参数进行深度拷贝，因此对副本做的所有更新操作，都不会对原数据生效。
+</code></pre><p>函数 copy() 有两个不可或缺的特点：<br>1.和前一节内容的情形相反，我们可能不希望传递的参数被修改。举个例子，考虑前一节中，我们不想修改 flights的内容。<br>我们先删掉前一节中，追加的 speed列：   </p>
+<pre><code>flights[, speed := NULL]   
+</code></pre><p>现在，我们可以像下面这样做：</p>
+<pre><code>foo &lt;- function(DT) {
+  DT &lt;- copy(DT)                             ## deep copy
+  DT[, speed := distance / (air_time/60)]    ## doesn&apos;t affect &apos;flights&apos;
+  DT[, .(max_speed = max(speed)), by=month]
+}
+ans &lt;- foo(flights)
+head(flights)
+#    year month day dep_time dep_delay arr_time arr_delay cancelled carrier tailnum flight origin
+# 1: 2014     1   1      914        14     1238        13         0      AA  N338AA      1    JFK
+# 2: 2014     1   1     1157        -3     1523        13         0      AA  N335AA      3    JFK
+# 3: 2014     1   1     1902         2     2224         9         0      AA  N327AA     21    JFK
+# 4: 2014     1   1      722        -8     1014       -26         0      AA  N3EHAA     29    LGA
+# 5: 2014     1   1     1347         2     1706         1         0      AA  N319AA    117    JFK
+# 6: 2014     1   1     1824         4     2145         0         0      AA  N3DEAA    119    EWR
+#    dest air_time distance hour min
+# 1:  LAX      359     2475    9  14
+# 2:  LAX      363     2475   11  57
+# 3:  LAX      351     2475   19   2
+# 4:  PBI      157     1035    7  22
+# 5:  LAX      350     2475   13  47
+# 6:  LAX      339     2454   18  24
+head(ans)
+#    month max_speed
+# 1:     1  535.6425
+# 2:     2  535.6425
+# 3:     3  549.0756
+# 4:     4  585.6000
+# 5:     5  544.2857
+# 6:     6  608.5714
+</code></pre><p>说明：</p>
+<pre><code>* 使用函数 copy() 不会更新 flights。它现在不包含 speed列。
+* 返回值 ans 包含了每月的最快速度。
+然而，我们可以使用影子拷贝来代替深度拷贝，来大幅度提高这个操作的效率。事实上，我们希望在 Data.Table的V1.9.8的版本里提供这个功能。我们会在data.table的设计里面继续讨论这个内容。
+</code></pre><p>Data.Table V1.9.8 相关资料：<br><a href="https://github.com/Rdatatable/data.table/issues/617" target="_blank" rel="external">Copy-on-:= at column level, DT[,list(…)] shallow copy and add cols to shallow(DT, cols)</a>   </p>
+<p>2.当我们将列名保存在变量里的时候，比如：DT_n = names(DT)，然后再对 DT 添加／更新／删除列，操作符“:=”也会更新变量 DT_n，除非我们运行 copy(names(DT))。</p>
+<pre><code>DT = data.table(x=1, y=2)
+DT_n = names(DT)
+DT_n
+# [1] &quot;x&quot; &quot;y&quot;
+
+## add a new column by reference
+DT[, z := 3]
+
+## DT_n also gets updated
+DT_n
+# [1] &quot;x&quot; &quot;y&quot; &quot;z&quot;
+
+## use `copy()`
+DT_n = copy(names(DT))
+DT[, w := 4]
+
+## DT_n doesn&apos;t get updated
+DT_n
+# [1] &quot;x&quot; &quot;y&quot; &quot;z&quot;
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><pre><code>操作符“:=”
+* 操作符“:=”用于添加／更新／删除列。
+* 我们也学习了如何跟参数i和参数by一起使用，就像在第一讲中学习的那样。同样，我们也可以使用 keyby，可以用方括号 [] 将操作连结起来，可以给参数by 指定表达式。
+* 我们可以利用操作符“:=”更新原数据，也可以用函数 copy() 来避免更新原数据。
+</code></pre><p>到目前为止，我们学习了好多参数j相关的知识，知道了参数i、参数j和参数by如何一起使用。下一讲<a href="http://youngspring1.github.io/post/2016-03-22-datatable3/">主键、基于二分法搜索的subset</a>，我们将注意力回到参数i上，来做一些通过主键的超快速的排序。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-03-21-datatable2/" data-id="cjr4zj3c6001wizw80dtjkqsb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-2016-03-20-bike" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -108,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjqtci6f8009bdrw89g4wk2ht" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjr4zj3bu001jizw8sb0qo62y" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单车/">单车</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
@@ -169,7 +547,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-15-career/" data-id="cjqtci6f6009adrw8fricw7ii" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-15-career/" data-id="cjr4zj3bn001cizw8jawqnkpa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/career/">career</a></li></ul>
@@ -212,7 +590,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-15-evalution/" data-id="cjqtci6ba0021drw8v5ez1u2r" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-15-evalution/" data-id="cjr4zj3by001mizw8r9qffu60" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/evalution/">evalution</a></li></ul>
@@ -839,7 +1217,7 @@ DT[, print(list(c(a,b))), by=ID]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-13-datatable1/" data-id="cjqtci6bb0025drw8pnn6oftg" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-13-datatable1/" data-id="cjr4zj3c4001tizw8agn8rcie" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -899,7 +1277,7 @@ DT[, print(list(c(a,b))), by=ID]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-12-designer/" data-id="cjqtci6bi002fdrw8mltnqo9k" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-12-designer/" data-id="cjr4zj3br001gizw8rofyvvbd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/design/">design</a></li></ul>
@@ -955,7 +1333,7 @@ mode(c(1,2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-08-r-class/" data-id="cjqtci6b8001ydrw8kd6e2tt7" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-08-r-class/" data-id="cjr4zj3bd0012izw8abh1bwog" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mode/">mode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/typeof/">typeof</a></li></ul>
@@ -1000,7 +1378,7 @@ mode(c(1,2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-08-thought/" data-id="cjqtci6b1001tdrw8phvtn5qs" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-08-thought/" data-id="cjr4zj3bj0019izw8h6rgkzqg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活感受/">生活感受</a></li></ul>
@@ -1048,7 +1426,7 @@ mode(c(1,2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-plan/" data-id="cjqtci6av001odrw8rylq5sd6" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-plan/" data-id="cjr4zj3b5000tizw8d2awzxv5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
@@ -1091,68 +1469,10 @@ mode(c(1,2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-ssn/" data-id="cjqtci6ay001qdrw8otmp06ty" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-ssn/" data-id="cjr4zj3bh0015izw8v48lh35n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/碎碎念/">碎碎念</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-03-06-inevitable" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-03-06-inevitable/" class="article-date">
-  <time datetime="2016-03-05T22:57:21.000Z" itemprop="datePublished">2016-03-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/读书/">读书</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-03-06-inevitable/">必然</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>我们期待未来30年，哪些预言能够成为现实！   </p>
-<h3 id="形成-Becoming"><a href="#形成-Becoming" class="headerlink" title="形成(Becoming)"></a>形成(Becoming)</h3><p>无数在未来颠覆我们当前世界的产品，可能还没有发明出来，所以当下就是创业的最佳时机。<br>未来正在“形成”，正在被我们所塑造。我们没有迟到。<br>上学的时候有人讲“互联网的圈地时代已经过去了”，现在看来，过去的十年里，无数的互联网公司涌现出来，并且在几个巨头的统治下，顽强地生存着。人类的需求和欲望，是不断扩大和增长的，有这一点，就有足够的理由期待未来有更多的产品，来满足人类的需求。   </p>
-<h3 id="知化-Cognifying"><a href="#知化-Cognifying" class="headerlink" title="知化(Cognifying)"></a>知化(Cognifying)</h3><p>大数据＋计算能力＋算法＝人工智能时代。<br>一个有趣的循环：<br>1.机器人（电脑）干不了我的工作。<br>2.好吧，它会许多事情，但我做的事情，它不一定都会。<br>3.好吧，我做的事情它都会，但它常常出故障，这时需要我来处理。<br>4.好吧，它干常规工作时从不出错，但是我需要训练它学习新任务。<br>5.好吧，就让它做我原来的工作吧，那本来就不是人该干的。<br>6.哇，机器人正在干我以前做的工作，我的新工作不仅好玩多了，工资还高！<br>7.真高兴，机器人（电脑）绝对干不了我现在做的事情。   </p>
-<p>好了，我要去找工作了！</p>
-<h3 id="流动-Flowing"><a href="#流动-Flowing" class="headerlink" title="流动(Flowing)"></a>流动(Flowing)</h3><p>如果某个产品可以依赖互联网复制，那么价格会趋近于免费。<br>但是下面这几种特性却无法复制，我们可以从这些角度创造价值：<br>1.即时性<br>2.个性化<br>3.解释性（用户手册、技术支持收费）<br>4.可靠性<br>5.获取权（云服务）<br>6.实体化（现场感）<br>7.可赞助<br>8.可寻性（相关性数据）<br>在“流动”的时代，互联网产品时开放的，可分享的，也是变化的。   </p>
-<h3 id="屏读-Screening"><a href="#屏读-Screening" class="headerlink" title="屏读(Screening)"></a>屏读(Screening)</h3><p>从古登堡以来，人们获取信息的方式，从书页转移到屏幕。未来我们的生活中会使用大大小小、分散在各处的屏幕。   </p>
-<h3 id="使用-Accessing"><a href="#使用-Accessing" class="headerlink" title="使用(Accessing)"></a>使用(Accessing)</h3><p>未来我们不需要真正“拥有”某些资源，我们只在需要的时候，租用／借阅／访问这些资源。</p>
-<h3 id="共享-Sharing"><a href="#共享-Sharing" class="headerlink" title="共享(Sharing)"></a>共享(Sharing)</h3><p>我们分享我们的知识（StackOverflow），并且互相协作（github），看上去是免费提供的，但是参与者可以获得满足感。<br>如果对某个设想感兴趣，并且想把它制造出来，可以“众筹”，也就是粉丝们集体资助他们所喜爱的，再也没有比“众筹”更能让创作者受益的好方法了。</p>
-<h3 id="过滤-Filtering"><a href="#过滤-Filtering" class="headerlink" title="过滤(Filtering)"></a>过滤(Filtering)</h3><p>这个世界每秒钟创造出来的信息，可能我一辈子都阅览不完。这个一个信息爆炸的时代，最稀缺的资源是我们自己的注意力，我们需要过滤器，将这些大量丰富的信息缩减到令人满意的程度，再将我们的注意力投入之上。<br>事实上，这些过滤器已经在工作了。电子邮件服务器帮我们区分出正常邮件／广告邮件／垃圾邮件；朋友圈／微博只推送给我，那些我感兴趣的信息；亚马逊通过我的购买记录，给我推荐我可能感兴趣的商品信息，我无须再自己搜索。<br>Google这样的广告服务商，可以根据用户的信息，提供更加准确的广告投放服务。<br>未来我们会在自己的身体或者生活中加入更多的感知仪器，测量到的数据会发送给我个人的过滤器，让我得到更加准确有效的信息。</p>
-<h3 id="重混-Remixing"><a href="#重混-Remixing" class="headerlink" title="重混(Remixing)"></a>重混(Remixing)</h3><p>文学作品／音乐／摄影作品／电影，这些作品在未来，最有可能发生再创作。同人小说创作、音乐改编、PS、电影片段剪辑。。。<br>法律上，应该如何界定一段代码、一个idea、一段旋律的所有权和期限，都可以是亟待探明的问题。</p>
-<h3 id="互动-Interacting"><a href="#互动-Interacting" class="headerlink" title="互动(Interacting)"></a>互动(Interacting)</h3><p>通过各种各样的感应器，我们可以在增强现实／虚拟现实的世界里，用我们自己的感知和行为跟这个世界互动。<br>有些感应器可以增强我们的能力，比如视力、听力，有些感应器能够给我们添加一些新能力，比如GPS定位、X光透视、温度探测等。互动发生的区域，会比现在的手机和手表，离我们更近。<br>我们自己就是密码和数字身份证。我们的步态、心跳模式、敲击键盘的节奏、表情、眨眼的频率、坐下的姿势、声音等等，都是和他人不同的，也几乎无法仿造。</p>
-<h3 id="追踪-Tracking"><a href="#追踪-Tracking" class="headerlink" title="追踪(Tracking)"></a>追踪(Tracking)</h3><p>越来越多的物联网设备记录了我们生活中的各种数据：行驶记录、旅行记录、手机位置、公共摄像头、公共wifi、社交网络、浏览器、智能家居设备、健康追踪等等。我们不断增长的自身信息，被追踪、分析，甚至被利用。   </p>
-<h3 id="提问-Questioning"><a href="#提问-Questioning" class="headerlink" title="提问(Questioning)"></a>提问(Questioning)</h3><p>在互联网上提问，可能是别人回答你的问题，比如维基百科、知乎；也有可能是人工智能回答你的问题，比如Google、Siri。<br>好的提问创造更多价值。</p>
-<h3 id="开始-Beginning"><a href="#开始-Beginning" class="headerlink" title="开始(Beginning)"></a>开始(Beginning)</h3><p>未来正在发生，我们就站在起点，能够参与其中，深感荣幸。   </p>
-<hr>
-<p>亚马逊链接：<a href="http://www.amazon.cn/gp/product/B0176RQ53A?ref_=s9_hps_bw_g14_i1" target="_blank" rel="external">必然</a><br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160306-the-inevitable.jpg" alt="必然"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-inevitable/" data-id="cjqtci6b4001vdrw8fp4gdsvh" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li></ul>
 
     </footer>
   </div>
@@ -1172,7 +1492,7 @@ mode(c(1,2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">分類</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/data-table教程/">data.table教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据分析笔记/">数据分析笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/新知/">新知</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习的数学基础/">机器学习的数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/读书/">读书</a></li></ul>
     </div>
@@ -1182,7 +1502,7 @@ mode(c(1,2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">標籤</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
     </div>
@@ -1192,16 +1512,16 @@ mode(c(1,2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">標籤雲</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 10px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 12.5px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">彙整</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
@@ -1211,9 +1531,13 @@ mode(c(1,2))
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/20190113-jantalks/">2019年1月碎碎念</a>
+          </li>
         
           <li>
             <a href="/2019/20190112-movies/">看了两场截然不同的电影</a>
@@ -1229,10 +1553,6 @@ mode(c(1,2))
         
           <li>
             <a href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
-          </li>
-        
-          <li>
-            <a href="/2017/2017-10-20-parse-date-in-xlsx/">用 Python 解析 Excel 发现的小坑</a>
           </li>
         
       </ul>
