@@ -65,6 +65,207 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2016-06-19-R08" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-06-19-R08/" class="article-date">
+  <time datetime="2016-06-18T17:28:58.000Z" itemprop="datePublished">2016-06-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-06-19-R08/">MIT:The Analytics Edge 笔记08－线性优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="noopener">15.071x The Analytics Edge</a> 第八单元的学习记录。</p>
+<hr>
+<h2 id="Linear-Optimization"><a href="#Linear-Optimization" class="headerlink" title="Linear Optimization"></a>Linear Optimization</h2><p>第八单元的主题是线性优化。</p>
+<h3 id="1-理论"><a href="#1-理论" class="headerlink" title="1.理论"></a>1.理论</h3><h4 id="线性优化"><a href="#线性优化" class="headerlink" title="线性优化"></a>线性优化</h4><p>线性优化，其实是用Excel／LibreOffice求解一个简单的多元1次多项式的最大值。<br>使用LibreOffice是这样做的：</p>
+<ol>
+<li>在单元格中填写多项式和约束条件。</li>
+<li>选取Tools-&gt;Solver，指定多项式，以及各种约束条件，当然也要选择［Linear Solver］这个方法。</li>
+<li>点击［Solve］就可以得到结果啦。</li>
+</ol>
+<p>在Excel中，需要在<code>option</code> - <code>addin</code> - <code>Excel addin</code> 选择加载<code>solver addin</code>，这样才会在data菜单栏中显示出<code>solver</code>按钮。</p>
+<h4 id="sensitivity-analysis"><a href="#sensitivity-analysis" class="headerlink" title="sensitivity analysis"></a>sensitivity analysis</h4><p>sensitivity analysis用来展示，结果是如何随数据（变量／约束条件）的变化而变化的。<br>shadow prices：表示当需求增加时，将（总量增加量／需求增量）的值定义为影子价格。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160624-R08-sensitive.png" alt="sensitivity analysis"><br>如图，纵坐标和横坐标表示两种不同的需求。暗红色阴影表示可能的取值范围。<br>如果不断提高需求R，从100到125到150，影子价格都保持不变；但是如果需求提高到170，影子价格就会发生变化。<br>如果不短提高需求D，从150到100，影子价格都为0，总量也不变。</p>
+<p>影子价格有可能在需求增加的一个范围内保持不变。也有可能一直为0。</p>
+<h3 id="2-实战"><a href="#2-实战" class="headerlink" title="2.实战"></a>2.实战</h3><p>当然，用R也能解决这样的问题。</p>
+<pre><code># 先安装pkg
+install.packages(&quot;lpSolveAPI&quot;)
+library(lpSolveAPI)
+
+# 创建模型
+# 说明：
+# 第一个参数是约束条件的个数。
+# one capacity constraint: 载客量有一个最大值（飞机座位数）
+# two demand constraints : 每种票价的数目（regular seats／discount seats）都有一个最大值
+# 所以这个参数的取值是3
+# 第二个参数是变量的个数。
+# decision variables : 我们有两种票价（regular seats／discount seats）
+# 所以这个参数的取值是2
+
+AirlineSimple = make.lp(3,2)
+# 创建出来的AirlineSimple是这样子的：
+Model name: 
+            C1    C2         
+Minimize     0     0         
+R1           0     0  free  0
+R2           0     0  free  0
+R3           0     0  free  0
+Kind       Std   Std         
+Type      Real  Real         
+Upper      Inf   Inf         
+Lower        0     0         
+
+# 那下面我们就来指定多项式和约束条件
+# 最终的效果是这样的：
+# max         617*R + 238*D
+# subject to    1*R +   1*D &lt;= 166
+#               1*R    +   0*D &lt;= 100
+#               0*R +   1*D &lt;= 150    
+
+# 特别注意：执行顺序，set.objfn()不能放在前面，我被坑了。。。
+# 指定约束条件（跟效果竖着对比着看）
+set.column(AirlineSimple, 1, c(1,1,0))
+set.column(AirlineSimple, 2, c(1,0,1))
+set.constr.type(AirlineSimple, c(&quot;&lt;=&quot;,&quot;&lt;=&quot;,&quot;&lt;=&quot;))
+set.rhs(AirlineSimple, c(166,100,150))
+# 指定两个变量的参数
+set.objfn(AirlineSimple, c(617,238))
+# 默认的是最小值，我们改为最大值
+lp.control(AirlineSimple,sense=&apos;max&apos;)
+
+# 这样就创建好了：
+Model name: 
+            C1    C2         
+Maximize   617   238         
+R1           1     1  &lt;=  166
+R2           1     0  &lt;=  100
+R3           0     1  &lt;=  150
+Kind       Std   Std         
+Type      Real  Real         
+Upper      Inf   Inf         
+Lower        0     0
+
+# 变量的取值是上面最后两行Upper和Lower，可以通过函数set.bounds()来修改
+
+# 现在可以来运行了
+# 如果正确运行，返回值是0
+solve(AirlineSimple)
+# 查看取得的最大值
+get.objective(AirlineSimple)
+# 查看取最大值时，两个变量的取值
+get.variables(AirlineSimple)
+
+# JFK 从DFW中转，到LAX的场景
+# 有8个约束条件，6个变量：
+AirlineConnecting = make.lp(8,6)
+set.column(AirlineConnecting, 1, c(1,1,1,0,0,0,0,0))
+set.column(AirlineConnecting, 2, c(1,1,0,1,0,0,0,0))
+set.column(AirlineConnecting, 3, c(1,0,0,0,1,0,0,0))
+set.column(AirlineConnecting, 4, c(1,0,0,0,0,1,0,0))
+set.column(AirlineConnecting, 5, c(0,1,0,0,0,0,1,0))
+set.column(AirlineConnecting, 6, c(0,1,0,0,0,0,0,1))
+set.constr.type(AirlineConnecting, rep(&quot;&lt;=&quot;,8))
+set.rhs(AirlineConnecting, c(166,166,80,120,75,100,60,110))
+set.objfn(AirlineConnecting, c(428,190,642,224,512,190))
+lp.control(AirlineConnecting,sense=&apos;max&apos;)
+
+# 模型稍微有点大
+Model name: 
+        C1    C2    C3    C4    C5    C6         
+Maximize   428   190   642   224   512   190         
+R1           1     1     1     1     0     0  &lt;=  166
+R2           1     1     0     0     1     1  &lt;=  166
+R3           1     0     0     0     0     0  &lt;=   80
+R4           0     1     0     0     0     0  &lt;=  120
+R5           0     0     1     0     0     0  &lt;=   75
+R6           0     0     0     1     0     0  &lt;=  100
+R7           0     0     0     0     1     0  &lt;=   60
+R8           0     0     0     0     0     1  &lt;=  110
+Kind       Std   Std   Std   Std   Std   Std         
+Type      Real  Real  Real  Real  Real  Real         
+Upper      Inf   Inf   Inf   Inf   Inf   Inf         
+Lower        0     0     0     0     0     0
+
+solve(AirlineConnecting)
+get.objective(AirlineConnecting)
+get.variables(AirlineConnecting)
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-06-19-R08/" data-id="cjrz25epy003wkiw8t35dccbk" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2016-06-17-life" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-06-17-life/" class="article-date">
+  <time datetime="2016-06-17T05:22:08.000Z" itemprop="datePublished">2016-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/读书/">读书</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-06-17-life/">乌托邦</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天早上读到<a href="http://www.jiemian.com/article/209404.html" target="_blank" rel="noopener">两个乌托邦人</a>这篇文章，下面这段很有感触。   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">赛斯的故事是关于一个人寻找到自己在这世界上的位置。我想起来老舍说，每人在这世间，就像八百尊罗汉，各有各的位置。你实在不能像对桌上的尘土一样，随手拿抹布就把我抹掉了。太平洋也真是座温情的海洋。它允许一个奇葩，这样合理地长大，实现梦想，拥有书、拥有沿海顶楼的好风光、拥有盛满三文鱼的冰箱。这无限孤独又无限美满的人生。</span><br><span class="line"></span><br><span class="line">每当我怀疑，我的人生究竟有没有意义的时候，我就会想想赛斯这奇葩。我会诧异如何从一开始每个人想要的都只不过是一个幸福的人生。结果走着走着，就变成了一个“独上高楼、高处不胜寒”的人生，变成了“十年生死两茫茫”的人生，变成了日复一日、年复一年，期待着总有一天能够赢取回报、得偿所愿，然后再终于快乐起来的人生。</span><br><span class="line"></span><br><span class="line">我们等下去的时候，他蹦跶着跳进海里捞螃蟹，不知不觉就跑远了。我有些羡慕。</span><br><span class="line"></span><br><span class="line">我逐渐发觉心理学以平均值导出关于人性若干结论的好笑之处：人与人之间的差异如此巨大，使得一千个人与一个人的样本，距离真理都同样远。曾有一万人的数据表明勤奋带来成功，再加上三百回研究支持金钱与幸福的钟型曲线关系，可世上奇葩那样多，这些适用于群体的结论就必定不可能与任何一个个体完美匹配。这便是人类群体与小白鼠的区别，而赛斯最早看清。</span><br><span class="line"></span><br><span class="line">他让我看到，这样活过一生也OK。</span><br></pre></td></tr></table></figure>
+<p>一个人非常立体的生活，在不那么熟悉的眼里都被扁平化了。好比看一场比赛的直播，过程惊心动魄，这是亲身体验；而晚间新闻中，却只有几句湖带过，这是别人眼里的我。更加可怕的是，普通人的一生，投影到历史上，简直微不足道。所以，还是把自己的生活过精彩吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-06-17-life/" data-id="cjrz25epv003lkiw89e95mhmj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/">life</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2016-06-17-taishan" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/2016-06-17-taishan/" class="article-date">
@@ -99,7 +300,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-17-taishan/" data-id="cjrgbrf07003m5ow8o32qmplq" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-17-taishan/" data-id="cjrz25epx003tkiw86g21e147" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/泰山/">泰山</a></li></ul>
@@ -144,7 +345,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-15-focus/" data-id="cjrgbrf05003h5ow8o6g9q0be" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-15-focus/" data-id="cjrz25epw003okiw8e2bj74z2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/专注/">专注</a></li></ul>
@@ -198,7 +399,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-06-06-lonely/" data-id="cjrgbrf03003a5ow8b3menrwh" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-06-06-lonely/" data-id="cjrz25eps003ekiw8bi3uyq8h" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/诗/">诗</a></li></ul>
@@ -458,7 +659,7 @@ DayHourCounts$Hour = as.numeric(as.character(DayHourCounts$Var2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-24-R07/" data-id="cjrgbrf04003e5ow8vhd8psmx" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-24-R07/" data-id="cjrz25ept003hkiw8jgpcalbf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -590,7 +791,7 @@ image(tumorClusters, axes = FALSE, col=rainbow(k))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-18-R06/" data-id="cjrgbrf0000305ow8vfshvzcr" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-18-R06/" data-id="cjrz25epq0038kiw85dqj9dhd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -763,7 +964,7 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R05/" data-id="cjrgbrf0200385ow8wrl8e6at" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R05/" data-id="cjrz25epn002ykiw8ykb4vpwr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
@@ -810,7 +1011,7 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-zuozhuan/" data-id="cjrgbrf0100345ow8hfzxecq9" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-zuozhuan/" data-id="cjrz25epo0031kiw8chkns2mq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/历史/">历史</a></li></ul>
@@ -857,295 +1058,10 @@ table(testSparse$Negative, predictRF)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-xianluoyang/" data-id="cjrgbrezx002t5ow8b25heac7" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-05-10-xianluoyang/" data-id="cjrz25epp0035kiw8ouise3rv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/西安/">西安</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-05-10-R04" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-05-10-R04/" class="article-date">
-  <time datetime="2016-05-10T03:44:08.000Z" itemprop="datePublished">2016-05-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-05-10-R04/">MIT:The Analytics Edge 笔记04－决策树和随机森林</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="noopener">15.071x The Analytics Edge</a> 第四单元的学习记录。</p>
-<hr>
-<h2 id="Trees"><a href="#Trees" class="headerlink" title="Trees"></a>Trees</h2><p>第四单元的主题是决策树和随机森林。</p>
-<h3 id="1-理论"><a href="#1-理论" class="headerlink" title="1.理论"></a>1.理论</h3><h4 id="CART-classification-and-regression-trees"><a href="#CART-classification-and-regression-trees" class="headerlink" title="CART(classification and regression trees)"></a>CART(classification and regression trees)</h4><h6 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h6><p>自变量是决策树上的节点(splits)。但是注意，不是每个自变量都有一个节点；也就是说，有的自变量有多个节点(随着取值的不同，导致因变量的结果也不同)，有的自变量没有节点(对因变量影响很小)。<br>因变量是决策树上的叶子/终端(leaves/nodes)。此图上的因变量的取值是0或者1。<br>在各个节点，根据各个自变量的取值，最终到达叶子节点，也就得到了因变量的取值。<br>注意，决策树的左边，节点的判断语句总是为True／Yes，右边节点的判断语句总是为False／No。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160517-tree-Rplot.png" alt="tree"><br>最左的分支表示，如果 LowerCou=lbr 且 Responde=CRI 且 Petition=CIT，那么因变量的取值为0。<br>最右的分支表示，如果 LowerCou!=lbr 且 Responde=STA，那么因变量的取值为1。   </p>
-<h6 id="决策树的大小"><a href="#决策树的大小" class="headerlink" title="决策树的大小"></a>决策树的大小</h6><p>minbucket可以理解为，决策树被节点分割后，每个bucket数据的数量。<br>minbucket越大，分组越少，split越少。<br>minbucket越小，分组越多，split越多。   </p>
-<h6 id="Classification-tree-和-Regression-tree"><a href="#Classification-tree-和-Regression-tree" class="headerlink" title="Classification tree 和 Regression tree"></a>Classification tree 和 Regression tree</h6><ul>
-<li>Classification tree analysis is when the predicted outcome is the class to which the data belongs.（简单的讲，预测值是0和1，比如支持还是反对）</li>
-<li>Regression tree analysis is when the predicted outcome can be considered a real number.（简单的讲，预测值是可变的，比如房价等等）</li>
-</ul>
-<p>体现在代码中的话，<br>如果指定了type = “class”，那么是 Classification tree。<br>如果没有指定type = “class”，那么是 Regression tree。   </p>
-<h4 id="Random-Forest"><a href="#Random-Forest" class="headerlink" title="Random Forest"></a>Random Forest</h4><p>随机森林，被设计出来用于提高CART的精度。<br>和字面意思类似，如果决策树只有一棵树，那么随机森林会创建多个决策树，然后找到效果最好的那一个。<br>那么它是如何创建多个决策树的呢，有点复杂。<br>它并不是多次调用rpart()，简单的调整几个参数而已。<br>每个决策树所用的数据，都只是原数据的随机subset或者说随机子集。<br>如果训练集被分成1，2，3，4，5 这五个子集，那么第一次可能选取2，4，5，2，1，第二次可能选取3，5，1，5，2。</p>
-<p>参数nodesize</p>
-<pre><code>类似于minbucket，每个子集的最小数目。它越小，生成的决策树越大。
-</code></pre><p>参数ntree</p>
-<pre><code>生成多少个决策树。一般几百个就够了。
-</code></pre><p>好消息是，参数的选取，相比CART而言，对结果的影响没有那么大。</p>
-<h4 id="Cross-Validation"><a href="#Cross-Validation" class="headerlink" title="Cross Validation"></a>Cross Validation</h4><p>minbucket应该选取什么样的值，来大道最好效果呢？<br>我们采用 k-fold cross validation 的方法。</p>
-<p>我们将训练集train分成k份，比如 k=5 的时候，<br>我们先用1，2，3，4来训练，5用来验证；<br>再用1，2，3，5来训练，4用来验证；<br>再用1，2，4，5来训练，3用来验证。。。<br>所以模型中创建了很多决策树。<br>我们测试每个分割方法下，参数每一个可能的取值，计算这个取值对应的预测精度，绘制曲线。<br>曲线的X轴是参数的取值，Y轴是预测精度，这样可以很容易找到参数的最佳取值。</p>
-<h6 id="CP"><a href="#CP" class="headerlink" title="CP"></a>CP</h6><p>像R平方一样，我们也定义了一个概念 cp(complexity parameter) 用来观测效果。<br>cp越小，决策树越大(over fitting)。     </p>
-<p><img src="http://latex.codecogs.com/svg.latex?s = splits" alt="formula"><br><img src="http://latex.codecogs.com/svg.latex?\lambda = penalty\\;error" alt="formula"><br><img src="http://latex.codecogs.com/svg.latex?\\sum_{leaves}\(RSS\\;at\\;each\\;leaf\" alt="formula"> + \lambda*s )<br><img src="http://latex.codecogs.com/svg.latex?cp = \\frac{\lambda}{RSS\(no\\;splits\" alt="formula">})<br>cp越大，分母越小，tree越小。<br>cp越小，分母越大，tree越大。</p>
-<h3 id="2-建模和评估"><a href="#2-建模和评估" class="headerlink" title="2.建模和评估"></a>2.建模和评估</h3><h4 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h4><pre><code># Install rpart library
-install.packages(&quot;rpart&quot;)
-library(rpart)
-install.packages(&quot;rpart.plot&quot;)
-library(rpart.plot)
-
-# CART model
-# method=&quot;class&quot; 表示我们创建了一个 classification tree
-StevensTree = rpart(Reverse ~ Circuit + Issue + Petitioner + Respondent + LowerCourt + Unconst, data = Train, method=&quot;class&quot;, minbucket=25)
-
-# plot tree
-prp(StevensTree)
-
-# Make predictions
-# 记得指定 type = &quot;class&quot;
-PredictCART = predict(StevensTree, newdata = Test, type = &quot;class&quot;)
-table(Test$Reverse, PredictCART)
-
-# ROC curve
-library(ROCR)
-
-PredictROC = predict(StevensTree, newdata = Test)
-# 注意这里没有指定 type = &quot;class&quot;
-# 也就是说，学习得到 classification tree 的模型，但是评估使用 regression tree
-# 真是天杀的。。。
-# 这个PredictROC 有两列
-# 第一列是预测y=0的概率
-# 第二列是预测y=1的概率
-# 如果比较一下 PredictROC 每行的数据，可以发现这两个概率和为1！那是当然！
-# 如果拿 PredictROC 和 PredictCART相比
-# 如果 PredictROC[n,2]&gt;0.5，那么PredictCART[n]=1。
-# 如果 PredictROC[n,2]&lt;0.5，那么PredictCART[n]=0。
-# 所以下面我们只使用第二列
-
-pred = prediction(PredictROC[,2], Test$Reverse)
-perf = performance(pred, &quot;tpr&quot;, &quot;fpr&quot;)
-plot(perf)
-
-# AUC
-as.numeric(performance(pred, &quot;auc&quot;)@y.values)
-</code></pre><h4 id="Random-Forest-1"><a href="#Random-Forest-1" class="headerlink" title="Random Forest"></a>Random Forest</h4><pre><code>install.packages(&quot;randomForest&quot;)
-library(randomForest)
-
-# Build random forest model
-StevensForest = randomForest(Reverse ~ Circuit + Issue + Petitioner + Respondent + LowerCourt + Unconst, data = Train, ntree=200, nodesize=25 )
-# Warning message:
-# In randomForest.default(m, y, ...) :
-#   The response has five or fewer unique values.  Are you sure you want to do regression?
-
-# 如上面的提示消息所示
-# randomForest认为因变量的取值很少，不应该用regression
-# 但是 random forest 没有 type = &quot;class&quot; 这样的参数
-# 所以我们必须确保因变量这一列的取值都是因子
-# Convert outcome to factor
-Train$Reverse = as.factor(Train$Reverse)
-Test$Reverse = as.factor(Test$Reverse)
-
-# Try again
-StevensForest = randomForest(Reverse ~ Circuit + Issue + Petitioner + Respondent + LowerCourt + Unconst, data = Train, ntree=200, nodesize=25 )
-
-# Make predictions
-PredictForest = predict(StevensForest, newdata = Test)
-table(Test$Reverse, PredictForest)
-</code></pre><h4 id="Cross-Validation-1"><a href="#Cross-Validation-1" class="headerlink" title="Cross Validation"></a>Cross Validation</h4><pre><code># Install cross-validation packages
-install.packages(&quot;caret&quot;)
-library(caret)
-install.packages(&quot;e1071&quot;)
-library(e1071)
-
-# Define cross-validation experiment
-numFolds = trainControl( method = &quot;cv&quot;, number = 10 )
-cpGrid = expand.grid( .cp = seq(0.01,0.5,0.01)) 
-
-# Perform the cross validation
-train(Reverse ~ Circuit + Issue + Petitioner + Respondent + LowerCourt + Unconst, data = Train, method = &quot;rpart&quot;, trControl = numFolds, tuneGrid = cpGrid )
-
-# Create a new CART model
-StevensTreeCV = rpart(Reverse ~ Circuit + Issue + Petitioner + Respondent + LowerCourt + Unconst, data = Train, method=&quot;class&quot;, cp = 0.18)
-
-# Make predictions
-PredictCV = predict(StevensTreeCV, newdata = Test, type = &quot;class&quot;)
-table(Test$Reverse, PredictCV)
-</code></pre><h4 id="参数cp和loss的使用"><a href="#参数cp和loss的使用" class="headerlink" title="参数cp和loss的使用"></a>参数cp和loss的使用</h4><pre><code># Penalty Matrix
-PenaltyMatrix = matrix(c(0,1,2,3,4,2,0,1,2,3,4,2,0,1,2,6,4,2,0,1,8,6,4,2,0), byrow=TRUE, nrow=5)
-
-# CART model
-ClaimsTree = rpart(bucket2009 ~ age + alzheimers + arthritis + cancer + copd + depression + diabetes + heart.failure + ihd + kidney + osteoporosis + stroke + bucket2008 + reimbursement2008, data=ClaimsTrain, method=&quot;class&quot;, cp=0.00005)
-
-prp(ClaimsTree)
-
-# Make predictions
-PredictTest = predict(ClaimsTree, newdata = ClaimsTest, type = &quot;class&quot;)
-# New CART model with loss matrix
-ClaimsTree = rpart(bucket2009 ~ age + alzheimers + arthritis + cancer + copd + depression + diabetes + heart.failure + ihd + kidney + osteoporosis + stroke + bucket2008 + reimbursement2008, data=ClaimsTrain, method=&quot;class&quot;, cp=0.00005, parms=list(loss=PenaltyMatrix))
-
-# Redo predictions and penalty error
-PredictTest = predict(ClaimsTree, newdata = ClaimsTest, type = &quot;class&quot;)
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-05-10-R04/" data-id="cjrgbrezx002r5ow8fi4us4mc" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-04-26-R03" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-04-26-R03/" class="article-date">
-  <time datetime="2016-04-25T19:52:13.000Z" itemprop="datePublished">2016-04-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据分析笔记/">数据分析笔记</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-04-26-R03/">MIT:The Analytics Edge 笔记03－指数回归</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>MIT课程 <a href="https://courses.edx.org/courses/course-v1:MITx+15.071x_3+1T2016/info" target="_blank" rel="noopener">15.071x The Analytics Edge</a> 第三单元的学习记录。</p>
-<hr>
-<h2 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h2><p>第三单元的主题是指数回归。</p>
-<h3 id="1-理论"><a href="#1-理论" class="headerlink" title="1.理论"></a>1.理论</h3><h4 id="指数回归"><a href="#指数回归" class="headerlink" title="指数回归"></a>指数回归</h4><p>指数回归用于因变量y是二进制的情况，也就是说，y的取值只有1或者0。<br>y=1的概率：<br><img src="http://latex.codecogs.com/svg.latex?P\(y=1\" alt="formula">=\frac{1}{1+e^{-{(\beta_0 +\beta_1x_1+\beta_2x_2+\ldots+\beta_nx_n+\epsilon)}}})  </p>
-<p>y=1的概率与y＝0的概率的比值：<br><img src="http://latex.codecogs.com/svg.latex?Odds=\\frac{P\(y=1\" alt="formula">}{P(y=0)})   </p>
-<p><img src="http://latex.codecogs.com/svg.latex?Odds=\\frac{P\(y=1\" alt="formula">}{1-P(y=1)})   </p>
-<p><img src="http://latex.codecogs.com/svg.latex?Odds=e^{\\beta_0 +\\beta_1x_1+\\beta_2x_2+\\ldots+\\beta_nx_n+\\epsilon}" alt="formula">   </p>
-<h4 id="混淆矩阵（confusion-matrix）"><a href="#混淆矩阵（confusion-matrix）" class="headerlink" title="混淆矩阵（confusion matrix）"></a>混淆矩阵（confusion matrix）</h4><p>有阈值t，<br>如果P(y=1) &gt;=t，则预测y=1。<br>如果P(y=1) &lt; t，则预测y=0。   </p>
-<p>对于预测结果，我们得到矩阵   </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left"></th>
-<th style="text-align:left">predict y=0</th>
-<th style="text-align:left">predict y=1</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">actual y=0</td>
-<td style="text-align:left">TN (True  Nagative)</td>
-<td style="text-align:left">FP (False Positive)</td>
-</tr>
-<tr>
-<td style="text-align:left">actual y=1</td>
-<td style="text-align:left">FN (False Nagative)</td>
-<td style="text-align:left">TP (True  Positive)</td>
-</tr>
-</tbody>
-</table>
-<p>根据矩阵中的值，我们可以计算指数回归的一些指标：   </p>
-<p><img src="http://latex.codecogs.com/svg.latex?accuracy=\\frac{TN+TP}{N}" alt="formula"><br><img src="http://latex.codecogs.com/svg.latex?specificity=\\frac{TN}{TN+FP}" alt="formula"><br><img src="http://latex.codecogs.com/svg.latex?sensitivity=\\frac{TP}{FN+TP}" alt="formula">   </p>
-<p>补充概念：<br>适合率<br><img src="http://latex.codecogs.com/svg.latex?precision=\\frac{TP}{FP+TP}" alt="formula"><br>再现率<br><img src="http://latex.codecogs.com/svg.latex?recall=tpr=\\frac{TP}{FN+TP}" alt="formula"><br>F值（F-measure）<br><img src="http://latex.codecogs.com/svg.latex?F-measure=\\frac{2*precision*recall}{precision+recall}" alt="formula"><br>F值越高，性能越好</p>
-<h4 id="ROC曲线"><a href="#ROC曲线" class="headerlink" title="ROC曲线"></a>ROC曲线</h4><p>ROC曲线 (Receiver Operator Characteristic curve)可以指导我们如何选取阈值t。<br>y轴的指标是 sensitivity，所以也叫 True positive rate。   </p>
-<p><img src="http://latex.codecogs.com/svg.latex?sensitivity=\\frac{TP}{FN+TP}" alt="formula"><br>x轴的指标是 1-specificity，所以也叫 False positive rate。   </p>
-<p><img src="http://latex.codecogs.com/svg.latex?1-sensitivity=\\frac{FP}{TN+FP}" alt="formula">    </p>
-<p>每取一个阈值t，则计算相对应的 TPR 和 FPR，在坐标里标出这个点，就形成ROC曲线。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20160509-ROC.png" alt="ROC Curve">   </p>
-<p>如图所示，   </p>
-<pre><code>t=0时，我们预测所有的y=1，即TPR=1，FPR=1，对应的坐标是(1,1)   
-t=1时，我们预测所有的y=0，即TPR=0，FPR=0，对应的坐标是(0,0)   
-</code></pre><p>这就是曲线的两个端点。</p>
-<h4 id="AUC值"><a href="#AUC值" class="headerlink" title="AUC值"></a>AUC值</h4><p>AUC（Area Under Curve）被定义为ROC曲线下的面积，显然这个面积的数值不会大于1。又由于ROC曲线一般都处于y=x这条直线的上方，所以AUC的取值范围在0.5和1之间。   </p>
-<h3 id="2-建立回归模型"><a href="#2-建立回归模型" class="headerlink" title="2.建立回归模型"></a>2.建立回归模型</h3><pre><code># 建立模型
-# Top10作为因变量，其他所有的列都作为自变量
-SongsLog1 = glm(Top10 ~ ., data=SongsTrain, family=binomial)
-
-# Top10作为因变量，除了loudness以外的所有列都作为自变量
-SongsLog2 = glm(Top10 ~ . - loudness, data=SongsTrain, family=binomial)
-</code></pre><h3 id="3-评估"><a href="#3-评估" class="headerlink" title="3.评估"></a>3.评估</h3><pre><code># 预测
-testPredict = predict(SongsLog3, newdata=SongsTest, type=&quot;response&quot;)
-
-# 生成混淆矩阵
-table(SongsTest$Top10, testPredict &gt;= 0.45)
-
-# 生成ROC曲线
-library(ROCR)
-pred = prediction(testPredict, test$violator)
-perf = performance(pred, &quot;tpr&quot;, &quot;fpr&quot;)
-plot(perf)
-
-# 加点颜色和坐标点
-plot(perf, colorize=TRUE, print.cutoffs.at=seq(0,1,0.1), text.adj=c(-0.2,1.7))
-
-# 计算AUC值
-as.numeric(performance(pred, &quot;auc&quot;)@y.values)
-</code></pre><h3 id="附录A-分割train和test的方法一"><a href="#附录A-分割train和test的方法一" class="headerlink" title="附录A 分割train和test的方法一"></a>附录A 分割train和test的方法一</h3><pre><code>library(caTools)
-set.seed(144)
-
-split = sample.split(parole$violator, SplitRatio = 0.7)
-train = subset(parole, split == TRUE)
-test = subset(parole, split == FALSE)
-# 特别注意：每次运行出来的结果是不一样的
-</code></pre><p>也可以这样做：</p>
-<pre><code>library(caTools)
-set.seed(144)
-
-split = sample(1:nrow(data), size=0.7 * nrow(data))
-train = data[split,]
-test = data[-split,]
-</code></pre><h3 id="附录B-补充缺失数据"><a href="#附录B-补充缺失数据" class="headerlink" title="附录B 补充缺失数据"></a>附录B 补充缺失数据</h3><pre><code>library(mice)
-set.seed(144)
-vars.for.imputation = setdiff(names(loans), &quot;not.fully.paid&quot;)
-imputed = complete(mice(loans[vars.for.imputation]))
-loans[vars.for.imputation] = imputed
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-04-26-R03/" data-id="cjrgbrezv002n5ow8y3zgilzl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
 
     </footer>
   </div>
@@ -1177,7 +1093,7 @@ loans[vars.for.imputation] = imputed
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数码产品/">数码产品</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
     </div>
   </div>
 
@@ -1187,7 +1103,7 @@ loans[vars.for.imputation] = imputed
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 12.5px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 15px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -1196,7 +1112,7 @@ loans[vars.for.imputation] = imputed
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -1209,6 +1125,14 @@ loans[vars.for.imputation] = imputed
       <ul>
         
           <li>
+            <a href="/2019/20190210-why-you-need-a-photo-printer/">为什么你需要一台照片打印机</a>
+          </li>
+        
+          <li>
+            <a href="/2019/20190210-febtalks/">2019年2月碎碎念</a>
+          </li>
+        
+          <li>
             <a href="/2019/20190113-jantalks/">2019年1月碎碎念</a>
           </li>
         
@@ -1218,14 +1142,6 @@ loans[vars.for.imputation] = imputed
         
           <li>
             <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约|张宇凌</a>
-          </li>
-        
-          <li>
-            <a href="/2019/2019-01-01-happynewyear/">又是新的一年</a>
-          </li>
-        
-          <li>
-            <a href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
           </li>
         
       </ul>

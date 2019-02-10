@@ -65,6 +65,190 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2016-03-26-shinyserver-jp" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-03-26-shinyserver-jp/" class="article-date">
+  <time datetime="2016-03-25T16:08:31.000Z" itemprop="datePublished">2016-03-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/新知/">新知</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-03-26-shinyserver-jp/">Shiny Server インストール手順</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Rは、統計に対して、とても便利ですが、ユーザに向けインタフェースはそんなに良くないと思います。<br>Shiny Serverは、Webサービスのように、ユーザの入力から、Rで計算して、ブラウザで結果を表示するサーバです。<br>インストール手順は、下記の通りです。<br>環境は、イントネットに接続できないCentOS 6.5 x64です。   </p>
+<h4 id="1-ソースからRのインストール"><a href="#1-ソースからRのインストール" class="headerlink" title="1.ソースからRのインストール"></a>1.ソースからRのインストール</h4><pre><code>./configure --prefix=/opt/r --enable-R-shlib 
+make 
+make install 
+</code></pre><p>注意1：PATHは、ファイル「/etc/profile」で設定してください。<br>注意2：Rは、他のコンポに依頼します。下記のコマンドは、実行することが必要かもしれません。エラーメッセージにより確認してください。</p>
+<pre><code>yum install gcc-gfortran 
+yum install readline-devel 
+yum install libXt-devel 
+yum install gcc-c++ glibc-headers
+</code></pre><h4 id="2-Xvfbのインストール"><a href="#2-Xvfbのインストール" class="headerlink" title="2.Xvfbのインストール"></a>2.Xvfbのインストール</h4><pre><code>yum install Xvfb
+</code></pre><p>説明：絵の作るのは、デフォルトが X11ですが、いろいろな問題があります。最後、Xvfbになりました。   </p>
+<h4 id="3-Shinyのインストール"><a href="#3-Shinyのインストール" class="headerlink" title="3.Shinyのインストール"></a>3.Shinyのインストール</h4><h5 id="3-1-Shiny-libのインストール"><a href="#3-1-Shiny-libのインストール" class="headerlink" title="3.1 Shiny libのインストール"></a>3.1 Shiny libのインストール</h5><p>Rのコンソールで、Shiny libをインストールします。   </p>
+<pre><code>install.packages(&apos;shiny&apos;)
+</code></pre><p>他のlibに依頼しますが、もしサーバは、いんとねっとに接続できないなら、インストールファイルをダウンロードして、サーバに置いて、ファイルからインストールします。<br>Rのコンソールから、quit()して、下記のようなコマンドを実行します。</p>
+<pre><code>R CMD INSTALL XXXXX.tar.gz 
+</code></pre><h5 id="3-2-Shiny-Serverのインストール"><a href="#3-2-Shiny-Serverのインストール" class="headerlink" title="3.2 Shiny Serverのインストール"></a>3.2 Shiny Serverのインストール</h5><pre><code>yum install --nogpgcheck shiny-server-1.4.2.786-rh5-x86_64.rpm 
+</code></pre><p>設定ファイルは、下記のパスです：</p>
+<pre><code>/etc/shiny-server/shiny-server.conf 
+</code></pre><p>確認のために、Shiny libの10個の例を、shiny-serverのサーバディレクトリにコピーします。   </p>
+<pre><code>cp -R /opt/r/lib64/R/library/shiny/examples/* /srv/shiny-server/
+</code></pre><p>上記により、すべてのAPPは、ディレクトリ「/srv/shiny-server/」に置きます。そして、ブラウザでアクセスできます。</p>
+<pre><code>http://localhost:3838/目录名
+</code></pre><p>それ以外、起動・停止コマンド：</p>
+<pre><code>start shiny-server 
+stop shiny-server 
+restart shiny-server 
+status shiny-server 
+reload shiny-server #サービスを中止しないように、更新内容をロード
+</code></pre><p>ホーンページを確認しますか：   </p>
+<pre><code>http://localhost:3838/index.html
+</code></pre><p>画面を表示できますが、絵は誤りがありそうです。</p>
+<h4 id="4-絵の作り"><a href="#4-絵の作り" class="headerlink" title="4.絵の作り"></a>4.絵の作り</h4><h5 id="4-1-Xvfbの起動"><a href="#4-1-Xvfbの起動" class="headerlink" title="4.1 Xvfbの起動"></a>4.1 Xvfbの起動</h5><p>X11を使ったら、エラー「can’t start PNG device」になります。<br>そのために、X11の代わりに，Xvfbを使います。<br>Xvfbを起動します。</p>
+<pre><code>Xvfb :3 -screen 1 1280x1024x24
+</code></pre><h5 id="4-1-設定"><a href="#4-1-設定" class="headerlink" title="4.1 設定"></a>4.1 設定</h5><p>ui.Rには、下記の内容を追加します。</p>
+<pre><code>Sys.setenv(DISPLAY = &quot;:3.1&quot;)
+</code></pre><p>例を確認しませんか。</p>
+<pre><code>http://localhost:3838/index.html 
+http://localhost:3838/01_hello/ 
+http://localhost:3838/02_text/
+http://localhost:3838/03_reactivity/
+http://localhost:3838/04_mpg/
+http://localhost:3838/05_sliders/
+http://localhost:3838/06_tabsets/
+http://localhost:3838/07_widgets/
+http://localhost:3838/08_html/
+http://localhost:3838/09_upload/
+http://localhost:3838/10_download/
+http://localhost:3838/11_timer/
+</code></pre><hr>
+<p>参照：<a href="https://www.rstudio.com/products/shiny/shiny-server2/" target="_blank" rel="noopener">https://www.rstudio.com/products/shiny/shiny-server2/</a><br>中国語版：<a href="http://youngspring1.github.io/post/2016-03-25-shinyserver/">http://youngspring1.github.io/post/2016-03-25-shinyserver/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-03-26-shinyserver-jp/" data-id="cjrz25epb0020kiw8qgvx8qcb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shiny-server/">shiny server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2016-03-25-shinyserver" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-03-25-shinyserver/" class="article-date">
+  <time datetime="2016-03-25T04:00:38.000Z" itemprop="datePublished">2016-03-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/新知/">新知</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-03-25-shinyserver/">Shiny Server 安装步骤</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>R语言非常适合用于统计相关的运算。但是在用户交互方面不够友好。<br>Shiny Server是RStudio推出的，一个Web服务。它可以接受用户的输入，使用R语言进行计算，最终展示计算结果。这一切都在浏览器上完成。<br>总之非常实用，现在整理下我自己的安装手册。</p>
+<h4 id="1-从代码安装R"><a href="#1-从代码安装R" class="headerlink" title="1.从代码安装R"></a>1.从代码安装R</h4><pre><code>./configure --prefix=/opt/r --enable-R-shlib 
+make 
+make install 
+</code></pre><p>注意1：PATH要设置这个文件，否则可能会找不到R ：/etc/profile<br>注意2：可能依赖其他包比如fortran，你可能还需要执行下面这些命令。   </p>
+<pre><code>yum install gcc-gfortran 
+yum install readline-devel 
+yum install libXt-devel 
+yum install gcc-c++ glibc-headers
+</code></pre><h4 id="2-安装Xvfb"><a href="#2-安装Xvfb" class="headerlink" title="2.安装Xvfb"></a>2.安装Xvfb</h4><pre><code>yum install Xvfb
+</code></pre><p>说明：绘制图形好像默认使用 X11，但是安装过程中遇到了各种麻烦，最后尝试了这个，能够正常显示。   </p>
+<h4 id="3-安装Shiny"><a href="#3-安装Shiny" class="headerlink" title="3.安装Shiny"></a>3.安装Shiny</h4><h5 id="3-1-安装Shiny"><a href="#3-1-安装Shiny" class="headerlink" title="3.1 安装Shiny"></a>3.1 安装Shiny</h5><p>R命令行下面安装Shiny的包。</p>
+<pre><code>install.packages(&apos;shiny&apos;)
+</code></pre><p>安装过程中，会安装其他依赖的包。<br>如果你跟我一样，服务器不能连网络，那就必须下载好压缩包，再传到服务器上，从本地安装。<br>但是不在R命令行下，而是还要quit()退出来。<br>安装的命令长这样：</p>
+<pre><code>R CMD INSTALL XXXXX.tar.gz 
+</code></pre><h5 id="3-2-安装Shiny-Server"><a href="#3-2-安装Shiny-Server" class="headerlink" title="3.2 安装Shiny Server"></a>3.2 安装Shiny Server</h5><pre><code>yum install --nogpgcheck shiny-server-1.4.2.786-rh5-x86_64.rpm 
+</code></pre><p>配置文件路径：</p>
+<pre><code>/etc/shiny-server/shiny-server.conf 
+</code></pre><p>你可以把shiny包里面自带的10个例子，都拷贝到shiny-server的目录下去。   </p>
+<pre><code>cp -R /opt/r/lib64/R/library/shiny/examples/* /srv/shiny-server/
+</code></pre><p>是的，你以后所有的APP都要在/srv/shiny-server/目录下，然后在浏览器中通过这样的方式来访问：</p>
+<pre><code>http://localhost:3838/目录名
+</code></pre><p>另外，启动／停止等命令：</p>
+<pre><code>start shiny-server 
+stop shiny-server 
+restart shiny-server 
+status shiny-server 
+reload shiny-server #不中断服务的前提下 更新加载配置项
+</code></pre><p>这时可以看下首页：   </p>
+<pre><code>http://localhost:3838/index.html
+</code></pre><p>页面能够显示，但是绘图的部分好像报错了。</p>
+<h4 id="4-绘图引擎"><a href="#4-绘图引擎" class="headerlink" title="4.绘图引擎"></a>4.绘图引擎</h4><h5 id="4-1-启动Xvfb"><a href="#4-1-启动Xvfb" class="headerlink" title="4.1 启动Xvfb"></a>4.1 启动Xvfb</h5><p>各种泪流满面啊，九牛二虎啊。之前安装一堆东西，企图使用X11，会报错：can’t start PNG device。<br>后来放弃X11，使用Xvfb。需要启动Xvfb。</p>
+<pre><code>Xvfb :3 -screen 1 1280x1024x24
+</code></pre><h5 id="4-1-设置"><a href="#4-1-设置" class="headerlink" title="4.1 设置"></a>4.1 设置</h5><p>ui.R需要加入下面这一行：</p>
+<pre><code>Sys.setenv(DISPLAY = &quot;:3.1&quot;)
+</code></pre><p>访问示例试试：</p>
+<pre><code>http://localhost:3838/index.html 
+http://localhost:3838/01_hello/ 
+http://localhost:3838/02_text/
+http://localhost:3838/03_reactivity/
+http://localhost:3838/04_mpg/
+http://localhost:3838/05_sliders/
+http://localhost:3838/06_tabsets/
+http://localhost:3838/07_widgets/
+http://localhost:3838/08_html/
+http://localhost:3838/09_upload/
+http://localhost:3838/10_download/
+http://localhost:3838/11_timer/
+</code></pre><hr>
+<p>参照：<a href="https://www.rstudio.com/products/shiny/shiny-server2/" target="_blank" rel="noopener">https://www.rstudio.com/products/shiny/shiny-server2/</a><br>日文版：<a href="http://youngspring1.github.io/post/2016-03-26-shinyserver-jp/">http://youngspring1.github.io/post/2016-03-26-shinyserver-jp/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-03-25-shinyserver/" data-id="cjrz25ep8001vkiw8rc76dzn7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shiny-server/">shiny server</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2016-03-22-datatable3" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/2016-03-22-datatable3/" class="article-date">
@@ -549,7 +733,7 @@ identical(ans1$val, ans2$val)
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-22-datatable3/" data-id="cjrgbrezk001t5ow8m9tj2t44" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-22-datatable3/" data-id="cjrz25eph002gkiw8e9f904zp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -927,7 +1111,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-21-datatable2/" data-id="cjrgbrezj001p5ow8fv0l1e64" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-21-datatable2/" data-id="cjrz25epg002dkiw814o4tfsv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -983,7 +1167,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjrgbrezn001z5ow8c42t9rcs" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-20-bike/" data-id="cjrz25ep6001qkiw8kkc2hy6p" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单车/">单车</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
@@ -1044,7 +1228,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-15-career/" data-id="cjrgbreze001g5ow8y31znnyk" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-15-career/" data-id="cjrz25ep3001lkiw8mztarrqg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/career/">career</a></li></ul>
@@ -1087,7 +1271,7 @@ DT_n
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-15-evalution/" data-id="cjrgbrezg001j5ow87125ols4" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-15-evalution/" data-id="cjrz25ep7001tkiw8qiw5bqwm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/evalution/">evalution</a></li></ul>
@@ -1714,7 +1898,7 @@ DT[, print(list(c(a,b))), by=ID]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-13-datatable1/" data-id="cjrgbrezl001w5ow8jxszuwjr" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-13-datatable1/" data-id="cjrz25epj002nkiw85x5amfkp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-table/">data.table</a></li></ul>
@@ -1774,7 +1958,7 @@ DT[, print(list(c(a,b))), by=ID]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-12-designer/" data-id="cjrgbrezd001e5ow8rqdlmkfl" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-12-designer/" data-id="cjrz25ep2001ikiw89ij8knwi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/design/">design</a></li></ul>
@@ -1830,103 +2014,10 @@ mode(c(1,2))
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-08-r-class/" data-id="cjrgbrez000155ow8vpqfj4kt" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-08-r-class/" data-id="cjrz25ep0001bkiw8k6h9krwi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mode/">mode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/typeof/">typeof</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-03-08-thought" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-03-08-thought/" class="article-date">
-  <time datetime="2016-03-08T06:42:24.000Z" itemprop="datePublished">2016-03-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/生活/">生活</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-03-08-thought/">大部分时候都是目光短浅的动物</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大部分时候都是目光短浅的动物，只能看到眼前一小块；要是再远一点，便如同迷雾般不可捉摸。<br>写代码的时候，不时需要打印出一些debug信息，这样才能确认正确；见过有牛人，一次写完代码，最后调试一遍，通过。<br>看不到利好，往往不敢继续。所以需要给自己的甜头，引诱自己继续前行。<br>在普通人看不到任何收益的情况下，还能继续做，要么眼光比别人更长远，要么是因为情怀。   </p>
-<hr>
-<p>今天吃饭看见一个老太太，一个人点了份寿司，安安静静的吃完，离开。面容好平静。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-08-thought/" data-id="cjrgbrezc001b5ow845jvhtp2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活感受/">生活感受</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2016-03-06-plan" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/2016-03-06-plan/" class="article-date">
-  <time datetime="2016-03-06T07:39:55.000Z" itemprop="datePublished">2016-03-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/生活/">生活</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/2016-03-06-plan/">敦煌旅行计划</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Day1-南京－兰州"><a href="#Day1-南京－兰州" class="headerlink" title="Day1:南京－兰州"></a>Day1:南京－兰州</h3><p>正宁路夜市（小吃）：到达的当晚可以逛。<br>永昌路夜市（杂货）：返程有空就逛，连着正宁路夜市。<br>中山铁桥：清朝。<br>省博：返程住兰州，有空逛，大约半天。   </p>
-<h3 id="Day2-兰州－武威－张掖"><a href="#Day2-兰州－武威－张掖" class="headerlink" title="Day2:兰州－武威－张掖"></a>Day2:兰州－武威－张掖</h3><p>武威旧称凉州，西夏文化，特色小吃：拨鱼儿、面片、三套车。<br>张掖<br>&emsp;丹霞景区（40元），最好早晨或者傍晚去，雨后更佳。<br>&emsp;大佛寺（41元），西夏国寺，卧佛。<br>&emsp;甘州美食广场。   </p>
-<h3 id="Day3-张掖－嘉峪关－敦煌"><a href="#Day3-张掖－嘉峪关－敦煌" class="headerlink" title="Day3:张掖－嘉峪关－敦煌"></a>Day3:张掖－嘉峪关－敦煌</h3><p>嘉峪关<br>&emsp;关城、第一城、悬壁长城三景区联票，但距离较远。<br>&emsp;镜铁市场的眼镜烧烤有名。<br>瓜洲<br>&emsp;榆林窟，有空就去。</p>
-<h3 id="Day4-敦煌"><a href="#Day4-敦煌" class="headerlink" title="Day4:敦煌"></a>Day4:敦煌</h3><p>敦煌市区以及莫高窟<br>&emsp;鸣沙山月牙泉（120元）傍晚去。<br>&emsp;市博。<br>&emsp;沙洲市场（敦煌夜市）。<br>东线：莫高窟。   </p>
-<h3 id="Day5-敦煌"><a href="#Day5-敦煌" class="headerlink" title="Day5:敦煌"></a>Day5:敦煌</h3><p>敦煌周边<br>西线：<br>&emsp;西北：玉门关（90km 40元）、雅丹魔鬼城（80km 80元）<br>&emsp;西南：西千佛洞（35km）、阳关（70km 50元包含博物馆）   </p>
-<h3 id="Day6-敦煌－青海湖－兰州"><a href="#Day6-敦煌－青海湖－兰州" class="headerlink" title="Day6:敦煌－青海湖－兰州"></a>Day6:敦煌－青海湖－兰州</h3><h3 id="Day7-兰州－南京"><a href="#Day7-兰州－南京" class="headerlink" title="Day7:兰州－南京"></a>Day7:兰州－南京</h3><h3 id="路线备忘"><a href="#路线备忘" class="headerlink" title="路线备忘"></a>路线备忘</h3><p>G30 丝绸之路：兰州－武威－张掖－酒泉－瓜洲：1000km<br>S314 瓜洲－敦煌：120km<br>G215-G315-G25 敦煌－青海湖－兰州   </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-plan/" data-id="cjrgbreyy00125ow8n153bzxj" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
 
     </footer>
   </div>
@@ -1958,7 +2049,7 @@ mode(c(1,2))
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Excel/">Excel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LCS/">LCS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OSS-Lisence/">OSS Lisence</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/career/">career</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-table/">data.table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/design/">design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evalution/">evalution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hugo/">hugo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/joel-on-software/">joel on software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mode/">mode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shiny-server/">shiny server</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software/">software</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typeof/">typeof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/west-world/">west world</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xlrd/">xlrd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/专注/">专注</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/人类简史/">人类简史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/入门教程/">入门教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单车/">单车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/历史/">历史</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/塞尔达传说/">塞尔达传说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/孔庙孔府孔林/">孔庙孔府孔林</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小说/">小说</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/归一化/">归一化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/想法/">想法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感受/">感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据分析/">数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数码产品/">数码产品</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日本/">日本</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/日记/">日记</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/有顶天家族/">有顶天家族</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率/">概率</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/泰山/">泰山</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/洛阳/">洛阳</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深度学习/">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/猫/">猫</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活感受/">生活感受</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/电影/">电影</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/碎碎念/">碎碎念</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/穿越/">穿越</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/简单工作/">简单工作</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/美食/">美食</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/背景知识/">背景知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/西安/">西安</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/诗/">诗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语音识别/">语音识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/赛车/">赛车</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a></li></ul>
     </div>
   </div>
 
@@ -1968,7 +2059,7 @@ mode(c(1,2))
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 12.5px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 15px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -1977,7 +2068,7 @@ mode(c(1,2))
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -1990,6 +2081,14 @@ mode(c(1,2))
       <ul>
         
           <li>
+            <a href="/2019/20190210-why-you-need-a-photo-printer/">为什么你需要一台照片打印机</a>
+          </li>
+        
+          <li>
+            <a href="/2019/20190210-febtalks/">2019年2月碎碎念</a>
+          </li>
+        
+          <li>
             <a href="/2019/20190113-jantalks/">2019年1月碎碎念</a>
           </li>
         
@@ -1999,14 +2098,6 @@ mode(c(1,2))
         
           <li>
             <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约|张宇凌</a>
-          </li>
-        
-          <li>
-            <a href="/2019/2019-01-01-happynewyear/">又是新的一年</a>
-          </li>
-        
-          <li>
-            <a href="/2018/2018-04-15-tour-de-hyrule/">海拉鲁大陆旅行指南</a>
           </li>
         
       </ul>
