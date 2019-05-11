@@ -65,6 +65,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2016-03-08-r-class" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/2016-03-08-r-class/" class="article-date">
+  <time datetime="2016-03-08T06:52:12.000Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/新知/">新知</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/2016-03-08-r-class/">R语言中的class()、mode()和typeof()的区别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天对R语言中的这三个函数产生了疑惑，为什么有时候它们的运行结果一样，有时候却又不一样？</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><strong>mode</strong><br>&emsp;The (Storage) Mode of an Object<br><strong>Description</strong><br>&emsp;Get or set the type or storage mode of an object.</p>
+<p><strong>typeof</strong><br>&emsp;The Type of an Object<br><strong>Description</strong><br>&emsp;typeof determines the (R internal) type or storage mode of any object</p>
+<p><strong>class</strong><br>&emsp;Object Classes<br><strong>Description</strong><br>&emsp;R possesses a simple generic function mechanism which can be used for an object-oriented style of programming.<br>&emsp;Method dispatch takes place based on the class of the first argument to the generic function.</p>
+<h3 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h3><p>在R里面，每一个对象都有一个mode和一个class。<br>前者表示对象在内存中是如何存储的。 (numeric, character, list and function)<br>后者表示对象的抽象类型。   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d &lt;- data.frame(V1=c(1,2))</span><br><span class="line">class(d)</span><br><span class="line"># [1] &quot;data.frame&quot;</span><br><span class="line">mode(d)</span><br><span class="line"># [1] &quot;list&quot;</span><br><span class="line">typeof(d)</span><br><span class="line"># list</span><br></pre></td></tr></table></figure>
+<p>通过上面的例子，我们可以知道，data frame这种类型，在内存中作为list被存储，但是它们被包装成data frame。<br>对于某个函数的参数，它的类型是data frame，却不能说是list。</p>
+<p>再来看mode和typeof。<br>mode和typeof通常返回同样的值，但也有例外。   </p>
+<pre><code>typeof(c(1,2))
+# [1] &quot;double&quot;
+mode(c(1,2))
+# [1] &quot;numeric&quot;
+</code></pre><p>历史原因啦。R语言由S语言发展而来。<br>mode，为了和S语言兼容，返回R的对象的模式。<br>typeof是R语言特有的，返回一个R的对象的类型。（哎呀，解释不清楚啦）   </p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>1.<a href="http://stackoverflow.com/questions/6258004/r-types-and-classes-of-variables" target="_blank" rel="noopener">http://stackoverflow.com/questions/6258004/r-types-and-classes-of-variables</a><br>2.<a href="http://stats.stackexchange.com/questions/3212/mode-class-and-type-of-r-objects" target="_blank" rel="noopener">http://stats.stackexchange.com/questions/3212/mode-class-and-type-of-r-objects</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2016/2016-03-08-r-class/" data-id="cjvj6wh070020gntyfpqkmkdv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mode/">mode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/typeof/">typeof</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2016-03-08-thought" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/2016-03-08-thought/" class="article-date">
@@ -98,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-08-thought/" data-id="cjrz25ep5001okiw8pwh954gp" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-08-thought/" data-id="cjvj6wh06001wgnty2szx0o27" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活感受/">生活感受</a></li></ul>
@@ -146,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-plan/" data-id="cjrz25eox0014kiw8l5lkmj1c" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-plan/" data-id="cjvj6wh02001ngntyibpmfc8j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/敦煌/">敦煌</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
@@ -189,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-ssn/" data-id="cjrz25ep1001ekiw83j8is5xl" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-ssn/" data-id="cjvj6wh05001tgnty18t9wpaw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/碎碎念/">碎碎念</a></li></ul>
@@ -247,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-inevitable/" data-id="cjrz25eow0011kiw8ki8g1akh" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-inevitable/" data-id="cjvj6wh03001qgntykoqk061t" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kevin-Kelly/">Kevin Kelly</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/The-Inevitable/">The Inevitable</a></li></ul>
@@ -371,7 +427,7 @@ $ git merge origin/next
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-git/" data-id="cjrz25eot000skiw84vxyqjk0" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-git/" data-id="cjvj6wh090023gntyexq59sis" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/">Git</a></li></ul>
@@ -481,7 +537,7 @@ $ git push -u origin master
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2016/2016-03-06-hugo/" data-id="cjrz25eoy0017kiw820rlg1ts" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2016/2016-03-06-hugo/" data-id="cjvj6wh0a0025gntyxycedmd5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hugo/">hugo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/入门教程/">入门教程</a></li></ul>
@@ -526,7 +582,7 @@ $ git push -u origin master
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 15px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 18px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12px;">shiny server</a> <a href="/tags/software/" style="font-size: 12px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 18px;">旅行</a> <a href="/tags/日本/" style="font-size: 14px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 16px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -535,7 +591,7 @@ $ git push -u origin master
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -546,6 +602,10 @@ $ git push -u origin master
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/20190511-maytalks/">2019年5月碎碎念</a>
+          </li>
         
           <li>
             <a href="/2019/20190210-why-you-need-a-photo-printer/">为什么你需要一台照片打印机</a>
@@ -561,10 +621,6 @@ $ git push -u origin master
         
           <li>
             <a href="/2019/20190112-movies/">看了两场截然不同的电影</a>
-          </li>
-        
-          <li>
-            <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约|张宇凌</a>
           </li>
         
       </ul>

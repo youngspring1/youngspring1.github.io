@@ -65,6 +65,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-2017-10-15-hexo" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/2017-10-15-hexo/" class="article-date">
+  <time datetime="2017-10-15T11:42:24.000Z" itemprop="datePublished">2017-10-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/新知/">新知</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/2017-10-15-hexo/">迁移博客系统到hexo</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>原先放在 github pages上的博客系统是用hugo搭建的，8月份换电脑，hugo环境没有了，正好迁移到主流的？<a href="https://hexo.io/" target="_blank" rel="noopener">hexo</a>，安装和配置还是挺简单的，而且有<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">中文说明</a>，这里讲讲hexo里面一些（我觉得）新的概念 和 跟之前hugo的不同之处。   </p>
+<ol>
+<li><p>流程更清晰<br> new/generate/deploy，对应写博客／生成静态文件／发布，三个步骤只需要运行hugo命令就行了，不需要再手动提交到github，操作简单很多。当然需要安装  hexo-deployer-git，并且定义好自己的仓库地址。</p>
+</li>
+<li><p>自定义的路径和url<br> 我希望md文件放在年份文件夹里，不要全部放在 _posts 文件夹下面。而且文件名要有日期前缀，要不然不好找。我在配置文件的 Writing 段落这样定义就可以了 <code>new_post_name: :year/:title.md</code>。当然 new post时，我手动吧日期敲进去。此外，生成页面的的url里面，默认是<code>:year/:month/:day/:title</code>，但是因为我文件名已经有日期了，所以url里面的日期就不要了，直接删成<code>:year/:title</code>这样就行。</p>
+</li>
+<li><p>草稿<br> 有个draft草稿的概念，这样的文件时看不到的；需要publish一下，才会吧draft变成post。好吧，其实对我没什么用。</p>
+</li>
+<li><p>分类<br> 原来hugo里面的category是并列的关系，跟tag一样，一片文章可以属于多个分类。但是hexo里面的category存在层次关系，[cat1, cat2]表示cat1下的子分类cat2，跟[cat2, cat1]是不一样的。</p>
+</li>
+</ol>
+<p>暂时就用到了这么多。   </p>
+<p>搬家快乐～～</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://youngspring1.github.io/2017/2017-10-15-hexo/" data-id="cjvj6wgzw001agntygyk7njwb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages-blog/">github pages blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-2017-07-02-food" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/2017-07-02-food/" class="article-date">
@@ -97,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-07-02-food/" data-id="cjrz25eos000okiw8b94cxy8e" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-07-02-food/" data-id="cjvj6wgzs000wgnty9mdd2v1w" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/美食/">美食</a></li></ul>
@@ -151,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-25-jizhi/" data-id="cjrz25eoo000fkiw8c263glow" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-25-jizhi/" data-id="cjvj6wgzv0016gntyrpixp6by" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/机器学习/">机器学习</a></li></ul>
@@ -198,7 +253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-DLmaterials/" data-id="cjrz25eoi0006kiw8f4qcm7e1" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-DLmaterials/" data-id="cjvj6wgzt000zgntyikpjsfmf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深度学习/">深度学习</a></li></ul>
@@ -255,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-fromdaily/" data-id="cjrz25eom000bkiw8imxvo9kr" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-fromdaily/" data-id="cjvj6wgzu0013gntyhpcwijtw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
@@ -312,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-24-normalization/" data-id="cjrz25eor000lkiw899bht1j0" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-24-normalization/" data-id="cjvj6wgzx001cgntydu3ps2zp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/归一化/">归一化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据分析/">数据分析</a></li></ul>
@@ -358,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-10-wonderwoman/" data-id="cjrz25eoh0005kiw8m7jgtldn" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-10-wonderwoman/" data-id="cjvj6wgzp000pgntyrx4sff7n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/电影/">电影</a></li></ul>
@@ -406,7 +461,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-06-04-brief-history/" data-id="cjrz25eol000akiw872v27hr3" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-06-04-brief-history/" data-id="cjvj6wgzo000mgntyfnwzraj8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/人类简史/">人类简史</a></li></ul>
@@ -452,7 +507,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-03-19-passthrough/" data-id="cjrz25eog0004kiw8bssa7vrs" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-03-19-passthrough/" data-id="cjvj6wgzr000tgntyfzjrvrz1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/穿越/">穿越</a></li></ul>
@@ -495,56 +550,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-01-22-background/" data-id="cjrz25eo70000kiw8euq1ds44" class="article-share-link">Share</a>
+      <a data-url="https://youngspring1.github.io/2017/2017-01-22-background/" data-id="cjvj6wgzm000igntyjbcizm3v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/背景知识/">背景知识</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2017-01-07-bilylyne" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/2017-01-07-bilylyne/" class="article-date">
-  <time datetime="2017-01-07T05:42:40.000Z" itemprop="datePublished">2017-01-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/读书/">读书</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/2017-01-07-bilylyne/">比利林恩的内心世界</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一个普通人的内心世界</p>
-<p>和1900一样，待在家里、待在美国更麻烦，才回战场的吧。毕竟那里才是他擅长的地方。</p>
-<p>封面很素气。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170107-billytext.JPG" alt="book"></p>
-<p>读到这一句的时候惊心动魄。<br>人生大部分时间是慵懒而得过且过的，也许某天出现了一些酸甜苦辣，但往往第二天就淡了，最终变成索然无味的一团。<br><img src="http://7xrjai.com1.z0.glb.clouddn.com/20170107-billybook.jpg" alt="txt"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://youngspring1.github.io/2017/2017-01-07-bilylyne/" data-id="cjrz25eoc0001kiw8nlgc35y1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小说/">小说</a></li></ul>
 
     </footer>
   </div>
@@ -586,7 +595,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 17.5px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12.5px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12.5px;">shiny server</a> <a href="/tags/software/" style="font-size: 12.5px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12.5px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 17.5px;">旅行</a> <a href="/tags/日本/" style="font-size: 15px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12.5px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12.5px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12.5px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 15px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
+      <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Kevin-Kelly/" style="font-size: 10px;">Kevin Kelly</a> <a href="/tags/LCS/" style="font-size: 10px;">LCS</a> <a href="/tags/OSS-Lisence/" style="font-size: 10px;">OSS Lisence</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/The-Inevitable/" style="font-size: 10px;">The Inevitable</a> <a href="/tags/career/" style="font-size: 10px;">career</a> <a href="/tags/class/" style="font-size: 10px;">class</a> <a href="/tags/data-table/" style="font-size: 18px;">data.table</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/evalution/" style="font-size: 10px;">evalution</a> <a href="/tags/github-pages-blog/" style="font-size: 10px;">github pages blog</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/hugo/" style="font-size: 10px;">hugo</a> <a href="/tags/joel-on-software/" style="font-size: 10px;">joel on software</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/mode/" style="font-size: 10px;">mode</a> <a href="/tags/python/" style="font-size: 12px;">python</a> <a href="/tags/shiny-server/" style="font-size: 12px;">shiny server</a> <a href="/tags/software/" style="font-size: 12px;">software</a> <a href="/tags/typeof/" style="font-size: 10px;">typeof</a> <a href="/tags/west-world/" style="font-size: 10px;">west world</a> <a href="/tags/xlrd/" style="font-size: 10px;">xlrd</a> <a href="/tags/专注/" style="font-size: 10px;">专注</a> <a href="/tags/人类简史/" style="font-size: 10px;">人类简史</a> <a href="/tags/入门教程/" style="font-size: 10px;">入门教程</a> <a href="/tags/单车/" style="font-size: 10px;">单车</a> <a href="/tags/历史/" style="font-size: 10px;">历史</a> <a href="/tags/塞尔达传说/" style="font-size: 10px;">塞尔达传说</a> <a href="/tags/孔庙孔府孔林/" style="font-size: 10px;">孔庙孔府孔林</a> <a href="/tags/小说/" style="font-size: 10px;">小说</a> <a href="/tags/归一化/" style="font-size: 10px;">归一化</a> <a href="/tags/想法/" style="font-size: 12px;">想法</a> <a href="/tags/感受/" style="font-size: 10px;">感受</a> <a href="/tags/敦煌/" style="font-size: 10px;">敦煌</a> <a href="/tags/数据分析/" style="font-size: 10px;">数据分析</a> <a href="/tags/数码产品/" style="font-size: 10px;">数码产品</a> <a href="/tags/旅行/" style="font-size: 18px;">旅行</a> <a href="/tags/日本/" style="font-size: 14px;">日本</a> <a href="/tags/日记/" style="font-size: 10px;">日记</a> <a href="/tags/有顶天家族/" style="font-size: 10px;">有顶天家族</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/概率/" style="font-size: 12px;">概率</a> <a href="/tags/泰山/" style="font-size: 10px;">泰山</a> <a href="/tags/洛阳/" style="font-size: 10px;">洛阳</a> <a href="/tags/深度学习/" style="font-size: 10px;">深度学习</a> <a href="/tags/游戏/" style="font-size: 12px;">游戏</a> <a href="/tags/猫/" style="font-size: 10px;">猫</a> <a href="/tags/生活感受/" style="font-size: 10px;">生活感受</a> <a href="/tags/电影/" style="font-size: 12px;">电影</a> <a href="/tags/碎碎念/" style="font-size: 16px;">碎碎念</a> <a href="/tags/穿越/" style="font-size: 10px;">穿越</a> <a href="/tags/简单工作/" style="font-size: 10px;">简单工作</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/美食/" style="font-size: 10px;">美食</a> <a href="/tags/背景知识/" style="font-size: 10px;">背景知识</a> <a href="/tags/西安/" style="font-size: 10px;">西安</a> <a href="/tags/诗/" style="font-size: 10px;">诗</a> <a href="/tags/语音识别/" style="font-size: 10px;">语音识别</a> <a href="/tags/读书/" style="font-size: 10px;">读书</a> <a href="/tags/赛车/" style="font-size: 10px;">赛车</a> <a href="/tags/转载/" style="font-size: 10px;">转载</a>
     </div>
   </div>
 
@@ -595,7 +604,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li></ul>
     </div>
   </div>
 
@@ -606,6 +615,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/20190511-maytalks/">2019年5月碎碎念</a>
+          </li>
         
           <li>
             <a href="/2019/20190210-why-you-need-a-photo-printer/">为什么你需要一台照片打印机</a>
@@ -621,10 +634,6 @@
         
           <li>
             <a href="/2019/20190112-movies/">看了两场截然不同的电影</a>
-          </li>
-        
-          <li>
-            <a href="/2019/20190105-repost/">转载：一份多么美好的长期租约|张宇凌</a>
           </li>
         
       </ul>
